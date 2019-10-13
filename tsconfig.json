@@ -1,0 +1,46 @@
+{
+    "compilerOptions": {
+        // Allow importing like `import React from "react"`
+        "allowSyntheticDefaultImports": true,
+
+        // Set React as the JSX factory
+        "jsx": "react",
+
+        // Resolve modules using Node-resolution algorithm
+        "moduleResolution": "node",
+
+        // Target latest version of ECMAScript
+        "target": "esnext",
+
+        // Path to output directory
+        "outDir": "./build",
+
+        // Enable strict null checks as a best practice
+        "strictNullChecks": true,
+
+        // Don't emit; allow Babel to transform files
+        "noEmit": true,
+
+        // Enable strictest settings like strictNullChecks and noImplicitAny
+        "strict": true,
+
+        // Include typings from built-in lib declarations
+        "lib": ["es2015", "dom", "dom.iterable"],
+
+        // Include module source maps for debugging
+        "sourceMap": true,
+
+        "baseUrl": "./src",
+        "module": "es6",
+        "alwaysStrict": true,
+        "allowUnreachableCode": false,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true
+    }
+}
