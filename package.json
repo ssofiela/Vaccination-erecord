@@ -3,12 +3,12 @@
     "version": "1.0.0",
     "main": "index.ts",
     "scripts": {
-        "lint": "eslint {src,test}/**/*.{ts, tsx}",
+        "lint": "eslint {src,test}/**/*.{ts,tsx}",
+        "format": "prettier --write {src,test}/**/*.{ts,tsx}",
         "test": "jest unit",
         "test:selenium": "jest --verbose --runInBand --config jest-selenium.config.js",
         "build": "webpack --mode production",
-        "start": "webpack-dev-server --mode development --open --hot",
-        "type-check-test": "tsc -p test/tsconfig.json"
+        "start": "webpack-dev-server --mode development --open --hot"
     },
     "license": "ISC",
     "dependencies": {
@@ -53,18 +53,34 @@
         "@types/selenium-webdriver": "^4.0.3",
         "@types/webpack": "^4.39.3",
         "@types/yup": "^0.26.24",
+        "@typescript-eslint/eslint-plugin": "^2.3.3",
+        "@typescript-eslint/parser": "^2.3.3",
         "babel-loader": "^8.0.6",
         "babel-plugin-styled-components": "^1.10.6",
         "enzyme": "^3.10.0",
+        "eslint": "^6.5.1",
+        "eslint-config-prettier": "^6.4.0",
+        "eslint-plugin-prettier": "^3.1.1",
+        "eslint-plugin-react": "^7.16.0",
         "html-webpack-plugin": "^3.2.0",
+        "husky": "^3.0.9",
         "jest": "^24.9.0",
+        "lint-staged": "^9.4.2",
+        "prettier": "^1.18.2",
         "webpack": "^4.41.1",
         "webpack-cli": "^3.3.9",
         "webpack-dev-server": "^3.8.2"
     },
+    "lint-staged": {
+        "**/*.ts": [
+            "eslint --fix",
+            "prettier-eslint --write",
+            "git add"
+        ]
+    },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn type-check-test && npm run lint && npm run test && lint-staged"
+            "pre-commit": "npm run lint && npm run test && lint-staged"
         }
     }
 }

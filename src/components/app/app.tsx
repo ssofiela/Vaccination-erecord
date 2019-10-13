@@ -1,13 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 
-class App extends React.Component {
-    render() {
-        return (
-            <div>Vaccination eRecord app setup</div>
-        );
+interface Props {}
+
+class App extends React.Component<Props> {
+    render(): React.ReactNode {
+        return <div>Vaccination eRecord app setup</div>;
     }
-};
+}
 
-
-export default connect()(App)
+export default connect()(App);

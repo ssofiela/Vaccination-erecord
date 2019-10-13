@@ -1,9 +1,7 @@
-import { combineReducers} from "redux";
+import { combineReducers } from "redux";
 import { userReducer } from "./user";
 
-export interface RootState {
-
-}
+export interface RootState {}
 
 export const rootReducer = combineReducers<RootState>({
     userReducer

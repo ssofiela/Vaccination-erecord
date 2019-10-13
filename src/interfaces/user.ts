@@ -1,6 +1,5 @@
 export interface User {
-    userId: number
+    userId: number;
 }
 
-export interface UserPayload extends User {
-}
+export interface UserPayload extends User {}

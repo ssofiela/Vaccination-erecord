@@ -1,7 +1,7 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, Store } from "redux";
 
-import { rootReducer, RootState} from "./reducers/index";
+import { rootReducer, RootState } from "./reducers/index";
 
-export function configureStore(initialState?: RootState) {
-    return createStore(rootReducer, initialState!)
+export function configureStore(initialState?: RootState): Store<RootState> {
+    return createStore(rootReducer, initialState);
 }
