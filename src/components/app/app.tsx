@@ -6,7 +6,7 @@ import { Header } from "../header";
 import { Main } from "../main";
 import { Home } from "../home";
 import { Login } from "../login";
-import { VaccineList } from "../vaccine-list";
+import { VaccineList } from "../vaccines";
 
 interface Props {}
 
