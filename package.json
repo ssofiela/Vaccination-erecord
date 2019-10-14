@@ -5,7 +5,7 @@
     "scripts": {
         "lint": "eslint {src,test}/**/*.{ts,tsx}",
         "format": "prettier --write {src,test}/**/*.{ts,tsx}",
-        "test": "jest unit",
+        "test": "jest unit --passWithNoTests",
         "test:selenium": "jest --verbose --runInBand --config jest-selenium.config.js",
         "build": "webpack --mode production",
         "start": "webpack-dev-server --mode development --open --hot"
@@ -14,7 +14,9 @@
     "dependencies": {
         "@material-ui/core": "4.5.1",
         "@material-ui/icons": "4.5.1",
+        "@material-ui/styles": "4.5.0",
         "axios": "0.19.0",
+        "clsx": "1.0.4",
         "css-loader": "3.2.0",
         "formik": "1.5.8",
         "lodash": "4.17.15",
@@ -77,7 +79,7 @@
     "lint-staged": {
         "{src,test}/**/*.{ts,tsx}": [
             "eslint --fix",
-            "prettier-eslint --write",
+            "prettier --write",
             "git add"
         ]
     },
