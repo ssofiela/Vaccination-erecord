@@ -3,13 +3,22 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "prestart": "sequelize-cli db:migrate",
     "start": "node ./bin/www",
-    "dev": "DEBUG=backend:* node ./bin/www"
+    "dev": "DEBUG=backend:* node ./bin/www",
+    "db": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
+    "connect-session-sequelize": "^6.0.0",
+    "convict": "^5.1.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^8.1.0",
     "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "express-session": "^1.17.0",
+    "morgan": "~1.9.1",
+    "pg": "^7.12.1",
+    "sequelize": "^5.19.6",
+    "sequelize-cli": "^5.5.1"
   }
 }
