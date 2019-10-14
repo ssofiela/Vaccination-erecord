@@ -25,7 +25,7 @@
         "strict": true,
 
         // Include typings from built-in lib declarations
-        "lib": ["es2015", "dom", "dom.iterable"],
+        "lib": ["es6", "dom", "dom.iterable"],
 
         // Include module source maps for debugging
         "sourceMap": true,
