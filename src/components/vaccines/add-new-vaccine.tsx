@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { Button } from "@material-ui/core";
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import {
     MuiPickersUtilsProvider,
@@ -21,13 +21,49 @@ interface NewVaccineProps {}
  * @constructor
  */
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            display: "flex",
+            flexWrap: "wrap"
+        },
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: 250
+        },
+        selectEmpty: {
+            marginTop: theme.spacing(2)
+        }
+    })
+);
+
 const NewVaccine: React.FC<NewVaccineProps> = props => {
+    const classes = useStyles();
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(
         new Date("2019-10-18T21:11:54")
     );
-
     const handleDateChange = (date: Date | null): void => {
         setSelectedDate(date);
+    };
+
+    const [state, setState] = React.useState<{ vaccine: string | number; name: string }>({
+        vaccine: "",
+        name: "hai"
+    });
+
+    const inputLabel = React.useRef<HTMLLabelElement>(null);
+    const [labelWidth, setLabelWidth] = React.useState(0);
+    React.useEffect(() => {
+        setLabelWidth(inputLabel.current!.offsetWidth);
+    }, []);
+
+    const handleChange = (name: keyof typeof state) => (
+        event: React.ChangeEvent<{ value: unknown }>
+    ) => {
+        setState({
+            ...state,
+            [name]: event.target.value
+        });
     };
 
     return (
@@ -61,34 +97,39 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                     <p style={{ margin: 5, display: "inline-block" }}>
                         Vaccine
                     </p>
-                    <form autoComplete="off">
+                    <div className={classes.root}>
                         <FormControl
                             variant="outlined"
-                            style={{ minWidth: 250 }}
+                            className={classes.formControl}
                         >
                             <InputLabel
-                                htmlFor="outlined-age-simple"
-                                defaultValue={"sfa"}
-                            ></InputLabel>
+                                ref={inputLabel}
+                                htmlFor="outlined-age-native-simple"
+                            >
+                                Type to vaccine
+                            </InputLabel>
                             <Select
+                                native
+                                value={state.vaccine}
+                                onChange={handleChange("vaccine")}
+                                labelWidth={labelWidth}
                                 inputProps={{
                                     name: "vaccine",
-                                    id: "outlined-age-simple"
+                                    id: "outlined-age-native-simple"
                                 }}
                             >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value="Diphtheria">
-                                    Diphtheria
-                                </MenuItem>
-                                <MenuItem value="Polio">Polio</MenuItem>
-                                <MenuItem value="Chickenpox">
-                                    Chickenpox
-                                </MenuItem>
+                                <option value="" />
+                                <option value={10}>Polio</option>
+                                <option value={20}>MMR</option>
+                                <option value={30}>Checker Pox</option>
+                                <option value={40}>TD</option>
+                                <option value={50}>Hepatitis A</option>
+                                <option value={60}>Hepatitis B</option>
+                                <option value={70}>Influenza</option>
+                                <option value={80}>Rotavirus</option>
                             </Select>
                         </FormControl>
-                    </form>
+                    </div>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
