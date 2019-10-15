@@ -102,68 +102,104 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                         Vaccine
                     </p>
                     <Formik
-                        initialValues={{ vaccine: "" }}
+                        initialValues={{ vaccine: "", changeDate: "" }}
                         onSubmit={() => {
                             alert("Form is validated! Submitting the form...");
                         }}
                     >
-                        {() => (
-                            <div className={classes.root}>
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                >
-                                    <InputLabel
-                                        ref={inputLabel}
-                                        htmlFor="outlined-age-native-simple"
+                        {form => (
+                            <div>
+                                <div className={classes.root}>
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
                                     >
-                                        Type to vaccine
-                                    </InputLabel>
-                                    <Select
-                                        native
-                                        value={state.vaccine}
-                                        onChange={handleChange("vaccine")}
-                                        labelWidth={labelWidth}
-                                        inputProps={{
-                                            name: "vaccine",
-                                            id: "outlined-age-native-simple"
-                                        }}
-                                    >
-                                        <option value="" />
-                                        <option value={10}>Polio</option>
-                                        <option value={20}>MMR</option>
-                                        <option value={30}>Checker Pox</option>
-                                        <option value={40}>TD</option>
-                                        <option value={50}>Hepatitis A</option>
-                                        <option value={60}>Hepatitis B</option>
-                                        <option value={70}>Influenza</option>
-                                        <option value={80}>Rotavirus</option>
-                                    </Select>
-                                </FormControl>
+                                        <InputLabel
+                                            ref={inputLabel}
+                                            htmlFor="outlined-age-native-simple"
+                                        >
+                                            Type to vaccine
+                                        </InputLabel>
+                                        <Select
+                                            native
+                                            value={state.vaccine}
+                                            onChange={handleChange("vaccine")}
+                                            labelWidth={labelWidth}
+                                            inputProps={{
+                                                name: "vaccine",
+                                                id: "outlined-age-native-simple"
+                                            }}
+                                        >
+                                            <option value="" />
+                                            <option value={10}>Cholera</option>
+                                            <option value={20}>Hib</option>
+                                            <option value={30}>dtap</option>
+                                            <option value={40}>dT</option>
+                                            <option value={50}>BCG</option>
+                                            <option value={60}>Typ</option>
+                                            <option value={70}>TBE</option>
+                                            <option value={80}>JEV</option>
+                                            <option value={90}>Influ</option>
+                                            <option value={100}>HBV</option>
+                                            <option value={110}>HAV</option>
+                                            <option value={120}>HABV</option>
+                                            <option value={130}>MPR</option>
+                                            <option value={140}>IPV</option>
+                                            <option value={150}>Rabies</option>
+                                            <option value={160}>Rota</option>
+                                            <option value={170}>Var</option>
+                                            <option value={180}>YFV</option>
+                                            <option value={190}>HPV</option>
+                                            <option value={200}>DTaP-IPV</option>
+                                            <option value={210}>DTaP-IPV-Hib</option>
+                                            <option value={220}>DTaP-IPV-Hib-HBV</option>
+                                            <option value={230}>dtap-IPV</option>
+                                            <option value={240}>PanInflu</option>
+                                            <option value={250}>Men</option>
+                                            <option value={260}>Pneu</option>
+                                            <option value={270}>Diphteria</option>
+                                            <option value={280}>DT</option>
+                                            <option value={290}>DTP</option>
+                                            <option value={300}>Tetanus</option>
+                                            <option value={310}>Morbilli</option>
+                                            <option value={320}>Parotitis</option>
+                                            <option value={330}>Rubella</option>
+                                            <option value={340}>Variola</option>
+                                            <option value={350}>DT-IPV</option>
+                                            <option value={360}>Pestis</option>
+                                            <option value={370}>Anthrax</option>
+                                            <option value={380}>T-IPV</option>
+                                            <option value={390}>Pertussis</option>
+                                            <option value={400}>DTP-Hib</option>
+                                            <option value={410}>DTP-IPV</option>
+                                            <option value={420}>MPRV</option>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="dd/MM/yyyy"
+                                            margin="normal"
+                                            id="date-picker-inline"
+                                            label="Date picker inline"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                "aria-label": "changeDate"
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
+                                <div>
+                                    <Button onPress={form.handleSubmit} href="/vaccines">Save</Button>
+                                    <Button>Cancel</Button>
+                                </div>
                             </div>
                         )}
                     </Formik>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
-                            <KeyboardDatePicker
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                label="Date picker inline"
-                                value={selectedDate}
-                                onChange={handleDateChange}
-                                KeyboardButtonProps={{
-                                    "aria-label": "change date"
-                                }}
-                            />
-                        </Grid>
-                    </MuiPickersUtilsProvider>
-                </div>
-                <div>
-                    <Button>Save</Button>
-                    <Button>Cancel</Button>
                 </div>
             </div>
         </div>
