@@ -8,6 +8,7 @@ import { Main } from "../main";
 import { Home } from "../home";
 import { Login } from "../login";
 import { VaccineList } from "../vaccines";
+import { NewVaccine } from "../vaccines";
 
 interface Props {}
 
@@ -45,6 +46,11 @@ class App extends React.Component<Props, State> {
                             key="vaccines"
                             path="/vaccines"
                             component={VaccineList}
+                        />
+                        <Route
+                            key="addvaccine"
+                            path="/addvaccine"
+                            component={NewVaccine}
                         />
                     </Switch>
                 </Main>
