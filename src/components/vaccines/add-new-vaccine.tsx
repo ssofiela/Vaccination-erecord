@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -12,6 +13,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker
 } from "@material-ui/pickers";
+import { addVaccineName } from "../../redux/actions/vaccine";
 
 interface NewVaccineProps {}
 
@@ -40,13 +42,16 @@ const useStyles = makeStyles((theme: Theme) =>
 const NewVaccine: React.FC<NewVaccineProps> = props => {
     const classes = useStyles();
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-        new Date("2019-10-18T21:11:54")
+        new Date("2019-10-16")
     );
     const handleDateChange = (date: Date | null): void => {
         setSelectedDate(date);
     };
 
-    const [state, setState] = React.useState<{ vaccine: string | number; name: string }>({
+    const [state, setState] = React.useState<{
+        vaccine: string | number;
+        name: string;
+    }>({
         vaccine: "",
         name: "hai"
     });
@@ -66,13 +71,19 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
         });
     };
 
+    const saveData = (): void => {
+        const selectedVaccine = state.vaccine;
+        // Add to redux
+        // props.addVaccineName(selectedVaccine);
+    };
+
     return (
         <div style={{ backgroundColor: "#f9f9f9" }}>
             <div
                 style={{
                     position: "absolute",
                     left: "40%",
-                    top: "60%",
+                    top: "30%",
                     bottom: "30%"
                 }}
             >
@@ -135,7 +146,7 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                             <KeyboardDatePicker
                                 disableToolbar
                                 variant="inline"
-                                format="MM/dd/yyyy"
+                                format="dd/MM/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"
                                 label="Date picker inline"
@@ -149,7 +160,7 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                     </MuiPickersUtilsProvider>
                 </div>
                 <div>
-                    <Button>Save</Button>
+                    <Button onPress={saveData}>Save</Button>
                     <Button>Cancel</Button>
                 </div>
             </div>
@@ -161,4 +172,19 @@ NewVaccine.propTypes = {
     children: PropTypes.any
 };
 
-export default NewVaccine;
+const MapStateToProps = (state: any): any => {
+    return {
+        vaccine: state.vaccine
+    };
+};
+
+const MapDispatchToProps = (dispatch: any): any => {
+    return {
+        addVaccineName: (name: string) => dispatch(addVaccineName(name))
+    };
+};
+
+export default connect(
+    MapStateToProps,
+    MapDispatchToProps
+)(NewVaccine);
