@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { Header } from "../header";
 import { Main } from "../main";
-import { Home } from "../home";
+//Import { Home } from "../home";
 import { Login } from "../login";
 import { VaccineList } from "../vaccines";
 
@@ -39,11 +39,13 @@ class App extends React.Component<Props, State> {
                 />
                 <Main sidebarOpen={this.state.sidebarOpen}>
                     <Switch>
-                        <Route key="home" exact path="/" component={Home} />
+                        {/* TODO add back when demo is over
+                            <Route key="home" exact path="/" component={Home}/>
+                        */}
                         <Route key="login" path="/login" component={Login} />
                         <Route
                             key="vaccines"
-                            path="/vaccines"
+                            path="/" // TODO change back to "/vaccines" when demo is over
                             component={VaccineList}
                         />
                     </Switch>
