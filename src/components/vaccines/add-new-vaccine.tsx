@@ -4,7 +4,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
+import { Button } from "@material-ui/core";
+import "date-fns";
+import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker
+} from "@material-ui/pickers";
 
 interface NewVaccineProps {}
 
@@ -13,10 +20,26 @@ interface NewVaccineProps {}
  * @param props
  * @constructor
  */
+
 const NewVaccine: React.FC<NewVaccineProps> = props => {
+    const [selectedDate, setSelectedDate] = React.useState<Date | null>(
+        new Date("2019-10-18T21:11:54")
+    );
+
+    const handleDateChange = (date: Date | null): void => {
+        setSelectedDate(date);
+    };
+
     return (
         <div style={{ backgroundColor: "#f9f9f9" }}>
-            <div style={{ position: "absolute", left: "50%", top: "50%" }}>
+            <div
+                style={{
+                    position: "absolute",
+                    left: "40%",
+                    top: "60%",
+                    bottom: "30%"
+                }}
+            >
                 <div
                     style={{
                         backgroundColor: "#CFEDF2",
@@ -43,35 +66,50 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                             variant="outlined"
                             style={{ minWidth: 250 }}
                         >
-                            <InputLabel htmlFor="outlined-age-simple">
-                                Type to select vaccine
-                            </InputLabel>
+                            <InputLabel
+                                htmlFor="outlined-age-simple"
+                                defaultValue={"sfa"}
+                            ></InputLabel>
                             <Select
                                 inputProps={{
-                                    name: "Type to select vaccine",
+                                    name: "vaccine",
                                     id: "outlined-age-simple"
                                 }}
                             >
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={10}>Diphtheria</MenuItem>
-                                <MenuItem value={20}>Polio</MenuItem>
-                                <MenuItem value={30}>Chickenpox</MenuItem>
+                                <MenuItem value="Diphtheria">
+                                    Diphtheria
+                                </MenuItem>
+                                <MenuItem value="Polio">Polio</MenuItem>
+                                <MenuItem value="Chickenpox">
+                                    Chickenpox
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </form>
-                    <form noValidate>
-                        <TextField
-                            id="date"
-                            label="Date"
-                            type="date"
-                            defaultValue="2017-05-24"
-                            InputLabelProps={{
-                                shrink: true
-                            }}
-                        />
-                    </form>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid container justify="space-around">
+                            <KeyboardDatePicker
+                                disableToolbar
+                                variant="inline"
+                                format="MM/dd/yyyy"
+                                margin="normal"
+                                id="date-picker-inline"
+                                label="Date picker inline"
+                                value={selectedDate}
+                                onChange={handleDateChange}
+                                KeyboardButtonProps={{
+                                    "aria-label": "change date"
+                                }}
+                            />
+                        </Grid>
+                    </MuiPickersUtilsProvider>
+                </div>
+                <div>
+                    <Button>Save</Button>
+                    <Button>Cancel</Button>
                 </div>
             </div>
         </div>
