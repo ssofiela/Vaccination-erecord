@@ -13,6 +13,10 @@ export const theme = createMuiTheme({
         },
         background: {
             default: "#fff"
+        },
+        action: {
+            disabled: "#707070",
+            disabledBackground: "#f9f9f9"
         }
     },
     typography: {
