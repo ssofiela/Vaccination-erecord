@@ -1,3 +1,5 @@
+//eslint-disable-var-no-requires
+/*eslint @typescript-eslint/no-var-requires:0*/
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -25,6 +27,10 @@ module.exports = {
                 use: {
                     loader: "babel-loader"
                 }
+            },
+            {
+                test: /\.(css|scss)$/,
+                use: ["style-loader", "css-loader"]
             }
         ]
     },
