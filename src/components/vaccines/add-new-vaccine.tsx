@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -13,7 +12,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker
 } from "@material-ui/pickers";
-import { addVaccineName } from "../../redux/actions/vaccine";
+import { Formik } from "formik";
 
 interface NewVaccineProps {}
 
@@ -71,12 +70,6 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
         });
     };
 
-    const saveData = (): void => {
-        const selectedVaccine = state.vaccine;
-        // Add to redux
-        // props.addVaccineName(selectedVaccine);
-    };
-
     return (
         <div style={{ backgroundColor: "#f9f9f9" }}>
             <div
@@ -108,39 +101,48 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                     <p style={{ margin: 5, display: "inline-block" }}>
                         Vaccine
                     </p>
-                    <div className={classes.root}>
-                        <FormControl
-                            variant="outlined"
-                            className={classes.formControl}
-                        >
-                            <InputLabel
-                                ref={inputLabel}
-                                htmlFor="outlined-age-native-simple"
-                            >
-                                Type to vaccine
-                            </InputLabel>
-                            <Select
-                                native
-                                value={state.vaccine}
-                                onChange={handleChange("vaccine")}
-                                labelWidth={labelWidth}
-                                inputProps={{
-                                    name: "vaccine",
-                                    id: "outlined-age-native-simple"
-                                }}
-                            >
-                                <option value="" />
-                                <option value={10}>Polio</option>
-                                <option value={20}>MMR</option>
-                                <option value={30}>Checker Pox</option>
-                                <option value={40}>TD</option>
-                                <option value={50}>Hepatitis A</option>
-                                <option value={60}>Hepatitis B</option>
-                                <option value={70}>Influenza</option>
-                                <option value={80}>Rotavirus</option>
-                            </Select>
-                        </FormControl>
-                    </div>
+                    <Formik
+                        initialValues={{ vaccine: "" }}
+                        onSubmit={() => {
+                            alert("Form is validated! Submitting the form...");
+                        }}
+                    >
+                        {() => (
+                            <div className={classes.root}>
+                                <FormControl
+                                    variant="outlined"
+                                    className={classes.formControl}
+                                >
+                                    <InputLabel
+                                        ref={inputLabel}
+                                        htmlFor="outlined-age-native-simple"
+                                    >
+                                        Type to vaccine
+                                    </InputLabel>
+                                    <Select
+                                        native
+                                        value={state.vaccine}
+                                        onChange={handleChange("vaccine")}
+                                        labelWidth={labelWidth}
+                                        inputProps={{
+                                            name: "vaccine",
+                                            id: "outlined-age-native-simple"
+                                        }}
+                                    >
+                                        <option value="" />
+                                        <option value={10}>Polio</option>
+                                        <option value={20}>MMR</option>
+                                        <option value={30}>Checker Pox</option>
+                                        <option value={40}>TD</option>
+                                        <option value={50}>Hepatitis A</option>
+                                        <option value={60}>Hepatitis B</option>
+                                        <option value={70}>Influenza</option>
+                                        <option value={80}>Rotavirus</option>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        )}
+                    </Formik>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-around">
                             <KeyboardDatePicker
@@ -160,7 +162,7 @@ const NewVaccine: React.FC<NewVaccineProps> = props => {
                     </MuiPickersUtilsProvider>
                 </div>
                 <div>
-                    <Button onPress={saveData}>Save</Button>
+                    <Button>Save</Button>
                     <Button>Cancel</Button>
                 </div>
             </div>
@@ -172,19 +174,4 @@ NewVaccine.propTypes = {
     children: PropTypes.any
 };
 
-const MapStateToProps = (state: any): any => {
-    return {
-        vaccine: state.vaccine
-    };
-};
-
-const MapDispatchToProps = (dispatch: any): any => {
-    return {
-        addVaccineName: (name: string) => dispatch(addVaccineName(name))
-    };
-};
-
-export default connect(
-    MapStateToProps,
-    MapDispatchToProps
-)(NewVaccine);
+export default NewVaccine;
