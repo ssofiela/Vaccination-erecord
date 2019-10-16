@@ -86,7 +86,10 @@ const Header: React.FC<HeaderProps> = props => {
                         */}
                 </Toolbar>
             </AppBar>
-            <Sidebar open={props.sidebarOpen} />
+            <Sidebar
+                open={props.sidebarOpen}
+                handleClose={props.handleSidebarClose}
+            />
         </div>
     );
 };

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
-import { sidebarWidth } from "../../utils/contants";
+import { sidebarWidth } from "../../utils/constants";
 
 interface MainProps {
     sidebarOpen: boolean;

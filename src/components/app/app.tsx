@@ -46,12 +46,13 @@ class App extends React.Component<Props, State> {
                         <Route key="login" path="/login" component={Login} />
                         <Route
                             key="vaccines"
+                            exact
                             path="/" // TODO change back to "/vaccines" when demo is over
                             component={VaccineList}
                         />
                         <Route
-                            key="addvaccine"
-                            path="/addvaccine"
+                            key="addVaccine"
+                            path="/add-vaccine"
                             component={NewVaccine}
                         />
                     </Switch>

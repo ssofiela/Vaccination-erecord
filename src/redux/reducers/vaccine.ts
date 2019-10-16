@@ -1,13 +1,27 @@
-import SELECTED_VACCINE from "../actions/vaccine";
+import { ACTION_TYPES } from "../../utils/constants";
+import { SetVaccinePayload } from "../actions/vaccine";
+import { Action } from "redux-actions";
 
-const initialState = {
+export type VaccineState = {
+    name: string;
+};
+
+export type VaccineStatePayload = SetVaccinePayload;
+
+const initialVaccineState = {
     name: ""
 };
 
-export const vaccineReducer = (state = initialState, action: any): any => {
+export const vaccineReducer = (
+    state = initialVaccineState,
+    action: Action<VaccineStatePayload>
+): VaccineState => {
     switch (action.type) {
-        case SELECTED_VACCINE:
-            return Object.assign({}, state, { name: action.vaccine });
+        case ACTION_TYPES.STORE_VACCINE:
+            return {
+                ...state,
+                name: action.payload
+            };
         default:
             return state;
     }
