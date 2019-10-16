@@ -20,6 +20,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import AddIcon from "@material-ui/icons/Add";
 import CheckIcon from "@material-ui/icons/Check";
+import { withRouter, RouteComponentProps } from "react-router";
 
 interface VaccineData {
     vaccine: string;
@@ -110,7 +111,7 @@ function createData(
  * @param props
  * @constructor
  */
-const VaccineList: React.FC = () => {
+const VaccineList: React.FC<RouteComponentProps> = props => {
     const theme = useTheme();
     const classes = useStyles();
 
@@ -236,6 +237,9 @@ const VaccineList: React.FC = () => {
                             variant="outlined"
                             color="primary"
                             className={classes.button}
+                            onClick={() => {
+                                props.history.push("/add-vaccine");
+                            }}
                             startIcon={<AddIcon />}
                         >
                             Add vaccine
@@ -247,4 +251,4 @@ const VaccineList: React.FC = () => {
     );
 };
 
-export default VaccineList;
+export default withRouter(VaccineList);

@@ -13,12 +13,16 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Colorize from "@material-ui/icons/Colorize";
 
-import { sidebarWidth } from "../../../utils/contants";
+import { sidebarWidth } from "../../../utils/constants";
 import { theme } from "../../../utils/theme";
+import { withRouter, RouteComponentProps } from "react-router";
 
 interface SidebarProps {
     open: boolean;
+    handleClose: () => void;
 }
+
+type Props = SidebarProps & RouteComponentProps;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -44,7 +48,7 @@ const StyledListItem = styled(ListItem)({
     }
 });
 
-const Sidebar: React.FC<SidebarProps> = props => {
+const Sidebar: React.FC<Props> = props => {
     const classes = useStyles();
     // TODO proper handling of current route location
     const selected = true;
@@ -60,7 +64,15 @@ const Sidebar: React.FC<SidebarProps> = props => {
         >
             <div className={classes.toolbar} />
             <List>
-                <StyledListItem button key={"my_vaccines"} selected={selected}>
+                <StyledListItem
+                    button
+                    key={"my_vaccines"}
+                    selected={selected}
+                    onClick={() => {
+                        props.history.push("/");
+                        props.handleClose();
+                    }}
+                >
                     <ListItemIcon color="inherit">
                         <Colorize />
                     </ListItemIcon>
@@ -71,8 +83,10 @@ const Sidebar: React.FC<SidebarProps> = props => {
     );
 };
 
+// TODO prop types with RouteComponentProps?
 Sidebar.propTypes = {
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

@@ -1,13 +1,13 @@
-export const Type = {
-    SELECTED_VACCINE: "SELECTED_VACCINE"
-};
+import { ACTION_TYPES } from "../../utils/constants";
+import { Action } from "redux-actions";
 
-export const addVaccineName = (name: string): any => {
+export type SetVaccinePayload = string;
+
+export const storeVaccine = (
+    payload: SetVaccinePayload
+): Action<SetVaccinePayload> => {
     return {
-        type: Type.SELECTED_VACCINE,
-        payload: name
+        type: ACTION_TYPES.STORE_VACCINE,
+        payload: payload
     };
 };
-
-export default Type;
-
