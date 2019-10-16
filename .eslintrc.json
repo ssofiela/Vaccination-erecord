@@ -19,7 +19,7 @@
         "object-curly-spacing": ["error", "always", {"arraysInObjects": false, "objectsInObjects": false }],
         "capitalized-comments": ["error", "always", {"ignoreConsecutiveComments": true }],
         "comma-dangle": ["error", "never"],
-        "indent": ["error", 4],
+        "indent": ["error", 4, {"SwitchCase":  1}],
         "quotes": ["error", "double", {"avoidEscape":  true, "allowTemplateLiterals": true}],
         "jsx-quotes": ["error", "prefer-double"],
         "@typescript-eslint/no-empty-interface": "off",
