@@ -26,6 +26,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import Select from "@material-ui/core/Select";
+import ReminderCheck from "./reminder-check";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -291,6 +292,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                         </Grid>
                                     </Box>
                                 </Grid>
+                                <ReminderCheck sidebarOpen />
                                 <Grid item xs={12}>
                                     <Box
                                         display="flex"
