@@ -26,6 +26,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import VaccineName from "./vaccine-name";
 
 import ReminderCheck from "./reminder-check";
+import { TextField } from "@material-ui/core";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -57,6 +58,14 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         menu: {
             width: 200
+        },
+        inputField: {
+            display: "flex",
+            flexWrap: "wrap"
+        },
+        textField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1)
         }
     })
 );
@@ -80,6 +89,10 @@ const StyledButton = withStyles((theme: Theme) =>
     })
 )(Button);
 
+interface State {
+    multiline: string;
+}
+
 /**
  * Adding a new vaccine entry
  * @param props
@@ -94,6 +107,14 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     );
     const handleDateChange = (date: Date | null): void => {
         setSelectedDate(date);
+    };
+
+    const [values, setValues] = React.useState<State>({
+        multiline: ""
+    });
+
+    const handleChange = (name: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValues({ ...values, [name]: event.target.value });
     };
 
     return (
@@ -145,39 +166,81 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                         p={5}
                                     >
                                         <Grid item xs={6}>
-                                            <VaccineName sidebarOpen />
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <VaccineName sidebarOpen />
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <ReminderCheck sidebarOpen />
+                                            </Box>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <MuiPickersUtilsProvider
-                                                utils={DateFnsUtils}
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
                                             >
-                                                <Grid
-                                                    container
-                                                    justify="space-around"
+                                                <MuiPickersUtilsProvider
+                                                    utils={DateFnsUtils}
                                                 >
-                                                    <KeyboardDatePicker
-                                                        name="date"
-                                                        disableToolbar
-                                                        variant="inline"
-                                                        format="dd/MM/yyyy"
-                                                        margin="dense"
-                                                        id="date-picker"
-                                                        label="Date"
-                                                        value={selectedDate}
-                                                        onChange={
-                                                            handleDateChange
+                                                    <Grid
+                                                        container
+                                                        
+                                                    >
+                                                        <KeyboardDatePicker
+                                                            name="date"
+                                                            disableToolbar
+                                                            variant="inline"
+                                                            format="dd/MM/yyyy"
+                                                            margin="dense"
+                                                            id="date-picker"
+                                                            label="Date"
+                                                            value={selectedDate}
+                                                            onChange={
+                                                                handleDateChange
+                                                            }
+                                                            KeyboardButtonProps={{
+                                                                "aria-label":
+                                                                    "change date"
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                </MuiPickersUtilsProvider>
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <form
+                                                    className={
+                                                        classes.inputField
+                                                    }
+                                                >
+                                                    <TextField
+                                                        multiline
+                                                        value={values.multiline}
+                                                        onChange={handleChange(
+                                                            "multiline"
+                                                        )}
+                                                        className={
+                                                            classes.textField
                                                         }
-                                                        KeyboardButtonProps={{
-                                                            "aria-label":
-                                                                "change date"
-                                                        }}
+                                                        margin="normal"
+                                                        label="Comment"
                                                     />
-                                                </Grid>
-                                            </MuiPickersUtilsProvider>
+                                                </form>
+                                            </Box>
                                         </Grid>
                                     </Box>
                                 </Grid>
-                                <ReminderCheck sidebarOpen />
                                 <Grid item xs={12}>
                                     <Box
                                         display="flex"
