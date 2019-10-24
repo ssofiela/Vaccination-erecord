@@ -192,7 +192,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 >
                                                     <Grid
                                                         container
-                                                        
+
                                                     >
                                                         <KeyboardDatePicker
                                                             name="date"

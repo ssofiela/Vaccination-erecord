@@ -109,7 +109,7 @@ const VaccineName: React.FC<MainProps> = () => {
     }, []);
 
     const handleChange = (name: keyof typeof state) => (
-        event: React.ChangeEvent<{ value: unknown }>
+        event: React.ChangeEvent<{ value: string }>
     ) => {
         setState({
             ...state,
@@ -127,7 +127,7 @@ const VaccineName: React.FC<MainProps> = () => {
             <Select
                 native
                 value={state.vaccine}
-                onChange={handleChange("vaccine")}
+                onChange={() => handleChange("vaccine")}
                 labelWidth={labelWidth}
                 name="vaccine"
                 inputProps={{

@@ -32,7 +32,6 @@ const ReminderCheck: React.FC<MainProps> = () => {
                 name="position"
                 value={value}
                 onChange={handleChange}
-                row
             >
                 <FormControlLabel
                     value="Yes"
