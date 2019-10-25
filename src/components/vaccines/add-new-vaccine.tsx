@@ -101,8 +101,13 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(
         new Date("2019-10-16")
     );
+    const [errors, setErrors] = React.useState<string[]>([]);
+
     const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
+        const index = errors.indexOf("date");
+        console.log("index", index, errors);
+        errors[index] = "";
     };
 
     const [name, setName] = React.useState<string>("");
@@ -115,15 +120,19 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
         setComment(event);
     };
 
-    const [errors, setErrors] = React.useState<string[]>([]);
-
     const handleErrors = (error: string): void => {
-        setErrors(error);
-        console.log("error", error);
+        errors.push(error);
+        console.log("error", error, errors);
     };
 
+    const deleteNameError = () => {
+        const index = errors.indexOf("name");
+        console.log("name", index, errors);
+        errors[index] = "";
+    }
     return (
         <Paper square className={classes.container}>
+            {console.log("here")}
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -197,6 +206,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                         error={""}
                                                     />
                                                 )}
+                                                {deleteNameError()}
                                             </Box>
                                             <Box
                                                 display="flex"
@@ -227,27 +237,56 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 <MuiPickersUtilsProvider
                                                     utils={DateFnsUtils}
                                                 >
-                                                    <Grid container>
-                                                        <KeyboardDatePicker
-                                                            name="date"
-                                                            disableToolbar
-                                                            variant="inline"
-                                                            format="dd/MM/yyyy"
-                                                            margin="dense"
-                                                            id="date-picker"
-                                                            label="Date"
-                                                            value={selectedDate}
-                                                            onChange={event =>
-                                                                handleDateChange(
-                                                                    event
-                                                                )
-                                                            }
-                                                            KeyboardButtonProps={{
-                                                                "aria-label":
-                                                                    "change date"
-                                                            }}
-                                                        />
-                                                    </Grid>
+                                                    {errors.includes("date") ? (
+                                                        <Grid container>
+                                                            <KeyboardDatePicker
+                                                                name="date"
+                                                                disableToolbar
+                                                                variant="inline"
+                                                                format="dd/MM/yyyy"
+                                                                margin="dense"
+                                                                id="date-picker"
+                                                                label="Date*"
+                                                                color="red"
+                                                                value={
+                                                                    selectedDate
+                                                                }
+                                                                onChange={event =>
+                                                                    handleDateChange(
+                                                                        event
+                                                                    )
+                                                                }
+                                                                KeyboardButtonProps={{
+                                                                    "aria-label":
+                                                                        "change date"
+                                                                }}
+                                                            />
+                                                        </Grid>
+                                                    ) : (
+                                                        <Grid container>
+                                                            <KeyboardDatePicker
+                                                                name="date"
+                                                                disableToolbar
+                                                                variant="inline"
+                                                                format="dd/MM/yyyy"
+                                                                margin="dense"
+                                                                id="date-picker"
+                                                                label="Date*"
+                                                                value={
+                                                                    selectedDate
+                                                                }
+                                                                onChange={event =>
+                                                                    handleDateChange(
+                                                                        event
+                                                                    )
+                                                                }
+                                                                KeyboardButtonProps={{
+                                                                    "aria-label":
+                                                                        "change date"
+                                                                }}
+                                                            />
+                                                        </Grid>
+                                                    )}
                                                 </MuiPickersUtilsProvider>
                                             </Box>
                                             <Box
@@ -293,12 +332,20 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             onClick={() => {
                                                 if (name === "") {
                                                     handleErrors("name");
-                                                } else if (
+                                                }
+                                                if (
                                                     emailReminder === "Yes" &&
                                                     email === ""
                                                 ) {
                                                     handleErrors("email");
-                                                } else {
+                                                }
+                                                if (
+                                                    selectedDate.toString() ===
+                                                    "Wed Oct 16 2019 03:00:00 GMT+0300 (Itä-Euroopan kesäaika)"
+                                                ) {
+                                                    handleErrors("date");
+                                                }
+                                                if (!errors.includes("name") && !errors.includes("email") && !errors.includes("date")) {
                                                     props.history.push("/");
                                                     form.resetForm();
                                                 }

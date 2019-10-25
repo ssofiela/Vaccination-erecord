@@ -128,13 +128,23 @@ const VaccineName: React.FC<MainProps> = props => {
 
     return (
         <div>
-            {props.error === "name" ? (
-                <p className={classes.errorMessage}>Vaccine name is missing</p>
-            ) : null}
             <FormControl className={classes.formControl}>
-                <InputLabel ref={inputLabel} htmlFor="outlined-age-native-simple">
-                    Select vaccine
-                </InputLabel>
+                {props.error === "name" ? (
+                    <InputLabel
+                        className={classes.errorMessage}
+                        ref={inputLabel}
+                        htmlFor="outlined-age-native-simple"
+                    >
+                        Select vaccine*
+                    </InputLabel>
+                ) : (
+                    <InputLabel
+                        ref={inputLabel}
+                        htmlFor="outlined-age-native-simple"
+                    >
+                        Select vaccine*
+                    </InputLabel>
+                )}
                 <Select
                     native
                     value={state.vaccine}
