@@ -9,6 +9,7 @@ interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
     updateName: any;
+    error: string;
 }
 
 interface VaccineOptions {
@@ -21,6 +22,7 @@ function createVaccineOptions(options: string[]): VaccineOptions[] {
 }
 
 const vaccineOptions = [
+    "",
     "Cholera",
     "Hib",
     "dtap",
@@ -90,6 +92,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         menu: {
             width: 200
+        },
+        errorMessage: {
+            color: "red"
         }
     })
 );
@@ -122,28 +127,34 @@ const VaccineName: React.FC<MainProps> = props => {
     const mappedVaccineOptions = createVaccineOptions(vaccineOptions);
 
     return (
-        <FormControl className={classes.formControl}>
-            <InputLabel ref={inputLabel} htmlFor="outlined-age-native-simple">
-                Select vaccine
-            </InputLabel>
-            <Select
-                native
-                value={state.vaccine}
-                onChange={handleChange("vaccine")}
-                labelWidth={labelWidth}
-                name="vaccine"
-                inputProps={{
-                    name: "vaccine",
-                    id: "outlined-age-native-simple"
-                }}
-            >
-                {mappedVaccineOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </Select>
-        </FormControl>
+        <div>
+            {props.error === "name" ? (
+                <p className={classes.errorMessage}>Vaccine name is missing</p>
+            ) : null}
+            <FormControl className={classes.formControl}>
+                <InputLabel ref={inputLabel} htmlFor="outlined-age-native-simple">
+                    Select vaccine
+                </InputLabel>
+                <Select
+                    native
+                    value={state.vaccine}
+                    onChange={handleChange("vaccine")}
+                    labelWidth={labelWidth}
+                    name="vaccine"
+                    required
+                    inputProps={{
+                        name: "vaccine",
+                        id: "outlined-age-native-simple"
+                    }}
+                >
+                    {mappedVaccineOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </Select>
+            </FormControl>
+        </div>
     );
 };
 

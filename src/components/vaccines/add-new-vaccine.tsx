@@ -115,6 +115,13 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
         setComment(event);
     };
 
+    const [errors, setErrors] = React.useState<string[]>([]);
+
+    const handleErrors = (error: string): void => {
+        setErrors(error);
+        console.log("error", error);
+    };
+
     return (
         <Paper square className={classes.container}>
             <Grid container>
@@ -169,12 +176,27 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 flexDirection="row"
                                                 p={5}
                                             >
-                                                <VaccineName
-                                                    sidebarOpen
-                                                    updateName={(
-                                                        name: string
-                                                    ): void => setName(name)}
-                                                />
+                                                {errors.includes("name") ? (
+                                                    <VaccineName
+                                                        sidebarOpen
+                                                        updateName={(
+                                                            name: string
+                                                        ): void =>
+                                                            setName(name)
+                                                        }
+                                                        error={"name"}
+                                                    />
+                                                ) : (
+                                                    <VaccineName
+                                                        sidebarOpen
+                                                        updateName={(
+                                                            name: string
+                                                        ): void =>
+                                                            setName(name)
+                                                        }
+                                                        error={""}
+                                                    />
+                                                )}
                                             </Box>
                                             <Box
                                                 display="flex"
@@ -215,7 +237,11 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                             id="date-picker"
                                                             label="Date"
                                                             value={selectedDate}
-                                                            onChange={event => handleDateChange(event)}
+                                                            onChange={event =>
+                                                                handleDateChange(
+                                                                    event
+                                                                )
+                                                            }
                                                             KeyboardButtonProps={{
                                                                 "aria-label":
                                                                     "change date"
@@ -265,8 +291,17 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             variant="contained"
                                             color="primary"
                                             onClick={() => {
-                                                props.history.push("/");
-                                                form.resetForm();
+                                                if (name === "") {
+                                                    handleErrors("name");
+                                                } else if (
+                                                    emailReminder === "Yes" &&
+                                                    email === ""
+                                                ) {
+                                                    handleErrors("email");
+                                                } else {
+                                                    props.history.push("/");
+                                                    form.resetForm();
+                                                }
                                             }}
                                         >
                                             Save
