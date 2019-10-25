@@ -8,6 +8,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
+    updateName: any;
 }
 
 interface VaccineOptions {
@@ -93,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const VaccineName: React.FC<MainProps> = () => {
+const VaccineName: React.FC<MainProps> = props => {
     const classes = useStyles();
 
     const [state, setState] = React.useState<{
@@ -115,6 +116,7 @@ const VaccineName: React.FC<MainProps> = () => {
             ...state,
             [name]: event.target.value
         });
+        props.updateName(event.target.value);
     };
 
     const mappedVaccineOptions = createVaccineOptions(vaccineOptions);
@@ -127,7 +129,7 @@ const VaccineName: React.FC<MainProps> = () => {
             <Select
                 native
                 value={state.vaccine}
-                onChange={() => handleChange("vaccine")}
+                onChange={handleChange("vaccine")}
                 labelWidth={labelWidth}
                 name="vaccine"
                 inputProps={{

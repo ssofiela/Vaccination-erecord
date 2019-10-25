@@ -8,9 +8,11 @@ import FormLabel from "@material-ui/core/FormLabel";
 interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
+    updateEmailRemainder: any;
+    updateEmail: any;
 }
 
-const ReminderCheck: React.FC<MainProps> = () => {
+const ReminderCheck: React.FC<MainProps> = props => {
     const [value, setValue] = React.useState("female");
     const [email, setEmail] = React.useState("No");
 
@@ -19,9 +21,15 @@ const ReminderCheck: React.FC<MainProps> = () => {
     };
     const addInput = (): void => {
         setEmail("Yes");
+        props.updateEmailRemainder("Yes");
     };
     const removeInput = (): void => {
         setEmail("No");
+        props.updateEmailRemainder("No");
+    };
+
+    const changeEmail = (email: string): void => {
+        props.updateEmail(email);
     };
 
     return (
@@ -47,6 +55,9 @@ const ReminderCheck: React.FC<MainProps> = () => {
                                 type="text"
                                 name="email"
                                 defaultValue={"email@example.com"}
+                                onChange={event =>
+                                    changeEmail(event.target.value)
+                                }
                             />
                         </label>
                     </form>

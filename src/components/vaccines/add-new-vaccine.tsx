@@ -89,10 +89,6 @@ const StyledButton = withStyles((theme: Theme) =>
     })
 )(Button);
 
-interface State {
-    multiline: string;
-}
-
 /**
  * Adding a new vaccine entry
  * @param props
@@ -105,16 +101,18 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(
         new Date("2019-10-16")
     );
-    const handleDateChange = (date: Date | null): void => {
+    const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
     };
 
-    const [values, setValues] = React.useState<State>({
-        multiline: ""
-    });
+    const [name, setName] = React.useState<string>("");
+    const [emailReminder, setReminder] = React.useState<string>("No");
+    const [email, setEmail] = React.useState<string>("");
 
-    const handleChange = (name: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({ ...values, [name]: event.target.value });
+    const [comment, setComment] = React.useState<string>("");
+
+    const handleComment = (event: string): void => {
+        setComment(event);
     };
 
     return (
@@ -171,14 +169,31 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 flexDirection="row"
                                                 p={5}
                                             >
-                                                <VaccineName sidebarOpen />
+                                                <VaccineName
+                                                    sidebarOpen
+                                                    updateName={(
+                                                        name: string
+                                                    ): void => setName(name)}
+                                                />
                                             </Box>
                                             <Box
                                                 display="flex"
                                                 flexDirection="row"
                                                 p={5}
                                             >
-                                                <ReminderCheck sidebarOpen />
+                                                <ReminderCheck
+                                                    sidebarOpen
+                                                    updateEmailRemainder={(
+                                                        emailReminder: string
+                                                    ): void =>
+                                                        setReminder(
+                                                            emailReminder
+                                                        )
+                                                    }
+                                                    updateEmail={(
+                                                        email: string
+                                                    ): void => setEmail(email)}
+                                                />
                                             </Box>
                                         </Grid>
                                         <Grid item xs={6}>
@@ -190,10 +205,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 <MuiPickersUtilsProvider
                                                     utils={DateFnsUtils}
                                                 >
-                                                    <Grid
-                                                        container
-
-                                                    >
+                                                    <Grid container>
                                                         <KeyboardDatePicker
                                                             name="date"
                                                             disableToolbar
@@ -203,9 +215,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                             id="date-picker"
                                                             label="Date"
                                                             value={selectedDate}
-                                                            onChange={
-                                                                handleDateChange
-                                                            }
+                                                            onChange={event => handleDateChange(event)}
                                                             KeyboardButtonProps={{
                                                                 "aria-label":
                                                                     "change date"
@@ -226,10 +236,12 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 >
                                                     <TextField
                                                         multiline
-                                                        value={values.multiline}
-                                                        onChange={handleChange(
-                                                            "multiline"
-                                                        )}
+                                                        onChange={event =>
+                                                            handleComment(
+                                                                event.target
+                                                                    .value
+                                                            )
+                                                        }
                                                         className={
                                                             classes.textField
                                                         }
