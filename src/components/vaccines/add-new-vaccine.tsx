@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
@@ -101,13 +101,12 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(
         new Date("2019-10-16")
     );
-    const [errors, setErrors] = React.useState<string[]>([]);
+    const [errors, setErrors] = React.useState<any>([]);
 
     const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
         const index = errors.indexOf("date");
-        console.log("index", index, errors);
-        errors[index] = "";
+        errors.splice(index, 1);
     };
 
     const [name, setName] = React.useState<string>("");
@@ -121,18 +120,23 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
 
     const handleErrors = (error: string): void => {
-        errors.push(error);
-        console.log("error", error, errors);
+        if (!errors.includes(error)) {
+            setErrors([
+                ...errors,
+                {
+                    value: error
+                }
+            ]);
+        }
     };
 
-    const deleteNameError = () => {
+    const deleteNameError = (): void => {
         const index = errors.indexOf("name");
-        console.log("name", index, errors);
-        errors[index] = "";
-    }
+        errors.splice(index, 1);
+    };
     return (
         <Paper square className={classes.container}>
-            {console.log("here")}
+            {console.log("errors in render: ", errors)}
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -247,7 +251,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                                 margin="dense"
                                                                 id="date-picker"
                                                                 label="Date*"
-                                                                color="red"
                                                                 value={
                                                                     selectedDate
                                                                 }
@@ -266,6 +269,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                         <Grid container>
                                                             <KeyboardDatePicker
                                                                 name="date"
+                                                                autoOk
                                                                 disableToolbar
                                                                 variant="inline"
                                                                 format="dd/MM/yyyy"
@@ -345,7 +349,11 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 ) {
                                                     handleErrors("date");
                                                 }
-                                                if (!errors.includes("name") && !errors.includes("email") && !errors.includes("date")) {
+                                                if (
+                                                    !errors.includes("name") &&
+                                                    !errors.includes("email") &&
+                                                    !errors.includes("date")
+                                                ) {
                                                     props.history.push("/");
                                                     form.resetForm();
                                                 }

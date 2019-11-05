@@ -130,39 +130,60 @@ const VaccineName: React.FC<MainProps> = props => {
         <div>
             <FormControl className={classes.formControl}>
                 {props.error === "name" ? (
-                    <InputLabel
-                        className={classes.errorMessage}
-                        ref={inputLabel}
-                        htmlFor="outlined-age-native-simple"
-                    >
-                        Select vaccine*
-                    </InputLabel>
+                    <div>
+                        <InputLabel
+                            className={classes.errorMessage}
+                            ref={inputLabel}
+                            htmlFor="outlined-age-native-simple"
+                        >
+                            Select vaccine*
+                        </InputLabel>
+                        <Select
+                            native
+                            error
+                            value={state.vaccine}
+                            onChange={handleChange("vaccine")}
+                            labelWidth={labelWidth}
+                            name="vaccine"
+                            inputProps={{
+                                name: "vaccine",
+                                id: "outlined-age-native-simple"
+                            }}
+                        >
+                            {mappedVaccineOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
                 ) : (
-                    <InputLabel
-                        ref={inputLabel}
-                        htmlFor="outlined-age-native-simple"
-                    >
-                        Select vaccine*
-                    </InputLabel>
+                    <div>
+                        <InputLabel
+                            ref={inputLabel}
+                            htmlFor="outlined-age-native-simple"
+                        >
+                            Select vaccine*
+                        </InputLabel>
+                        <Select
+                            native
+                            value={state.vaccine}
+                            onChange={handleChange("vaccine")}
+                            labelWidth={labelWidth}
+                            name="vaccine"
+                            inputProps={{
+                                name: "vaccine",
+                                id: "outlined-age-native-simple"
+                            }}
+                        >
+                            {mappedVaccineOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
                 )}
-                <Select
-                    native
-                    value={state.vaccine}
-                    onChange={handleChange("vaccine")}
-                    labelWidth={labelWidth}
-                    name="vaccine"
-                    required
-                    inputProps={{
-                        name: "vaccine",
-                        id: "outlined-age-native-simple"
-                    }}
-                >
-                    {mappedVaccineOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </Select>
             </FormControl>
         </div>
     );
