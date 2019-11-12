@@ -1,15 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-
-interface HomeProps {}
+import { Typography } from "@material-ui/core";
 
 /**
  * Landing page of the site
  * @param props
  * @constructor
  */
-const Home: React.FC<HomeProps> = props => {
-    return <div>{props.children}</div>;
+const Home: React.FC = (props) => {
+    return (
+        <div>
+            {props.children}
+            <Typography>TODO</Typography>
+        </div>
+    );
 };
 
 Home.propTypes = {

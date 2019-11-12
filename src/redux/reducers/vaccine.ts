@@ -1,6 +1,7 @@
+import { Action } from "redux-actions";
+
 import { ACTION_TYPES } from "../../utils/constants";
 import { SetVaccinePayload } from "../actions/vaccine";
-import { Action } from "redux-actions";
 
 export type VaccineState = {
     name: string;
