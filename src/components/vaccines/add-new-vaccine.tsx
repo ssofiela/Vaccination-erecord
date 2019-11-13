@@ -2,7 +2,6 @@ import React from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import "date-fns";
 import Grid from "@material-ui/core/Grid";
 import {
     createStyles,
@@ -13,10 +12,7 @@ import {
     withStyles
 } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { Formik } from "formik";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -86,7 +82,7 @@ interface VaccineOptions {
 }
 
 function createVaccineOptions(options: string[]): VaccineOptions[] {
-    return options.map(option => ({ value: option, label: option }));
+    return options.map((option) => ({ value: option, label: option }));
 }
 
 const vaccineOptions = [
@@ -138,13 +134,11 @@ const vaccineOptions = [
  * @param props
  * @constructor
  */
-const NewVaccine: React.FC<RouteComponentProps> = props => {
+const NewVaccine: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-        new Date("2019-10-16")
-    );
+    const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date("2019-10-16"));
     const handleDateChange = (date: Date | null): void => {
         setSelectedDate(date);
     };
@@ -158,7 +152,9 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const inputLabel = React.useRef<HTMLLabelElement>(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
     React.useEffect(() => {
-        setLabelWidth(inputLabel.current!.offsetWidth);
+        if (inputLabel.current) {
+            setLabelWidth(inputLabel.current.offsetWidth);
+        }
     }, []);
 
     const handleChange = (name: keyof typeof state) => (
@@ -184,20 +180,11 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                         p={1.5}
                     >
                         <Breadcrumbs aria-label="breadcrumb">
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                href="/"
-                                className={classes.link}
-                            >
+                            <Link variant="body1" color="inherit" href="/" className={classes.link}>
                                 <StyledColorize />
                                 My vaccines
                             </Link>
-                            <Typography
-                                color="inherit"
-                                variant="body1"
-                                className={classes.link}
-                            >
+                            <Typography color="inherit" variant="body1" className={classes.link}>
                                 New vaccine entry
                             </Typography>
                         </Breadcrumbs>
@@ -212,18 +199,12 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                             alert("Form is validated! Submitting the form...");
                         }}
                     >
-                        {form => (
+                        {(form) => (
                             <Grid container>
                                 <Grid item xs={12}>
-                                    <Box
-                                        display="flex"
-                                        flexDirection="row"
-                                        p={5}
-                                    >
+                                    <Box display="flex" flexDirection="row" p={5}>
                                         <Grid item xs={6}>
-                                            <FormControl
-                                                className={classes.formControl}
-                                            >
+                                            <FormControl className={classes.formControl}>
                                                 <InputLabel
                                                     ref={inputLabel}
                                                     htmlFor="outlined-age-native-simple"
@@ -233,42 +214,28 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 <Select
                                                     native
                                                     value={state.vaccine}
-                                                    onChange={handleChange(
-                                                        "vaccine"
-                                                    )}
+                                                    onChange={handleChange("vaccine")}
                                                     labelWidth={labelWidth}
                                                     name="vaccine"
                                                     inputProps={{
                                                         name: "vaccine",
-                                                        id:
-                                                            "outlined-age-native-simple"
+                                                        id: "outlined-age-native-simple"
                                                     }}
                                                 >
-                                                    {mappedVaccineOptions.map(
-                                                        option => (
-                                                            <option
-                                                                key={
-                                                                    option.value
-                                                                }
-                                                                value={
-                                                                    option.value
-                                                                }
-                                                            >
-                                                                {option.label}
-                                                            </option>
-                                                        )
-                                                    )}
+                                                    {mappedVaccineOptions.map((option) => (
+                                                        <option
+                                                            key={option.value}
+                                                            value={option.value}
+                                                        >
+                                                            {option.label}
+                                                        </option>
+                                                    ))}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <MuiPickersUtilsProvider
-                                                utils={DateFnsUtils}
-                                            >
-                                                <Grid
-                                                    container
-                                                    justify="space-around"
-                                                >
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <Grid container justify="space-around">
                                                     <KeyboardDatePicker
                                                         name="date"
                                                         disableToolbar
@@ -278,12 +245,9 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                         id="date-picker"
                                                         label="Date"
                                                         value={selectedDate}
-                                                        onChange={
-                                                            handleDateChange
-                                                        }
+                                                        onChange={handleDateChange}
                                                         KeyboardButtonProps={{
-                                                            "aria-label":
-                                                                "change date"
+                                                            "aria-label": "change date"
                                                         }}
                                                     />
                                                 </Grid>
@@ -303,7 +267,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             variant="contained"
                                             color="primary"
                                             onClick={() => {
-                                                props.history.push("/");
+                                                props.history.push("/vaccines");
                                                 form.resetForm();
                                             }}
                                         >
@@ -313,7 +277,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             variant="outlined"
                                             color="primary"
                                             onClick={() => {
-                                                props.history.push("/");
+                                                props.history.push("/vaccines");
                                                 form.resetForm();
                                             }}
                                         >
