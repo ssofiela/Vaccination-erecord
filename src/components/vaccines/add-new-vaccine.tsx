@@ -378,7 +378,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 }
                                                 handleErrors(newErrors);
                                                 if (!invalid) {
-                                                    props.history.push("/");
+                                                    props.history.push("/vaccines");
                                                     form.resetForm();
                                                 }
                                             }}
