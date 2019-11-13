@@ -90,11 +90,6 @@ const StyledButton = withStyles((theme: Theme) =>
     })
 )(Button);
 
-/**
- * Adding a new vaccine entry
- * @param props
- * @constructor
- */
 const NewVaccine: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
     const theme = useTheme();
