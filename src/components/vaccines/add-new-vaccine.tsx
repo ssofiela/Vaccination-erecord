@@ -97,14 +97,21 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const [selectedDate, setSelectedDate] = React.useState<string>(
         moment().format()
     );
+    const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(
+        moment().format()
+    );
     const [errors, setErrors] = React.useState<string[]>([]);
 
     const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
         setErrors(errors.filter(err => err != "date"));
     };
+    const handleBoosterDateChange = (date: Date | null | any): void => {
+        setSelectedBoosterDate(date);
+    };
 
     const [name, setName] = React.useState<string>("");
+    const [nickName, setNickName] = React.useState<string>("");
     const [emailReminder, setReminder] = React.useState<string>("No");
     const [email, setEmail] = React.useState<string>("");
 
@@ -189,7 +196,45 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                             ? "name"
                                                             : ""
                                                     }
+                                                    type={"name"}
                                                 />
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <MuiPickersUtilsProvider
+                                                    utils={DateFnsUtils}
+                                                >
+                                                    <Grid container>
+                                                        <KeyboardDatePicker
+                                                            name="date"
+                                                            autoOk={
+                                                                !errors.includes(
+                                                                    "date"
+                                                                )
+                                                            }
+                                                            error={errors.includes("date")}
+                                                            disableToolbar
+                                                            variant="inline"
+                                                            format="dd/MM/yyyy"
+                                                            margin="dense"
+                                                            id="date-picker"
+                                                            label="Date*"
+                                                            value={selectedDate}
+                                                            onChange={event =>
+                                                                handleDateChange(
+                                                                    event
+                                                                )
+                                                            }
+                                                            KeyboardButtonProps={{
+                                                                "aria-label":
+                                                                    "change date"
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                </MuiPickersUtilsProvider>
                                             </Box>
                                             <Box
                                                 display="flex"
@@ -217,6 +262,26 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 flexDirection="row"
                                                 p={5}
                                             >
+                                                <VaccineName
+                                                    sidebarOpen
+                                                    updateName={(
+                                                        name: string
+                                                    ): void => {
+                                                        setNickName(name);
+                                                    }}
+                                                    error={
+                                                        errors.includes("name")
+                                                            ? "name"
+                                                            : ""
+                                                    }
+                                                    type={"nickname"}
+                                                />
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
                                                 <MuiPickersUtilsProvider
                                                     utils={DateFnsUtils}
                                                 >
@@ -228,16 +293,15 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                                     "date"
                                                                 )
                                                             }
-                                                            error={errors.includes("date")}
                                                             disableToolbar
                                                             variant="inline"
                                                             format="dd/MM/yyyy"
                                                             margin="dense"
                                                             id="date-picker"
-                                                            label="Date*"
-                                                            value={selectedDate}
+                                                            label="Booster date"
+                                                            value={selectedBoosterDate}
                                                             onChange={event =>
-                                                                handleDateChange(
+                                                                handleBoosterDateChange(
                                                                     event
                                                                 )
                                                             }

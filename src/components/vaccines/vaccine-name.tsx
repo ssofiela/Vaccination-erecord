@@ -11,6 +11,7 @@ interface MainProps {
     children?: React.ReactNode;
     updateName: any;
     error: string;
+    type: string;
 }
 
 interface VaccineOptions {
@@ -129,10 +130,10 @@ const VaccineName: React.FC<MainProps> = props => {
 
     return (
         <div>
-            <HelpOutlineOutlinedIcon />
+            {/*<HelpOutlineOutlinedIcon /> */}
             <FormControl className={classes.formControl}>
                 <div>
-                    {props.error === "name" ? (
+                    {props.error === "name" && props.type === "name" ? (
                         <InputLabel
                             className={classes.errorMessage}
                             ref={inputLabel}
@@ -145,11 +146,11 @@ const VaccineName: React.FC<MainProps> = props => {
                             ref={inputLabel}
                             htmlFor="outlined-age-native-simple"
                         >
-                            Select vaccine*
+                            {props.type === "name" ? "Select vaccine*" : "Select abbreviation"}
                         </InputLabel>
                     )}
                     <Select
-                        error={props.error === "name"}
+                        error={props.error === "name" && props.type === "name"}
                         native
                         value={state.vaccine}
                         onChange={handleChange("vaccine")}
