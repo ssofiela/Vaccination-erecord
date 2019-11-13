@@ -3,9 +3,8 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import React from "react";
 import "date-fns";
-import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
+import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { Label } from "@material-ui/icons";
 
 interface MainProps {
     sidebarOpen: boolean;

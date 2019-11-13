@@ -107,7 +107,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
         setErrors(errors.filter(err => err != "date"));
-        console.log("date change", errors);
     };
 
     const [name, setName] = React.useState<string>("");
@@ -126,12 +125,10 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
 
     const deleteNameError = (): void => {
-        console.log("name delete");
         setErrors(errors.filter(err => err != "name"));
     };
     return (
         <Paper square className={classes.container}>
-            {console.log("errors in render: ", errors)}
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -298,7 +295,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             variant="contained"
                                             color="primary"
                                             onClick={() => {
-                                                console.log("fdsfsd", selectedDate.toString().split("T")[0], moment().format().split("T")[0])
                                                 const invalidName: boolean =
                                                     name === "";
                                                 const invalidEmail: boolean =
