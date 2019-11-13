@@ -3,7 +3,9 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import React from "react";
 import "date-fns";
+import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { Label } from "@material-ui/icons";
 
 interface MainProps {
     sidebarOpen: boolean;
@@ -128,9 +130,10 @@ const VaccineName: React.FC<MainProps> = props => {
 
     return (
         <div>
+            <HelpOutlineOutlinedIcon />
             <FormControl className={classes.formControl}>
-                {props.error === "name" ? (
-                    <div>
+                <div>
+                    {props.error === "name" ? (
                         <InputLabel
                             className={classes.errorMessage}
                             ref={inputLabel}
@@ -138,52 +141,32 @@ const VaccineName: React.FC<MainProps> = props => {
                         >
                             Select vaccine*
                         </InputLabel>
-                        <Select
-                            native
-                            error
-                            value={state.vaccine}
-                            onChange={handleChange("vaccine")}
-                            labelWidth={labelWidth}
-                            name="vaccine"
-                            inputProps={{
-                                name: "vaccine",
-                                id: "outlined-age-native-simple"
-                            }}
-                        >
-                            {mappedVaccineOptions.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </Select>
-                    </div>
-                ) : (
-                    <div>
+                    ) : (
                         <InputLabel
                             ref={inputLabel}
                             htmlFor="outlined-age-native-simple"
                         >
                             Select vaccine*
                         </InputLabel>
-                        <Select
-                            native
-                            value={state.vaccine}
-                            onChange={handleChange("vaccine")}
-                            labelWidth={labelWidth}
-                            name="vaccine"
-                            inputProps={{
-                                name: "vaccine",
-                                id: "outlined-age-native-simple"
-                            }}
-                        >
-                            {mappedVaccineOptions.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </Select>
-                    </div>
-                )}
+                    )}
+                    <Select
+                        error={props.error === "name"}
+                        native
+                        value={state.vaccine}
+                        onChange={handleChange("vaccine")}
+                        name="vaccine"
+                        inputProps={{
+                            name: "vaccine",
+                            id: "outlined-age-native-simple"
+                        }}
+                    >
+                        {mappedVaccineOptions.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </Select>
+                </div>
             </FormControl>
         </div>
     );

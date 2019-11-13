@@ -38,7 +38,7 @@ const ReminderCheck: React.FC<MainProps> = props => {
             <RadioGroup
                 aria-label="position"
                 name="position"
-                value={value}
+                value={email}
                 onChange={handleChange}
             >
                 <FormControlLabel
@@ -51,10 +51,10 @@ const ReminderCheck: React.FC<MainProps> = props => {
                 {email == "Yes" ? (
                     <form>
                         <label>
+                            email:
                             <input
                                 type="text"
                                 name="email"
-                                defaultValue={"email@example.com"}
                                 onChange={event =>
                                     changeEmail(event.target.value)
                                 }
@@ -63,6 +63,7 @@ const ReminderCheck: React.FC<MainProps> = props => {
                     </form>
                 ) : null}
                 <FormControlLabel
+
                     value="No"
                     control={<Radio color="primary" />} // Changes color to "#f9f9f9"
                     label="No"
