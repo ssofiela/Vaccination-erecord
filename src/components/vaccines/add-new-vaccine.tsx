@@ -1,7 +1,6 @@
 import React from "react";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
+import "date-fns";
 import Grid from "@material-ui/core/Grid";
 import {
     createStyles,
@@ -12,7 +11,10 @@ import {
     withStyles
 } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker
+} from "@material-ui/pickers";
 import { Formik } from "formik";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -21,7 +23,11 @@ import Colorize from "@material-ui/icons/Colorize";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
-import Select from "@material-ui/core/Select";
+import VaccineName from "./vaccine-name";
+import moment from "moment";
+
+import ReminderCheck from "./reminder-check";
+import { TextField } from "@material-ui/core";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -53,6 +59,14 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         menu: {
             width: 200
+        },
+        inputField: {
+            display: "flex",
+            flexWrap: "wrap"
+        },
+        textField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1)
         }
     })
 );
@@ -76,98 +90,45 @@ const StyledButton = withStyles((theme: Theme) =>
     })
 )(Button);
 
-interface VaccineOptions {
-    value: string;
-    label: string;
-}
-
-function createVaccineOptions(options: string[]): VaccineOptions[] {
-    return options.map((option) => ({ value: option, label: option }));
-}
-
-const vaccineOptions = [
-    "Cholera",
-    "Hib",
-    "dtap",
-    "dT",
-    "BCG",
-    "Typ",
-    "TBE",
-    "JEV",
-    "Influ",
-    "HBV",
-    "HAV",
-    "HABV",
-    "MPR",
-    "IPV",
-    "Rabies",
-    "Rota",
-    "Var",
-    "YFV",
-    "HPV",
-    "DTaP-IPV",
-    "DTaP-IPV-Hib",
-    "DTaP-IPV-Hib-HBV",
-    "dtap-IPV",
-    "PanInflu",
-    "Men",
-    "Pneu",
-    "Diphteria",
-    "DT",
-    "DTP",
-    "Tetanus",
-    "Morbilli",
-    "Parotitis",
-    "Rubella",
-    "Variola",
-    "DT-IPV",
-    "Pestis",
-    "Anthrax",
-    "Pertussis",
-    "DTP-Hib",
-    "DTP-IPV",
-    "MPRV"
-];
-
-/**
- * Adding a new vaccine entry
- * @param props
- * @constructor
- */
-const NewVaccine: React.FC<RouteComponentProps> = (props) => {
+const NewVaccine: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date("2019-10-16"));
-    const handleDateChange = (date: Date | null): void => {
+    const [selectedDate, setSelectedDate] = React.useState<string>(
+        moment().format()
+    );
+    const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(
+        moment().format()
+    );
+    const [errors, setErrors] = React.useState<string[]>([]);
+
+    const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
+        setErrors(errors.filter(err => err != "date"));
+    };
+    const handleBoosterDateChange = (date: Date | null | any): void => {
+        setSelectedBoosterDate(date);
     };
 
-    const [state, setState] = React.useState<{
-        vaccine: string | number;
-    }>({
-        vaccine: ""
-    });
+    const [name, setName] = React.useState<string>("");
+    const [nickName, setNickName] = React.useState<string>("");
+    const [emailReminder, setReminder] = React.useState<string>("No");
+    const [email, setEmail] = React.useState<string>("");
 
-    const inputLabel = React.useRef<HTMLLabelElement>(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
-    React.useEffect(() => {
-        if (inputLabel.current) {
-            setLabelWidth(inputLabel.current.offsetWidth);
-        }
-    }, []);
+    const [comment, setComment] = React.useState<string>("");
 
-    const handleChange = (name: keyof typeof state) => (
-        event: React.ChangeEvent<{ value: unknown }>
-    ) => {
-        setState({
-            ...state,
-            [name]: event.target.value
-        });
+    const handleComment = (event: string): void => {
+        setComment(event);
     };
 
-    const mappedVaccineOptions = createVaccineOptions(vaccineOptions);
+    const handleErrors = (newErrors: string[]): void => {
+        console.log([...errors, ...newErrors]);
+        setErrors([...errors, ...newErrors]);
+    };
 
+    const deleteNameError = (): void => {
+        setErrors(errors.filter(err => err != "name"));
+    };
     return (
         <Paper square className={classes.container}>
             <Grid container>
@@ -180,11 +141,20 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                         p={1.5}
                     >
                         <Breadcrumbs aria-label="breadcrumb">
-                            <Link variant="body1" color="inherit" href="/" className={classes.link}>
+                            <Link
+                                variant="body1"
+                                color="inherit"
+                                href="/"
+                                className={classes.link}
+                            >
                                 <StyledColorize />
                                 My vaccines
                             </Link>
-                            <Typography color="inherit" variant="body1" className={classes.link}>
+                            <Typography
+                                color="inherit"
+                                variant="body1"
+                                className={classes.link}
+                            >
                                 New vaccine entry
                             </Typography>
                         </Breadcrumbs>
@@ -199,59 +169,176 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                             alert("Form is validated! Submitting the form...");
                         }}
                     >
-                        {(form) => (
+                        {form => (
                             <Grid container>
                                 <Grid item xs={12}>
-                                    <Box display="flex" flexDirection="row" p={5}>
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        p={5}
+                                    >
                                         <Grid item xs={6}>
-                                            <FormControl className={classes.formControl}>
-                                                <InputLabel
-                                                    ref={inputLabel}
-                                                    htmlFor="outlined-age-native-simple"
-                                                >
-                                                    Select vaccine
-                                                </InputLabel>
-                                                <Select
-                                                    native
-                                                    value={state.vaccine}
-                                                    onChange={handleChange("vaccine")}
-                                                    labelWidth={labelWidth}
-                                                    name="vaccine"
-                                                    inputProps={{
-                                                        name: "vaccine",
-                                                        id: "outlined-age-native-simple"
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <VaccineName
+                                                    sidebarOpen
+                                                    updateName={(
+                                                        name: string
+                                                    ): void => {
+                                                        deleteNameError();
+                                                        setName(name);
                                                     }}
+                                                    error={
+                                                        errors.includes("name")
+                                                            ? "name"
+                                                            : ""
+                                                    }
+                                                    type={"name"}
+                                                />
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <MuiPickersUtilsProvider
+                                                    utils={DateFnsUtils}
                                                 >
-                                                    {mappedVaccineOptions.map((option) => (
-                                                        <option
-                                                            key={option.value}
-                                                            value={option.value}
-                                                        >
-                                                            {option.label}
-                                                        </option>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
+                                                    <Grid container>
+                                                        <KeyboardDatePicker
+                                                            name="date"
+                                                            autoOk={
+                                                                !errors.includes(
+                                                                    "date"
+                                                                )
+                                                            }
+                                                            error={errors.includes("date")}
+                                                            disableToolbar
+                                                            variant="inline"
+                                                            format="dd/MM/yyyy"
+                                                            margin="dense"
+                                                            id="date-picker"
+                                                            label="Date*"
+                                                            value={selectedDate}
+                                                            onChange={event =>
+                                                                handleDateChange(
+                                                                    event
+                                                                )
+                                                            }
+                                                            KeyboardButtonProps={{
+                                                                "aria-label":
+                                                                    "change date"
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                </MuiPickersUtilsProvider>
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <ReminderCheck
+                                                    sidebarOpen
+                                                    updateEmailRemainder={(
+                                                        emailReminder: string
+                                                    ): void =>
+                                                        setReminder(
+                                                            emailReminder
+                                                        )
+                                                    }
+                                                    updateEmail={(
+                                                        email: string
+                                                    ): void => setEmail(email)}
+                                                />
+                                            </Box>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                                <Grid container justify="space-around">
-                                                    <KeyboardDatePicker
-                                                        name="date"
-                                                        disableToolbar
-                                                        variant="inline"
-                                                        format="dd/MM/yyyy"
-                                                        margin="dense"
-                                                        id="date-picker"
-                                                        label="Date"
-                                                        value={selectedDate}
-                                                        onChange={handleDateChange}
-                                                        KeyboardButtonProps={{
-                                                            "aria-label": "change date"
-                                                        }}
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <VaccineName
+                                                    sidebarOpen
+                                                    updateName={(
+                                                        name: string
+                                                    ): void => {
+                                                        setNickName(name);
+                                                    }}
+                                                    error={
+                                                        errors.includes("name")
+                                                            ? "name"
+                                                            : ""
+                                                    }
+                                                    type={"nickname"}
+                                                />
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <MuiPickersUtilsProvider
+                                                    utils={DateFnsUtils}
+                                                >
+                                                    <Grid container>
+                                                        <KeyboardDatePicker
+                                                            name="date"
+                                                            autoOk={
+                                                                !errors.includes(
+                                                                    "date"
+                                                                )
+                                                            }
+                                                            disableToolbar
+                                                            variant="inline"
+                                                            format="dd/MM/yyyy"
+                                                            margin="dense"
+                                                            id="date-picker"
+                                                            label="Booster date"
+                                                            value={selectedBoosterDate}
+                                                            onChange={event =>
+                                                                handleBoosterDateChange(
+                                                                    event
+                                                                )
+                                                            }
+                                                            KeyboardButtonProps={{
+                                                                "aria-label":
+                                                                    "change date"
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                </MuiPickersUtilsProvider>
+                                            </Box>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="row"
+                                                p={5}
+                                            >
+                                                <form
+                                                    className={
+                                                        classes.inputField
+                                                    }
+                                                >
+                                                    <TextField
+                                                        multiline
+                                                        onChange={event =>
+                                                            handleComment(
+                                                                event.target
+                                                                    .value
+                                                            )
+                                                        }
+                                                        className={
+                                                            classes.textField
+                                                        }
+                                                        margin="normal"
+                                                        label="Comment"
                                                     />
-                                                </Grid>
-                                            </MuiPickersUtilsProvider>
+                                                </form>
+                                            </Box>
                                         </Grid>
                                     </Box>
                                 </Grid>
@@ -267,8 +354,33 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                             variant="contained"
                                             color="primary"
                                             onClick={() => {
-                                                props.history.push("/vaccines");
-                                                form.resetForm();
+                                                const invalidName: boolean =
+                                                    name === "";
+                                                const invalidEmail: boolean =
+                                                    emailReminder === "Yes" &&
+                                                    email === "";
+                                                const invalidDate: boolean =
+                                                    selectedDate.toString().split("T")[0] ===
+                                                    moment().format().split("T")[0];
+                                                const invalid: boolean =
+                                                    invalidName ||
+                                                    invalidEmail ||
+                                                    invalidDate;
+                                                let newErrors: string[] = [];
+                                                if (invalidName) {
+                                                    newErrors.push("name");
+                                                }
+                                                if (invalidEmail) {
+                                                    newErrors.push("email");
+                                                }
+                                                if (invalidDate) {
+                                                    newErrors.push("date");
+                                                }
+                                                handleErrors(newErrors);
+                                                if (!invalid) {
+                                                    props.history.push("/vaccines");
+                                                    form.resetForm();
+                                                }
                                             }}
                                         >
                                             Save
@@ -277,7 +389,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                             variant="outlined"
                                             color="primary"
                                             onClick={() => {
-                                                props.history.push("/vaccines");
+                                                props.history.push("/");
                                                 form.resetForm();
                                             }}
                                         >
