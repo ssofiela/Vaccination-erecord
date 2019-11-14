@@ -25,6 +25,8 @@ import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import VaccineName from "./vaccine-name";
 import moment from "moment";
+import MobileNewVaccine from "./add-new-vaccine-mobile"
+
 
 import ReminderCheck from "./reminder-check";
 import { TextField } from "@material-ui/core";
@@ -129,280 +131,295 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     const deleteNameError = (): void => {
         setErrors(errors.filter(err => err != "name"));
     };
+
+    const moobile = (): boolean => {
+        const isMobile = window.innerWidth <= 500;
+        if (isMobile){
+            return true
+        } else {
+            return false
+        }
+    };
     return (
-        <Paper square className={classes.container}>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Box
-                        className={classes.header}
-                        display="flex"
-                        flexDirection="row"
-                        bgcolor={theme.palette.secondary.main}
-                        p={1.5}
-                    >
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                href="/"
-                                className={classes.link}
+        <div>
+            { moobile() ?
+                <MobileNewVaccine />
+            : (
+                <Paper square className={classes.container}>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Box
+                                className={classes.header}
+                                display="flex"
+                                flexDirection="row"
+                                bgcolor={theme.palette.secondary.main}
+                                p={1.5}
                             >
-                                <StyledColorize />
-                                My vaccines
-                            </Link>
-                            <Typography
-                                color="inherit"
-                                variant="body1"
-                                className={classes.link}
-                            >
-                                New vaccine entry
-                            </Typography>
-                        </Breadcrumbs>
-                    </Box>
-                </Grid>
-            </Grid>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Formik
-                        initialValues={{ vaccine: "", date: "" }}
-                        onSubmit={() => {
-                            alert("Form is validated! Submitting the form...");
-                        }}
-                    >
-                        {form => (
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Box
-                                        display="flex"
-                                        flexDirection="row"
-                                        p={5}
+                                <Breadcrumbs aria-label="breadcrumb">
+                                    <Link
+                                        variant="body1"
+                                        color="inherit"
+                                        href="/"
+                                        className={classes.link}
                                     >
-                                        <Grid item xs={6}>
+                                        <StyledColorize />
+                                        My vaccines
+                                    </Link>
+                                    <Typography
+                                        color="inherit"
+                                        variant="body1"
+                                        className={classes.link}
+                                    >
+                                        New vaccine entry
+                                    </Typography>
+                                </Breadcrumbs>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Formik
+                                initialValues={{ vaccine: "", date: "" }}
+                                onSubmit={() => {
+                                    alert("Form is validated! Submitting the form...");
+                                }}
+                            >
+                                {form => (
+                                    <Grid container>
+                                        <Grid item xs={12}>
                                             <Box
                                                 display="flex"
                                                 flexDirection="row"
                                                 p={5}
                                             >
-                                                <VaccineName
-                                                    sidebarOpen
-                                                    updateName={(
-                                                        name: string
-                                                    ): void => {
-                                                        deleteNameError();
-                                                        setName(name);
-                                                    }}
-                                                    error={
-                                                        errors.includes("name")
-                                                            ? "name"
-                                                            : ""
-                                                    }
-                                                    type={"name"}
-                                                />
-                                            </Box>
-                                            <Box
-                                                display="flex"
-                                                flexDirection="row"
-                                                p={5}
-                                            >
-                                                <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
-                                                >
-                                                    <Grid container>
-                                                        <KeyboardDatePicker
-                                                            name="date"
-                                                            autoOk={
-                                                                !errors.includes(
-                                                                    "date"
-                                                                )
-                                                            }
-                                                            error={errors.includes("date")}
-                                                            disableToolbar
-                                                            variant="inline"
-                                                            format="dd/MM/yyyy"
-                                                            margin="dense"
-                                                            id="date-picker"
-                                                            label="Date*"
-                                                            value={selectedDate}
-                                                            onChange={event =>
-                                                                handleDateChange(
-                                                                    event
-                                                                )
-                                                            }
-                                                            KeyboardButtonProps={{
-                                                                "aria-label":
-                                                                    "change date"
+                                                <Grid item xs={6}>
+                                                    <Box
+                                                        display="flex"
+                                                        flexDirection="row"
+                                                        p={5}
+                                                    >
+                                                        <VaccineName
+                                                            sidebarOpen
+                                                            updateName={(
+                                                                name: string
+                                                            ): void => {
+                                                                deleteNameError();
+                                                                setName(name);
                                                             }}
+                                                            error={
+                                                                errors.includes("name")
+                                                                    ? "name"
+                                                                    : ""
+                                                            }
+                                                            type={"name"}
                                                         />
-                                                    </Grid>
-                                                </MuiPickersUtilsProvider>
-                                            </Box>
-                                            <Box
-                                                display="flex"
-                                                flexDirection="row"
-                                                p={5}
-                                            >
-                                                <ReminderCheck
-                                                    sidebarOpen
-                                                    updateEmailRemainder={(
-                                                        emailReminder: string
-                                                    ): void =>
-                                                        setReminder(
-                                                            emailReminder
-                                                        )
-                                                    }
-                                                    updateEmail={(
-                                                        email: string
-                                                    ): void => setEmail(email)}
-                                                />
+                                                    </Box>
+                                                    <Box
+                                                        display="flex"
+                                                        flexDirection="row"
+                                                        p={5}
+                                                    >
+                                                        <MuiPickersUtilsProvider
+                                                            utils={DateFnsUtils}
+                                                        >
+                                                            <Grid container>
+                                                                <KeyboardDatePicker
+                                                                    name="date"
+                                                                    autoOk={
+                                                                        !errors.includes(
+                                                                            "date"
+                                                                        )
+                                                                    }
+                                                                    error={errors.includes("date")}
+                                                                    disableToolbar
+                                                                    variant="inline"
+                                                                    format="dd/MM/yyyy"
+                                                                    margin="dense"
+                                                                    id="date-picker"
+                                                                    label="Date*"
+                                                                    value={selectedDate}
+                                                                    onChange={event =>
+                                                                        handleDateChange(
+                                                                            event
+                                                                        )
+                                                                    }
+                                                                    KeyboardButtonProps={{
+                                                                        "aria-label":
+                                                                            "change date"
+                                                                    }}
+                                                                />
+                                                            </Grid>
+                                                        </MuiPickersUtilsProvider>
+                                                    </Box>
+                                                    <Box
+                                                        display="flex"
+                                                        flexDirection="row"
+                                                        p={5}
+                                                    >
+                                                        <ReminderCheck
+                                                            sidebarOpen
+                                                            updateEmailRemainder={(
+                                                                emailReminder: string
+                                                            ): void =>
+                                                                setReminder(
+                                                                    emailReminder
+                                                                )
+                                                            }
+                                                            updateEmail={(
+                                                                email: string
+                                                            ): void => setEmail(email)}
+                                                        />
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Box
+                                                        display="flex"
+                                                        flexDirection="row"
+                                                        p={5}
+                                                    >
+                                                        <VaccineName
+                                                            sidebarOpen
+                                                            updateName={(
+                                                                name: string
+                                                            ): void => {
+                                                                setNickName(name);
+                                                            }}
+                                                            error={
+                                                                errors.includes("name")
+                                                                    ? "name"
+                                                                    : ""
+                                                            }
+                                                            type={"nickname"}
+                                                        />
+                                                    </Box>
+                                                    <Box
+                                                        display="flex"
+                                                        flexDirection="row"
+                                                        p={5}
+                                                    >
+                                                        <MuiPickersUtilsProvider
+                                                            utils={DateFnsUtils}
+                                                        >
+                                                            <Grid container>
+                                                                <KeyboardDatePicker
+                                                                    name="date"
+                                                                    autoOk={
+                                                                        !errors.includes(
+                                                                            "date"
+                                                                        )
+                                                                    }
+                                                                    disableToolbar
+                                                                    variant="inline"
+                                                                    format="dd/MM/yyyy"
+                                                                    margin="dense"
+                                                                    id="date-picker"
+                                                                    label="Booster date"
+                                                                    value={selectedBoosterDate}
+                                                                    onChange={event =>
+                                                                        handleBoosterDateChange(
+                                                                            event
+                                                                        )
+                                                                    }
+                                                                    KeyboardButtonProps={{
+                                                                        "aria-label":
+                                                                            "change date"
+                                                                    }}
+                                                                />
+                                                            </Grid>
+                                                        </MuiPickersUtilsProvider>
+                                                    </Box>
+                                                    <Box
+                                                        display="flex"
+                                                        flexDirection="row"
+                                                        p={5}
+                                                    >
+                                                        <form
+                                                            className={
+                                                                classes.inputField
+                                                            }
+                                                        >
+                                                            <TextField
+                                                                multiline
+                                                                onChange={event =>
+                                                                    handleComment(
+                                                                        event.target
+                                                                            .value
+                                                                    )
+                                                                }
+                                                                className={
+                                                                    classes.textField
+                                                                }
+                                                                margin="normal"
+                                                                label="Comment"
+                                                            />
+                                                        </form>
+                                                    </Box>
+                                                </Grid>
                                             </Box>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12}>
                                             <Box
                                                 display="flex"
                                                 flexDirection="row"
-                                                p={5}
+                                                justifyContent="flex-end"
+                                                bgcolor="#f9f9f9"
+                                                p={2}
                                             >
-                                                <VaccineName
-                                                    sidebarOpen
-                                                    updateName={(
-                                                        name: string
-                                                    ): void => {
-                                                        setNickName(name);
+                                                <StyledButton
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        const invalidName: boolean =
+                                                            name === "";
+                                                        const invalidEmail: boolean =
+                                                            emailReminder === "Yes" &&
+                                                            email === "";
+                                                        const invalidDate: boolean =
+                                                            selectedDate.toString().split("T")[0] ===
+                                                            moment().format().split("T")[0];
+                                                        const invalid: boolean =
+                                                            invalidName ||
+                                                            invalidEmail ||
+                                                            invalidDate;
+                                                        let newErrors: string[] = [];
+                                                        if (invalidName) {
+                                                            newErrors.push("name");
+                                                        }
+                                                        if (invalidEmail) {
+                                                            newErrors.push("email");
+                                                        }
+                                                        if (invalidDate) {
+                                                            newErrors.push("date");
+                                                        }
+                                                        handleErrors(newErrors);
+                                                        if (!invalid) {
+                                                            props.history.push("/vaccines");
+                                                            form.resetForm();
+                                                        }
                                                     }}
-                                                    error={
-                                                        errors.includes("name")
-                                                            ? "name"
-                                                            : ""
-                                                    }
-                                                    type={"nickname"}
-                                                />
-                                            </Box>
-                                            <Box
-                                                display="flex"
-                                                flexDirection="row"
-                                                p={5}
-                                            >
-                                                <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
                                                 >
-                                                    <Grid container>
-                                                        <KeyboardDatePicker
-                                                            name="date"
-                                                            autoOk={
-                                                                !errors.includes(
-                                                                    "date"
-                                                                )
-                                                            }
-                                                            disableToolbar
-                                                            variant="inline"
-                                                            format="dd/MM/yyyy"
-                                                            margin="dense"
-                                                            id="date-picker"
-                                                            label="Booster date"
-                                                            value={selectedBoosterDate}
-                                                            onChange={event =>
-                                                                handleBoosterDateChange(
-                                                                    event
-                                                                )
-                                                            }
-                                                            KeyboardButtonProps={{
-                                                                "aria-label":
-                                                                    "change date"
-                                                            }}
-                                                        />
-                                                    </Grid>
-                                                </MuiPickersUtilsProvider>
-                                            </Box>
-                                            <Box
-                                                display="flex"
-                                                flexDirection="row"
-                                                p={5}
-                                            >
-                                                <form
-                                                    className={
-                                                        classes.inputField
-                                                    }
+                                                    Save
+                                                </StyledButton>
+                                                <StyledButton
+                                                    variant="outlined"
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        props.history.push("/");
+                                                        form.resetForm();
+                                                    }}
                                                 >
-                                                    <TextField
-                                                        multiline
-                                                        onChange={event =>
-                                                            handleComment(
-                                                                event.target
-                                                                    .value
-                                                            )
-                                                        }
-                                                        className={
-                                                            classes.textField
-                                                        }
-                                                        margin="normal"
-                                                        label="Comment"
-                                                    />
-                                                </form>
+                                                    Cancel
+                                                </StyledButton>
                                             </Box>
                                         </Grid>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box
-                                        display="flex"
-                                        flexDirection="row"
-                                        justifyContent="flex-end"
-                                        bgcolor="#f9f9f9"
-                                        p={2}
-                                    >
-                                        <StyledButton
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => {
-                                                const invalidName: boolean =
-                                                    name === "";
-                                                const invalidEmail: boolean =
-                                                    emailReminder === "Yes" &&
-                                                    email === "";
-                                                const invalidDate: boolean =
-                                                    selectedDate.toString().split("T")[0] ===
-                                                    moment().format().split("T")[0];
-                                                const invalid: boolean =
-                                                    invalidName ||
-                                                    invalidEmail ||
-                                                    invalidDate;
-                                                let newErrors: string[] = [];
-                                                if (invalidName) {
-                                                    newErrors.push("name");
-                                                }
-                                                if (invalidEmail) {
-                                                    newErrors.push("email");
-                                                }
-                                                if (invalidDate) {
-                                                    newErrors.push("date");
-                                                }
-                                                handleErrors(newErrors);
-                                                if (!invalid) {
-                                                    props.history.push("/vaccines");
-                                                    form.resetForm();
-                                                }
-                                            }}
-                                        >
-                                            Save
-                                        </StyledButton>
-                                        <StyledButton
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={() => {
-                                                props.history.push("/");
-                                                form.resetForm();
-                                            }}
-                                        >
-                                            Cancel
-                                        </StyledButton>
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        )}
-                    </Formik>
-                </Grid>
-            </Grid>
-        </Paper>
+                                    </Grid>
+                                )}
+                            </Formik>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            )}
+        </div>
     );
 };
 
