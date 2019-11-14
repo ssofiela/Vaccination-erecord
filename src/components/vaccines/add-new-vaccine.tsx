@@ -126,7 +126,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
 
     const handleErrors = (newErrors: string[]): void => {
-        console.log([...errors, ...newErrors]);
         setErrors([...errors, ...newErrors]);
     };
 
@@ -135,7 +134,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
 
     const moobile = (): boolean => {
-        const isMobile = window.outerWidth <= 670;
+        const isMobile = window.outerWidth <= 640;
         return isMobile;
     };
     const handleMobile = (): void => {
@@ -438,7 +437,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                     display="flex"
                                     flexDirection="row"
                                     p={5}
-                                    minWidth={200}
                                 >
                                     <MuiPickersUtilsProvider
                                         utils={DateFnsUtils}
@@ -517,7 +515,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                     display="flex"
                                     flexDirection="row"
                                     p={5}
-                                    minWidth={200}
                                 >
                                     <MuiPickersUtilsProvider
                                         utils={DateFnsUtils}
