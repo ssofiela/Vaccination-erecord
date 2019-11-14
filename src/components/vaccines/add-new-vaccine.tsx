@@ -159,7 +159,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                     <Link
                                         variant="body1"
                                         color="inherit"
-                                        href="/"
+                                        href="/vaccines"
                                         className={classes.link}
                                     >
                                         <StyledColorize />
