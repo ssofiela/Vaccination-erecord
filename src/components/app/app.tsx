@@ -6,7 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { Header } from "../header";
 import { Main } from "../main";
 import { Home } from "../home";
-import { Login } from "../login";
+import { Login, Register } from "../login";
 import { VaccineList, NewVaccine } from "../vaccines";
 import { Settings } from "../settings"
 import { FrequentlyAskedQuestions } from "../frequently-asked-questions";
@@ -21,6 +21,7 @@ class App extends React.Component {
                     <Switch>
                         <Route key="home" exact path="/" component={Home} />
                         <Route key="login" path="/login" component={Login} />
+                        <Route key="register" path="/register" component={Register} />
                         <Route key="vaccines" exact path="/vaccines" component={VaccineList} />
                         <Route key="addVaccine" path="/add-vaccine" component={NewVaccine} />
                         <Route key="settings" path="/settings" component={Settings} />

@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Login: React.FC<RouteComponentProps> = props => {
+const Register: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
 
     const [error, setError] = React.useState<boolean>(false);
@@ -50,7 +50,7 @@ const Login: React.FC<RouteComponentProps> = props => {
         <Container component="main" maxWidth="xs">
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Register
                 </Typography>
                 <form className={classes.form} noValidate>
                     <TextField
@@ -90,8 +90,8 @@ const Login: React.FC<RouteComponentProps> = props => {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link onClick={() => props.history.push("/register")}  variant="h6">
-                                {"Don't have an account? Sign Up"}
+                            <Link variant="h6">
+                                {"Have an account already? Sign In"}
                             </Link>
                         </Grid>
                     </Grid>
@@ -101,7 +101,7 @@ const Login: React.FC<RouteComponentProps> = props => {
     );
 };
 
-export default Login;
+export default Register;
 
 
 
