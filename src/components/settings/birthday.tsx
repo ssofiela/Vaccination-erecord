@@ -8,6 +8,7 @@ interface MainProps {
     children?: React.ReactNode;
     updateBirthday: any;
     editStatus: boolean;
+    type: string;
 }
 
 
@@ -60,13 +61,21 @@ const Birthday: React.FC<MainProps> = props => {
         1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
         2003, 2004, 2005, 2006, 2007, 2008, 2010, 2011, 2012, 1013, 2014, 2015, 2016, 2017, 2018, 2019
     ];
-    const mappedBirthdayOptions = createBirthdayOptions(birthdayOptions);
+    const reminderOptions = [
+        1, 2, 3, 4, 5, 6
+    ];
+    let mappedBirthdayOptions;
+    if(props.type === "birthday") {
+        mappedBirthdayOptions = createBirthdayOptions(birthdayOptions);
+    } else {
+        mappedBirthdayOptions = createBirthdayOptions(reminderOptions);
+    }
 
     return (
         <div>
             {!props.editStatus ?
                 <div>
-                    <InputLabel id="demo-simple-select-label">Birthday</InputLabel>
+                    <InputLabel id="demo-simple-select-label">{props.type}</InputLabel>
                     <TextField
                         value={birthday.birthday}
                         id="standard-basic"
@@ -76,7 +85,7 @@ const Birthday: React.FC<MainProps> = props => {
                 </div>
                 :
                 <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-label">Birthday</InputLabel>
+                    <InputLabel id="demo-simple-select-label">{props.type}</InputLabel>
                     <Select
                         id="demo-simple-select"
                         value={birthday.birthday}

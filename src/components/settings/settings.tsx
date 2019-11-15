@@ -19,6 +19,7 @@ import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import ReminderCheck from "../vaccines/reminder-check"
 import Birthday from "./birthday";
+import { InputLabel, TextField } from "@material-ui/core";
 
 
 const StyledColorize = styled(Colorize)({
@@ -58,6 +59,27 @@ const useStyles = makeStyles((theme: Theme) =>
         textField: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1)
+        },
+        dotted: {
+            width: "80%",
+            display: "flex",
+            alignContent: "center",
+            borderWidth: 2,
+            borderColor: theme.palette.secondary.main,
+            borderStyle: "dashed",
+            margin: 30
+        },
+        textField2: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            width: 200,
+        },
+        margin: {
+            marginTop: 10,
+            marginBottom: 10
+        },
+        marginDouble: {
+            marginBottom: 30
         }
     })
 );
@@ -87,13 +109,12 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     const [errors, setErrors] = React.useState<string[]>([]);
 
-    const [emailReminder, setReminder] = React.useState<string>("No");
-    const [email, setEmail] = React.useState<string>("");
+    const [email, setEmail] = React.useState<string>("email@example.com");
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
+    const [reminder, setReminder] = React.useState<number>(0);
 
     const handleErrors = (newErrors: string[]): void => {
-        console.log([...errors, ...newErrors]);
         setErrors([...errors, ...newErrors]);
     };
 
@@ -126,26 +147,44 @@ const Settings: React.FC<RouteComponentProps> = props => {
                 <Grid item xs={12}>
                     <Box
                         display="flex"
-                        flexDirection="row"
+                        flexDirection="column"
                         p={5}
                     >
-                        <Grid item xs={6}>
-                            <Box
-                                display="flex"
-                                flexDirection="row"
-                                p={5}
-                            >
-                                <Birthday
-                                    sidebarOpen
-                                    updateBirthday={(
-                                        birthday: number
-                                    ): void => {
-                                        setBirthday(birthday)
-                                    }}
-                                    editStatus={editStatus} />
-                            </Box>
-                        </Grid>
+                        <div className={classes.marginDouble}>Personal information</div>
+
+                        <Birthday
+                            sidebarOpen
+                            updateBirthday={(
+                                birthday: number
+                            ): void => {
+                                setBirthday(birthday)
+                            }}
+                            editStatus={editStatus}
+                            type="birthday"
+                        />
+                        <div className={classes.dotted}></div>
+                        <div className={classes.marginDouble}>Reminder settings</div>
+                        <Birthday
+                            sidebarOpen
+                            updateBirthday={(
+                                reminder: number
+                            ): void => {
+                                setReminder(reminder)
+                            }}
+                            editStatus={editStatus}
+                            type="reminder"
+                        />
+                        <InputLabel id="demo-simple-select-label" className={classes.margin}>Email address for reminder</InputLabel>
+                        <TextField
+                            className={classes.textField2}
+                            value={email}
+                            onChange={event =>
+                                setEmail(event.target.value)
+                            }
+                            disabled={!editStatus}
+                        />
                     </Box>
+
                     <Grid item xs={12}>
                         <Box
                             display="flex"
@@ -170,19 +209,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         variant="contained"
                                         color="primary"
                                         onClick={() => {
-                                            const invalidEmail: boolean =
-                                                emailReminder === "Yes" &&
-                                                email === "";
-                                            const invalid: boolean =
-                                                invalidEmail;
-                                            let newErrors: string[] = [];
-                                            if (invalidEmail) {
-                                                newErrors.push("email");
-                                            }
-                                            handleErrors(newErrors);
-                                            if (!invalid) {
                                                 props.history.push("/settings");
-                                            }
                                         }}
                                     >
                                         Save
