@@ -34,13 +34,41 @@ const useStyles = makeStyles(theme => ({
 const Register: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
 
-    const [error, setError] = React.useState<boolean>(false);
-    const handleBack = (): void => {
-        const valid = true; /* Check that email address match with the password */
-        if (valid) {
-            props.history.push("home");
-        } else {
-            setError(true)
+    const [errors, setErrors] = React.useState<string[]>([]);
+    const [email, setEmail] = React.useState<string>("");
+    const [password, setPassword] = React.useState<string>("");
+
+    const handleErrors = (newErrors: string[]): void => {
+        setErrors(newErrors);
+    };
+
+/*
+DO: jonkunlainen infolappu
+At least 6
+English Upper Case
+English Lower Case
+Numerals
+Non-Alphanumeric (Punctuation marks and other symbols)
+*/
+
+
+/* Check that email address and the password are valid */
+    const handleInputs = (): void => {
+        let errors = [];
+        const expression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!expression.test(email)) {
+            errors.push("email");
+        }
+
+        const symbols = /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/
+        if (password.length < 6 || password.toLocaleLowerCase() === password.toLocaleUpperCase() ||
+            !password.match(symbols) || !password.match("[0-9]+")) {
+            errors.push("password")
+        }
+        handleErrors(errors);
+        if (errors.length === 0){
+            /* email address and password is correct in here */
+            props.history.push("/home")
         }
 
     };
@@ -62,6 +90,10 @@ const Register: React.FC<RouteComponentProps> = props => {
                         label="Email Address"
                         name="email"
                         autoComplete="email"
+                        helperText={errors.includes("email") && "Invalid email address"}
+                        onChange={event =>
+                            setEmail(event.target.value)
+                        }
                     />
                     <TextField
                         variant="outlined"
@@ -71,20 +103,19 @@ const Register: React.FC<RouteComponentProps> = props => {
                         name="password"
                         label="Password"
                         type="password"
+                        helperText={errors.includes("password") && "Invalid password"}
                         id="password"
                         autoComplete="current-password"
-                        helperText={error && "Incorrect email address or password"}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
+                        onChange={event =>
+                            setPassword(event.target.value)
+                        }
                     />
                     <Button
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={handleBack}
+                        onClick={handleInputs}
                     >
                         Sign In
                     </Button>

@@ -49,7 +49,6 @@ const Header: React.FC<Props> = (props) => {
     };
     const handleLogin = (): void => {
         if (props.userId) {
-            console.log("login")
             props.history.push("/login");
         } else {
             /* Sign out */
