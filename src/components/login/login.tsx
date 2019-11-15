@@ -1,6 +1,6 @@
 import React from "react";
 import "date-fns";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, styled } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -10,6 +10,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { RouteComponentProps,  } from "react-router";
+import Box from "@material-ui/core/Box";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Paper from "@material-ui/core/Paper";
+import Colorize from "@material-ui/core/SvgIcon/SvgIcon";
+import { theme } from "../../utils/theme";
+
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -28,7 +34,31 @@ const useStyles = makeStyles(theme => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+        maxWidth: 100
     },
+    header: {
+        borderLeft: `7px solid ${theme.palette.primary.main}`
+    },
+    container: {
+        margin: theme.spacing(2, 4),
+        overFlowX: "auto",
+    },
+    link: {
+        display: "flex"
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 200
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        maxWidth: 300
+    },
+    sameLine: {
+        flexDirection:"row",
+        display: "flex"
+    }
 }));
 
 const Login: React.FC<RouteComponentProps> = props => {
@@ -45,59 +75,110 @@ const Login: React.FC<RouteComponentProps> = props => {
 
     };
 
+    const StyledColorize = styled(Colorize)({
+        marginRight: "10px"
+    });
+
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                <form className={classes.form} noValidate>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        helperText={error && "Incorrect email address or password"}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={handleBack}
+        <Paper square className={classes.container}>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Box
+                        className={classes.header}
+                        display="flex"
+                        flexDirection="row"
+                        bgcolor={theme.palette.secondary.main}
+                        p={1.5}
                     >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item>
-                            <Link onClick={() => props.history.push("/register")}  variant="h6">
-                                {"Don't have an account? Sign Up"}
+                        <Breadcrumbs aria-label="breadcrumb">
+                            <Link
+                                variant="body1"
+                                color="inherit"
+                                href="/"
+                                className={classes.link}
+                            >
+                                <StyledColorize />
+                                Sign In
                             </Link>
-                        </Grid>
+                        </Breadcrumbs>
+                    </Box>
+                </Grid>
+            </Grid>
+            <form className={classes.form} noValidate>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            p={2}
+                        >
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                className={classes.textField}
+                            />
+                        </Box>
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            p={2}
+                        >
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                className={classes.textField}
+                                helperText={error && "Incorrect email address or password"}
+                            />
+                        </Box>
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            p={2}
+                        >
+                            <Grid container>
+                                <Grid item>
+                                    <div className={classes.sameLine}>
+                                        <div>New to Vaccination eRecord?</div>
+                                        <Link onClick={() => props.history.push("/register")}  variant="h6">
+                                            {"Sign Up"}
+                                        </Link>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            p={5}
+                        >
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                                onClick={handleBack}
+                            >
+                                Sign In
+                            </Button>
+                        </Box>
                     </Grid>
-                </form>
-            </div>
-        </Container>
+                </Grid>
+            </form>
+        </Paper>
     );
 };
 
