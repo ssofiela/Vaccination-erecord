@@ -20,6 +20,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import ReminderCheck from "../vaccines/reminder-check"
 import Birthday from "./birthday";
 import { InputLabel, TextField } from "@material-ui/core";
+import Reminder from "./reminder";
 
 
 const StyledColorize = styled(Colorize)({
@@ -35,12 +36,15 @@ const useStyles = makeStyles((theme: Theme) =>
             margin: theme.spacing(2, 4),
             overFlowX: "auto",
         },
+        mobileContainer: {
+            overFlowX: "auto",
+        },
         link: {
             display: "flex"
         },
         formControl: {
             margin: theme.spacing(1),
-            minWidth: 250
+            minWidth: 200
         },
         selectEmpty: {
             marginTop: theme.spacing(2)
@@ -61,22 +65,20 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: theme.spacing(1)
         },
         dotted: {
-            width: "80%",
-            display: "flex",
-            alignContent: "center",
+            width: "100%",
             borderWidth: 2,
             borderColor: theme.palette.secondary.main,
             borderStyle: "dashed",
-            margin: 30
+            marginTop: 40,
+            marginBottom: 40
         },
         textField2: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
-            width: 200,
+            maxWidth: 200,
         },
         margin: {
-            marginTop: 10,
-            marginBottom: 10
+            marginTop: 30,
         },
         marginDouble: {
             marginBottom: 30
@@ -117,9 +119,26 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const handleErrors = (newErrors: string[]): void => {
         setErrors([...errors, ...newErrors]);
     };
+    const [width, setWidth] = React.useState<number>(0);
+    const moobile = (): boolean => {
+        const isMobile = window.outerWidth <= 450;
+        return isMobile;
+    };
+    const handleMobile = (): void => {
+        if (window.outerWidth !== width) {
+            setWidth(window.outerWidth);
+            moobile();
+        }
+
+    };
+    React.useEffect(() => {
+        window.addEventListener("resize", handleMobile);
+        //It is important to remove EventListener attached on window.
+        () => window.removeEventListener("resize", handleMobile);
+    }, [width]);
 
     return (
-        <Paper square className={classes.container}>
+        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -164,20 +183,23 @@ const Settings: React.FC<RouteComponentProps> = props => {
                         />
                         <div className={classes.dotted}></div>
                         <div className={classes.marginDouble}>Reminder settings</div>
-                        <Birthday
+                        <Reminder
                             sidebarOpen
                             updateBirthday={(
-                                reminder: number
+                                reminder: string
                             ): void => {
                                 setReminder(reminder)
                             }}
                             editStatus={editStatus}
                             type="reminder"
                         />
-                        <InputLabel id="demo-simple-select-label" className={classes.margin}>Email address for reminder</InputLabel>
+                        <InputLabel id="demo-simple-select-label"
+                            className={classes.margin}>
+                            Email address for reminder
+                        </InputLabel>
                         <TextField
                             className={classes.textField2}
-                            value={email}
+                            value={email === "email@example.com" ? "" : email}
                             onChange={event =>
                                 setEmail(event.target.value)
                             }
@@ -209,7 +231,9 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         variant="contained"
                                         color="primary"
                                         onClick={() => {
-                                                props.history.push("/settings");
+                                            /* states -> back-end */
+                                            props.history.push("/settings");
+                                            setEditStatus(false)
                                         }}
                                     >
                                         Save
@@ -218,6 +242,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         variant="outlined"
                                         color="primary"
                                         onClick={() => {
+                                            /* Get the old data from back-end */
                                             props.history.push("/settings");
                                             setEditStatus(false)
                                         }}
