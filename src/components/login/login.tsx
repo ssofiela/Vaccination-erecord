@@ -95,7 +95,7 @@ const Login: React.FC<RouteComponentProps> = props => {
                             <Link
                                 variant="body1"
                                 color="inherit"
-                                href="/"
+                                href="/login"
                                 className={classes.link}
                             >
                                 <StyledColorize />
@@ -163,7 +163,7 @@ const Login: React.FC<RouteComponentProps> = props => {
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={5}
+                            p={3}
                         >
                             <Button
                                 fullWidth
