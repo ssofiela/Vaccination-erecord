@@ -18,6 +18,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import ReminderCheck from "../vaccines/reminder-check"
+import Birthday from "./birthday";
 
 
 const StyledColorize = styled(Colorize)({
@@ -32,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
             margin: theme.spacing(2, 4),
             overFlowX: "auto",
-            minWidth: 800
         },
         link: {
             display: "flex"
@@ -89,6 +89,8 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     const [emailReminder, setReminder] = React.useState<string>("No");
     const [email, setEmail] = React.useState<string>("");
+    const [editStatus, setEditStatus] = React.useState<boolean>(false);
+    const [birthday, setBirthday] = React.useState<number>(0);
 
     const handleErrors = (newErrors: string[]): void => {
         console.log([...errors, ...newErrors]);
@@ -122,88 +124,83 @@ const Settings: React.FC<RouteComponentProps> = props => {
             </Grid>
             <Grid container>
                 <Grid item xs={12}>
-                    <Formik
-                        initialValues={{ vaccine: "", date: "" }}
-                        onSubmit={() => {
-                            alert("Form is validated! Submitting the form...");
-                        }}
+                    <Box
+                        display="flex"
+                        flexDirection="row"
+                        p={5}
                     >
-                        {form => (
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Box
-                                        display="flex"
-                                        flexDirection="row"
-                                        p={5}
+                        <Grid item xs={6}>
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                p={5}
+                            >
+                                <Birthday
+                                    sidebarOpen
+                                    updateBirthday={(
+                                        birthday: number
+                                    ): void => {
+                                        setBirthday(birthday)
+                                    }}
+                                    editStatus={editStatus} />
+                            </Box>
+                        </Grid>
+                    </Box>
+                    <Grid item xs={12}>
+                        <Box
+                            display="flex"
+                            flexDirection="row"
+                            justifyContent={editStatus ? "flex-end" : "flex-start"}
+                            bgcolor="#f9f9f9"
+                            p={2}
+                        >
+                            {!editStatus ?
+                                <StyledButton
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={() => {
+                                        setEditStatus(true)
+                                    }}
+                                >
+                                    Edit
+                                </StyledButton>
+                                :
+                                <div>
+                                    <StyledButton
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => {
+                                            const invalidEmail: boolean =
+                                                emailReminder === "Yes" &&
+                                                email === "";
+                                            const invalid: boolean =
+                                                invalidEmail;
+                                            let newErrors: string[] = [];
+                                            if (invalidEmail) {
+                                                newErrors.push("email");
+                                            }
+                                            handleErrors(newErrors);
+                                            if (!invalid) {
+                                                props.history.push("/settings");
+                                            }
+                                        }}
                                     >
-                                        <Grid item xs={6}>
-                                            <Box
-                                                display="flex"
-                                                flexDirection="row"
-                                                p={5}
-                                            >
-                                                <ReminderCheck
-                                                    sidebarOpen
-                                                    updateEmailRemainder={(
-                                                        emailReminder: string
-                                                    ): void =>
-                                                        setReminder(
-                                                            emailReminder
-                                                        )
-                                                    }
-                                                    updateEmail={(
-                                                        email: string
-                                                    ): void => setEmail(email)}
-                                                />
-                                            </Box>
-                                        </Grid>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box
-                                        display="flex"
-                                        flexDirection="row"
-                                        justifyContent="flex-end"
-                                        bgcolor="#f9f9f9"
-                                        p={2}
+                                        Save
+                                    </StyledButton>
+                                    <StyledButton
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => {
+                                            props.history.push("/settings");
+                                            setEditStatus(false)
+                                        }}
                                     >
-                                        <StyledButton
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => {
-                                                const invalidEmail: boolean =
-                                                    emailReminder === "Yes" &&
-                                                    email === "";
-                                                const invalid: boolean =
-                                                    invalidEmail;
-                                                let newErrors: string[] = [];
-                                                if (invalidEmail) {
-                                                    newErrors.push("email");
-                                                }
-                                                handleErrors(newErrors);
-                                                if (!invalid) {
-                                                    props.history.push("/settings");
-                                                    form.resetForm();
-                                                }
-                                            }}
-                                        >
-                                            Save
-                                        </StyledButton>
-                                        <StyledButton
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={() => {
-                                                props.history.push("/");
-                                                form.resetForm();
-                                            }}
-                                        >
-                                            Cancel
-                                        </StyledButton>
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        )}
-                    </Formik>
+                                        Cancel
+                                    </StyledButton>
+                                </div>
+                            }
+                        </Box>
+                    </Grid>
                 </Grid>
             </Grid>
         </Paper>
