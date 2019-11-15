@@ -8,6 +8,7 @@ import { Main } from "../main";
 import { Home } from "../home";
 import { Login } from "../login";
 import { VaccineList, NewVaccine } from "../vaccines";
+import { Settings } from "../settings"
 import { FrequentlyAskedQuestions } from "../frequently-asked-questions";
 
 class App extends React.Component {
@@ -22,6 +23,7 @@ class App extends React.Component {
                         <Route key="login" path="/login" component={Login} />
                         <Route key="vaccines" exact path="/vaccines" component={VaccineList} />
                         <Route key="addVaccine" path="/add-vaccine" component={NewVaccine} />
+                        <Route key="settings" path="/settings" component={Settings} />
                         <Route
                             key="frequentlyAskedQuestions"
                             path="/frequently-asked-questions"
