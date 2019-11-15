@@ -65,6 +65,7 @@ const Header: React.FC<Props> = (props) => {
                         >
                             <Tab label="Home" value="/" />
                             <Tab label="My vaccines" value="/vaccines" />
+                            <Tab label="Settings" value="/settings" />
                             <Tab label="FAQ" value="/frequently-asked-questions" />
                         </Tabs>
                     </div>
