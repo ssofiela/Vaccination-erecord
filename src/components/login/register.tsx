@@ -1,6 +1,6 @@
 import React from "react";
 import "date-fns";
-import { makeStyles, styled } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
@@ -10,7 +10,6 @@ import Box from "@material-ui/core/Box";
 import { theme } from "../../utils/theme";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Paper from "@material-ui/core/Paper";
-import Colorize from "@material-ui/core/SvgIcon/SvgIcon";
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -31,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(1),
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(3, 2, 2),
         maxWidth: 100
     },
     header: {
@@ -41,24 +40,35 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(2, 4),
         overFlowX: "auto",
     },
+    mobileContainer: {
+        margin: theme.spacing(2, 0),
+        overFlowX: "auto",
+        minWidth: 200
+    },
     link: {
-        display: "flex"
+        display: "flex",
+        fontWeight: "bold"
     },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 200
+        mainWidth: 200
     },
     textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        maxWidth: 300
+        marginLeft: theme.spacing(2),
+        maxWidth: 300,
+        minWidth: 130
     },
     sameLine: {
+        marginLeft: theme.spacing(2),
         flexDirection:"row",
-        display: "flex"
+        display: "flex",
+    },
+    differentLine: {
+        marginLeft: theme.spacing(2),
+        flexDirection: "column"
     },
     margin: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(3),
     },
 }));
 
@@ -71,11 +81,6 @@ const Register: React.FC<RouteComponentProps> = props => {
 
     const handleErrors = (newErrors: string[]): void => {
         setErrors(newErrors);
-    };
-
-
-    const infoButtonPassword = () => {
-        console.log("infor click")
     };
 
 
@@ -107,12 +112,28 @@ const Register: React.FC<RouteComponentProps> = props => {
         }
     };
 
-    const StyledColorize = styled(Colorize)({
-        marginRight: "10px"
-    });
+    const [width, setWidth] = React.useState<number>(0);
+    const moobile = (): boolean => {
+        const isMobile = window.outerWidth <= 450;
+        return isMobile;
+    };
+    const handleMobile = (): void => {
+        if (window.outerWidth !== width) {
+            setWidth(window.outerWidth);
+            moobile();
+        }
+
+    };
+    React.useEffect(() => {
+        window.addEventListener("resize", handleMobile);
+        //It is important to remove EventListener attached on window.
+        () => window.removeEventListener("resize", handleMobile);
+    }, [width]);
+
+
 
     return (
-        <Paper square className={classes.container}>
+        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -129,7 +150,6 @@ const Register: React.FC<RouteComponentProps> = props => {
                                 href="/register"
                                 className={classes.link}
                             >
-                                <StyledColorize />
                                 Sign Up
                             </Link>
                         </Breadcrumbs>
@@ -144,58 +164,53 @@ const Register: React.FC<RouteComponentProps> = props => {
                             flexDirection="row"
                             p={2}
                         >
-
-                            <div className={classes.sameLine}>
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
-                                    className={classes.textField}
-                                    helperText={errors.includes("email") && "Invalid email address"}
-                                    onChange={event =>
-                                        setEmail(event.target.value)
-                                    }
-                                />
-                                <Tooltip title="Email address must be valid (email@example.com)" >
-                                    <IconButton aria-label="help" size="small" className={classes.margin}>
-                                        <HelpOutlineOutlinedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                className={classes.textField}
+                                helperText={errors.includes("email") && "Invalid email address"}
+                                onChange={event =>
+                                    setEmail(event.target.value)
+                                }
+                            />
+                            <Tooltip title="Email address must be valid (email@example.com)" >
+                                <IconButton aria-label="help" size="small" className={classes.margin}>
+                                    <HelpOutlineOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
                         </Box>
                         <Box
                             display="flex"
                             flexDirection="row"
                             p={2}
                         >
-                            <div className={classes.sameLine}>
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    helperText={errors.includes("password") && "Invalid password"}
-                                    id="password"
-                                    autoComplete="current-password"
-                                    className={classes.textField}
-                                    onChange={event =>
-                                        setPassword(event.target.value)
-                                    }
-                                />
-                                <Tooltip title="Password must include: length must be more than 6, upper case, lower case, numerals and other symbol." >
-                                    <IconButton onClick={infoButtonPassword} aria-label="delete" className={classes.margin} size="small">
-                                        <HelpOutlineOutlinedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                helperText={errors.includes("password") && "Invalid password"}
+                                id="password"
+                                autoComplete="current-password"
+                                className={classes.textField}
+                                onChange={event =>
+                                    setPassword(event.target.value)
+                                }
+                            />
+                            <Tooltip title="Password must include: length must be more than 6, upper case, lower case, numerals and other symbol." >
+                                <IconButton aria-label="delete" className={classes.margin} size="small">
+                                    <HelpOutlineOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
                         </Box>
                         <Box
                             display="flex"
@@ -204,9 +219,9 @@ const Register: React.FC<RouteComponentProps> = props => {
                         >
                             <Grid container>
                                 <Grid item>
-                                    <div className={classes.sameLine}>
+                                    <div className={moobile() ? classes.differentLine : classes.sameLine}>
                                         <div>Already have an account?</div>
-                                        <Link onClick={() => props.history.push("/login")}  variant="h6">
+                                        <Link onClick={() => props.history.push("/login")} >
                                             {"Sign In"}
                                         </Link>
                                     </div>

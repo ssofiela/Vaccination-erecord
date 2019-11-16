@@ -3,12 +3,8 @@ import "date-fns";
 import { makeStyles, styled } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import { RouteComponentProps,  } from "react-router";
 import Box from "@material-ui/core/Box";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -33,7 +29,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(1),
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(2, 2, 2),
         maxWidth: 100
     },
     header: {
@@ -43,21 +39,22 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(2, 4),
         overFlowX: "auto",
     },
+    mobileContainer: {
+        margin: theme.spacing(2, 0),
+        overFlowX: "auto"
+    },
     link: {
-        display: "flex"
+        display: "flex",
+        fontWeight: "bold"
     },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 200
     },
     textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
         maxWidth: 300
-    },
-    sameLine: {
-        flexDirection:"row",
-        display: "flex"
     }
 }));
 
@@ -74,14 +71,28 @@ const Login: React.FC<RouteComponentProps> = props => {
         }
 
     };
+    const [width, setWidth] = React.useState<number>(0);
+    const moobile = (): boolean => {
+        const isMobile = window.outerWidth <= 450;
+        return isMobile;
+    };
+    const handleMobile = (): void => {
+        if (window.outerWidth !== width) {
+            setWidth(window.outerWidth);
+            moobile();
+        }
 
-    const StyledColorize = styled(Colorize)({
-        marginRight: "10px"
-    });
+    };
+    React.useEffect(() => {
+        window.addEventListener("resize", handleMobile);
+        //It is important to remove EventListener attached on window.
+        () => window.removeEventListener("resize", handleMobile);
+    }, [width]);
+
 
 
     return (
-        <Paper square className={classes.container}>
+        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -95,10 +106,8 @@ const Login: React.FC<RouteComponentProps> = props => {
                             <Link
                                 variant="body1"
                                 color="inherit"
-                                href="/login"
                                 className={classes.link}
                             >
-                                <StyledColorize />
                                 Sign In
                             </Link>
                         </Breadcrumbs>
@@ -151,10 +160,10 @@ const Login: React.FC<RouteComponentProps> = props => {
                         >
                             <Grid container>
                                 <Grid item>
-                                    <div className={classes.sameLine}>
-                                        <div>New to Vaccination eRecord?</div>
-                                        <Link onClick={() => props.history.push("/register")}  variant="h6">
-                                            {"Sign Up"}
+                                    <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                                        <div>New to Vaccination eRecord? </div>
+                                        <Link onClick={() => props.history.push("/register")} >
+                                            {" Sign Up"}
                                         </Link>
                                     </div>
                                 </Grid>

@@ -36,7 +36,8 @@ const StyledColorize = styled(Colorize)({
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         content: {
-          padding: "-64px -24px -24px !important"
+            margin: theme.spacing(2, 0),
+            overFlowX: "auto",
         },
         header: {
             borderLeft: `7px solid ${theme.palette.primary.main}`

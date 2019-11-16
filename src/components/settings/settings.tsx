@@ -10,14 +10,12 @@ import {
     useTheme,
     withStyles
 } from "@material-ui/core/styles";
-import { Formik } from "formik";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Colorize from "@material-ui/icons/Colorize";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
-import ReminderCheck from "../vaccines/reminder-check"
 import Birthday from "./birthday";
 import { InputLabel, TextField } from "@material-ui/core";
 import Reminder from "./reminder";
@@ -37,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
             overFlowX: "auto",
         },
         mobileContainer: {
+            margin: theme.spacing(2, 0),
             overFlowX: "auto",
         },
         link: {
