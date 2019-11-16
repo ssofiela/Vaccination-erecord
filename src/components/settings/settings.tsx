@@ -22,6 +22,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
+import CreateIcon from '@material-ui/icons/Create';
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -114,7 +116,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
     const theme = useTheme();
 
-
+    const [emailError, setEmailError] = React.useState<boolean>(false);
     const [email, setEmail] = React.useState<string>("email@example.com");
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
@@ -141,6 +143,16 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const StyledSettings = styled(SettingsIcon)({
         marginRight: "10px"
     });
+
+    const StyledCreate = styled(CreateIcon)({
+        marginRight: "10px"
+    });
+
+    const checkEmail = (): boolean => {
+        const expression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        setEmailError(!expression.test(email));
+        return !expression.test(email)
+    };
 
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
@@ -206,6 +218,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             >
                                 <div>
                                     <TextField
+                                        error={emailError}
                                         variant="outlined"
                                         margin="normal"
                                         id="email"
@@ -261,6 +274,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         setEditStatus(true)
                                     }}
                                 >
+                                    <StyledCreate />
                                     Edit
                                 </StyledButton>
                                 :
@@ -270,8 +284,11 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         color="primary"
                                         onClick={() => {
                                             /* states -> back-end */
-                                            props.history.push("/settings");
-                                            setEditStatus(false)
+                                            const value = checkEmail();
+                                            if (!value) {
+                                                props.history.push("/settings");
+                                                setEditStatus(false)
+                                            }
                                         }}
                                     >
                                         Save

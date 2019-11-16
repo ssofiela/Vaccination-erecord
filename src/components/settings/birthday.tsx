@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
         formControl: {
             minWidth: 300,
             display:"flex",
-            flexDirection:"column"
+            flexDirection:"column",
+            marginRight: theme.spacing(1),
         },
         sameLine: {
             flexDirection: "row",
