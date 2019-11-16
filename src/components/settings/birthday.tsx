@@ -13,6 +13,7 @@ interface MainProps {
     updateBirthday: any;
     editStatus: boolean;
     type: string;
+    mobile: boolean;
 }
 
 
@@ -27,6 +28,12 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         formControl: {
             minWidth: 300,
+            display:"flex",
+            flexDirection:"column",
+            marginRight: theme.spacing(1),
+        },
+        formControlMobile: {
+            minWidth: 150,
             display:"flex",
             flexDirection:"column",
             marginRight: theme.spacing(1),
@@ -108,7 +115,7 @@ const Birthday: React.FC<MainProps> = props => {
                     p={2}
                     padding="0px 0px 0px 0px"
                 >
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl variant="outlined" className={props.mobile? classes.formControlMobile : classes.formControl}>
                         <InputLabel>Birth year</InputLabel>
                         <Select
                             id="demo-simple-select"

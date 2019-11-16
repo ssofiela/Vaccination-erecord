@@ -13,6 +13,7 @@ interface MainProps {
     updateBirthday: any;
     editStatus: boolean;
     type: string;
+    mobile: boolean;
 }
 
 
@@ -31,6 +32,12 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth: 300,
             display:"flex",
             flexDirection:"column"
+        },
+        formControlMobile: {
+            minWidth: 150,
+            display:"flex",
+            flexDirection:"column",
+            marginRight: theme.spacing(1),
         },
         margin: {
             margin: theme.spacing(3)
@@ -97,7 +104,7 @@ const Reminder: React.FC<MainProps> = props => {
                     p={5}
                     padding="0px 0px 0px 0px"
                 >
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl variant="outlined" className={props.mobile ? classes.formControlMobile : classes.formControl}>
                         <InputLabel id="demo-simple-select-label">{"Reminder time"}</InputLabel>
                             <Select
                                 id="demo-simple-select"

@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
         mobileContainer: {
             margin: theme.spacing(2, 0),
             overFlowX: "auto",
+            minWidth: 250
         },
         link: {
             display: "flex",
@@ -83,11 +84,20 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth: 300,
             marginTop: theme.spacing(2),
         },
+        textFieldWithSpaceMobile: {
+            marginRight: theme.spacing(1),
+            width: 150,
+            marginTop: theme.spacing(2),
+        },
         marginDouble: {
             marginBottom: theme.spacing(2),
         },
         margin: {
             margin: theme.spacing(3),
+        },
+        sameLine: {
+            flexDirection: "row",
+            display: "flex",
         },
     })
 );
@@ -124,7 +134,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     const [width, setWidth] = React.useState<number>(0);
     const moobile = (): boolean => {
-        const isMobile = window.outerWidth <= 450;
+        const isMobile = window.outerWidth <= 510;
         return isMobile;
     };
     const handleMobile = (): void => {
@@ -194,6 +204,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             ): void => {
                                 setBirthday(birthday)
                             }}
+                            mobile={moobile()}
                             editStatus={editStatus}
                             type="birthday"
                         />
@@ -206,6 +217,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             ): void => {
                                 setReminder(reminder)
                             }}
+                            mobile={moobile()}
                             editStatus={editStatus}
                             type="reminder"
                         />
@@ -216,7 +228,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                 p={5}
                                 padding="0px 0px 0px 0px"
                             >
-                                <div>
+                                <div className={classes.sameLine}>
                                     <TextField
                                         error={emailError}
                                         variant="outlined"
@@ -225,7 +237,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         label="Email address for reminder"
                                         name="email"
                                         autoComplete="email"
-                                        className={classes.textFieldWithSpace }
+                                        className={moobile() ? classes.textFieldWithSpaceMobile : classes.textFieldWithSpace }
                                         value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
                                         onChange={event =>
                                             setEmail(event.target.value)
