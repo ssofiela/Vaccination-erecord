@@ -12,18 +12,17 @@ import {
 } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
-import Colorize from "@material-ui/icons/Colorize";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import Birthday from "./birthday";
-import { InputLabel, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Reminder from "./reminder";
+import SettingsIcon from '@material-ui/icons/Settings';
+import IconButton from "@material-ui/core/IconButton";
+import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
+import Tooltip from "@material-ui/core/Tooltip";
 
-
-const StyledColorize = styled(Colorize)({
-    marginRight: "10px"
-});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,7 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
             overFlowX: "auto",
         },
         link: {
-            display: "flex"
+            display: "flex",
+            color: "black"
         },
         formControl: {
             margin: theme.spacing(1),
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         textField: {
             marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1)
+            marginRight: theme.spacing(1),
         },
         dotted: {
             width: "100%",
@@ -72,18 +72,24 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: 40
         },
         textField2: {
-            marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
-            maxWidth: 200,
+            maxWidth: 300,
+            marginTop: theme.spacing(2),
         },
-        margin: {
-            marginTop: 30,
+        textFieldWithSpace: {
+            marginRight: theme.spacing(1),
+            minWidth: 300,
+            marginTop: theme.spacing(2),
         },
         marginDouble: {
-            marginBottom: 30
-        }
+            marginBottom: theme.spacing(2),
+        },
+        margin: {
+            margin: theme.spacing(3),
+        },
     })
 );
+
 
 const StyledButton = withStyles((theme: Theme) =>
     createStyles({
@@ -132,6 +138,10 @@ const Settings: React.FC<RouteComponentProps> = props => {
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
 
+    const StyledSettings = styled(SettingsIcon)({
+        marginRight: "10px"
+    });
+
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
             <Grid container>
@@ -147,10 +157,10 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             <Link
                                 variant="body1"
                                 color="inherit"
-                                href="/"
+                                href="/settings"
                                 className={classes.link}
                             >
-                                <StyledColorize />
+                                <StyledSettings />
                                 Settings
                             </Link>
                         </Breadcrumbs>
@@ -165,7 +175,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
                         p={5}
                     >
                         <div className={classes.marginDouble}>Personal information</div>
-
                         <Birthday
                             sidebarOpen
                             updateBirthday={(
@@ -188,18 +197,52 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             editStatus={editStatus}
                             type="reminder"
                         />
-                        <InputLabel id="demo-simple-select-label"
-                            className={classes.margin}>
-                            Email address for reminder
-                        </InputLabel>
-                        <TextField
-                            className={classes.textField2}
-                            value={email === "email@example.com" ? "" : email}
-                            onChange={event =>
-                                setEmail(event.target.value)
-                            }
-                            disabled={!editStatus}
-                        />
+                        {editStatus ?
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                p={5}
+                                padding="0px 0px 0px 0px"
+                            >
+                                <div>
+                                    <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        id="email"
+                                        label="Email address for reminder"
+                                        name="email"
+                                        autoComplete="email"
+                                        className={classes.textFieldWithSpace }
+                                        value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
+                                        onChange={event =>
+                                            setEmail(event.target.value)
+                                        }
+                                        disabled={!editStatus}
+                                    />
+                                    <Tooltip
+                                        title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
+                                        <IconButton aria-label="delete" className={classes.margin} size="small">
+                                            <HelpOutlineOutlinedIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            </Box>
+                            :
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                id="email"
+                                label="Email address for reminder"
+                                name="email"
+                                autoComplete="email"
+                                className={classes.textField2}
+                                value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
+                                onChange={event =>
+                                    setEmail(event.target.value)
+                                }
+                                disabled={!editStatus}
+                            />
+                        }
                     </Box>
 
                     <Grid item xs={12}>
