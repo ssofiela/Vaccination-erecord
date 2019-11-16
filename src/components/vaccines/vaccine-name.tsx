@@ -3,8 +3,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import React from "react";
 import "date-fns";
-import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import useStyles from "../common/styles"
 
 interface MainProps {
     sidebarOpen: boolean;
@@ -67,39 +66,6 @@ const vaccineOptions = [
     "DTP-IPV",
     "MPRV"
 ];
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        header: {
-            borderLeft: `7px solid ${theme.palette.primary.main}`
-        },
-        container: {
-            margin: theme.spacing(2, 4),
-            overFlowX: "auto",
-            minWidth: 800
-        },
-        link: {
-            display: "flex"
-        },
-        formControl: {
-            margin: theme.spacing(1),
-            minWidth: 250
-        },
-        selectEmpty: {
-            marginTop: theme.spacing(2)
-        },
-        dropdown: {
-            width: "100%",
-            height: "45px"
-        },
-        menu: {
-            width: 200
-        },
-        errorMessage: {
-            color: "red"
-        }
-    })
-);
 
 const VaccineName: React.FC<MainProps> = props => {
     const classes = useStyles();

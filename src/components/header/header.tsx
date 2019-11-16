@@ -47,6 +47,13 @@ const Header: React.FC<Props> = (props) => {
         setValue(newValue);
         props.history.push(newValue);
     };
+    const handleLogin = (): void => {
+        // if (props.userId) {
+            props.history.push("/login");
+       //  } else {
+            /* Sign out */
+        // }
+    };
 
     return (
         <div className={classes.root}>
@@ -69,7 +76,7 @@ const Header: React.FC<Props> = (props) => {
                             <Tab label="FAQ" value="/frequently-asked-questions" />
                         </Tabs>
                     </div>
-                    <Button color="inherit">{props.userId ? "Sign out" : "Sign in"}</Button>
+                    <Button color="inherit" onClick={handleLogin}>{props.userId ? "Sign out" : "Sign in"}</Button>
                 </Toolbar>
             </AppBar>
         </div>
