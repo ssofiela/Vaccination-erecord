@@ -108,16 +108,12 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [errors, setErrors] = React.useState<string[]>([]);
 
     const [email, setEmail] = React.useState<string>("email@example.com");
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
     const [reminder, setReminder] = React.useState<number>(0);
 
-    const handleErrors = (newErrors: string[]): void => {
-        setErrors([...errors, ...newErrors]);
-    };
     const [width, setWidth] = React.useState<number>(0);
     const moobile = (): boolean => {
         const isMobile = window.outerWidth <= 450;

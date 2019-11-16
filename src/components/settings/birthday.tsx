@@ -2,7 +2,6 @@ import React from "react";
 import "date-fns";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
 
 interface MainProps {
     sidebarOpen: boolean;

@@ -1,10 +1,9 @@
-import React, {useEffect}from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
 import {
     createStyles,
-    makeStyles,
     styled,
     Theme,
     useTheme,
@@ -24,6 +23,7 @@ import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import VaccineName from "./vaccine-name";
 import moment from "moment";
+import useStyles from "../common/styles"
 
 
 import ReminderCheck from "./reminder-check";
@@ -32,48 +32,6 @@ import { TextField } from "@material-ui/core";
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
 });
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        content: {
-            margin: theme.spacing(2, 0),
-            overFlowX: "auto",
-        },
-        header: {
-            borderLeft: `7px solid ${theme.palette.primary.main}`
-        },
-        container: {
-            margin: theme.spacing(2, 4),
-            overFlowX: "auto",
-            padding: "0px 0px 0px"
-        },
-        link: {
-            display: "flex"
-        },
-        formControl: {
-            margin: theme.spacing(1),
-            minWidth: 250
-        },
-        selectEmpty: {
-            marginTop: theme.spacing(2)
-        },
-        dropdown: {
-            width: "100%",
-            height: "45px"
-        },
-        menu: {
-            width: 200
-        },
-        inputField: {
-            display: "flex",
-            flexWrap: "wrap"
-        },
-        textField: {
-            marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1)
-        }
-    })
-);
 
 const StyledButton = withStyles((theme: Theme) =>
     createStyles({
@@ -154,7 +112,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
 
 
     return (
-        <Paper square className={moobile() ? classes.content : classes.container}>
+        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -341,7 +299,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             )
                                         }
                                         className={
-                                            classes.textField
+                                            classes.textFieldWithoutLimits
                                         }
                                         margin="normal"
                                         label="Comment"
@@ -567,7 +525,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 )
                                             }
                                             className={
-                                                classes.textField
+                                                classes.textFieldWithoutLimits
                                             }
                                             margin="normal"
                                             label="Comment"
