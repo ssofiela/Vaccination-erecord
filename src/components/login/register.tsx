@@ -121,7 +121,7 @@ const Register: React.FC<RouteComponentProps> = props => {
                                     setEmail(event.target.value)
                                 }
                             />
-                            <Tooltip title="Email address must be valid (email@example.com)">
+                            <Tooltip title="Example email address: email@example.com">
                                 <IconButton aria-label="help" size="small" className={classes.margin}>
                                     <HelpOutlineOutlinedIcon/>
                                 </IconButton>
@@ -149,7 +149,7 @@ const Register: React.FC<RouteComponentProps> = props => {
                                 }
                             />
                             <Tooltip
-                                title="Password must include: length must be more than 6, upper case, lower case, numerals and other symbol.">
+                                title="Password required: more than 5 marks and upper case, lower case, numerals and other symbol.">
                                 <IconButton aria-label="delete" className={classes.margin} size="small">
                                     <HelpOutlineOutlinedIcon/>
                                 </IconButton>

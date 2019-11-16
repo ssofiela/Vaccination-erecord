@@ -48,11 +48,11 @@ const Header: React.FC<Props> = (props) => {
         props.history.push(newValue);
     };
     const handleLogin = (): void => {
-        if (props.userId) {
+        // if (props.userId) {
             props.history.push("/login");
-        } else {
+       //  } else {
             /* Sign out */
-        }
+        // }
     };
 
     return (
