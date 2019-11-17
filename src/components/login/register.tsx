@@ -1,6 +1,5 @@
 import React from "react";
 import "date-fns";
-import { makeStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
@@ -14,6 +13,7 @@ import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import useStyles from "../common/styles"
+import emailCheck from "../common/emailChecker"
 
 const Register: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
@@ -28,10 +28,10 @@ const Register: React.FC<RouteComponentProps> = props => {
 
 
     /* Check that email address and the password are valid */
-    const handleInputs = (): void => {
+    const handleInputs2 = (): void => {
+        const emailValid = emailCheck(email);
         let errors = [];
-        const expression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!expression.test(email)) {
+        if (!emailValid) {
             errors.push("email");
         }
 
@@ -181,7 +181,7 @@ const Register: React.FC<RouteComponentProps> = props => {
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
-                                onClick={handleInputs}
+                                onClick={handleInputs2}
                             >
                                 Sign In
                             </Button>

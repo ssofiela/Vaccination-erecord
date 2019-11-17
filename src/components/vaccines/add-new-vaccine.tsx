@@ -24,6 +24,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import VaccineName from "./vaccine-name";
 import moment from "moment";
 import useStyles from "../common/styles"
+import emailCheck from "../common/emailChecker"
 
 
 import ReminderCheck from "./reminder-check";
@@ -93,7 +94,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
 
     const moobile = (): boolean => {
-        const isMobile = window.outerWidth <= 640;
+        const isMobile = window.outerWidth <= 680;
         return isMobile;
     };
     const handleMobile = (): void => {
@@ -105,8 +106,6 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
     React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
-
-        //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
     }, [width])
 
@@ -212,6 +211,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             id="date-picker"
                                             label="Date*"
                                             value={selectedDate}
+                                            className={classes.menu}
                                             onChange={event =>
                                                 handleDateChange(
                                                     event
@@ -247,6 +247,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             margin="dense"
                                             id="date-picker"
                                             label="Booster date"
+                                            className={classes.menu}
                                             value={selectedBoosterDate}
                                             onChange={event =>
                                                 handleBoosterDateChange(
@@ -278,6 +279,9 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                     updateEmail={(
                                         email: string
                                     ): void => setEmail(email)}
+                                    error={errors.includes("email")
+                                        ? "email"
+                                        : ""}
                                 />
                             </Box>
                             <Box
@@ -285,26 +289,21 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                 flexDirection="row"
                                 p={1}
                             >
-                                <form
-                                    className={
-                                        classes.inputField
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    fullWidth
+                                    id="comment"
+                                    label="Comment"
+                                    name="comment"
+                                    className={classes.textFieldWithoutLimits}
+                                    onChange={event =>
+                                        handleComment(
+                                            event.target
+                                                .value
+                                        )
                                     }
-                                >
-                                    <TextField
-                                        multiline
-                                        onChange={event =>
-                                            handleComment(
-                                                event.target
-                                                    .value
-                                            )
-                                        }
-                                        className={
-                                            classes.textFieldWithoutLimits
-                                        }
-                                        margin="normal"
-                                        label="Comment"
-                                    />
-                                </form>
+                                />
                             </Box>
                             <Grid item xs={12}>
                                 <Box
@@ -322,7 +321,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 name === "";
                                             const invalidEmail: boolean =
                                                 emailReminder === "Yes" &&
-                                                email === "";
+                                                !emailCheck(email);
                                             const invalidDate: boolean =
                                                 selectedDate.toString().split("T")[0] ===
                                                 moment().format().split("T")[0];
@@ -416,6 +415,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 id="date-picker"
                                                 label="Date*"
                                                 value={selectedDate}
+                                                className={classes.menu}
                                                 onChange={event =>
                                                     handleDateChange(
                                                         event
@@ -446,6 +446,9 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                         updateEmail={(
                                             email: string
                                         ): void => setEmail(email)}
+                                        error={errors.includes("email")
+                                            ? "email"
+                                            : ""}
                                     />
                                 </Box>
                             </Grid>
@@ -492,6 +495,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                                 margin="dense"
                                                 id="date-picker"
                                                 label="Booster date"
+                                                className={classes.menu}
                                                 value={selectedBoosterDate}
                                                 onChange={event =>
                                                     handleBoosterDateChange(
@@ -511,26 +515,21 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                     flexDirection="row"
                                     p={5}
                                 >
-                                    <form
-                                        className={
-                                            classes.inputField
+                                    <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        fullWidth
+                                        id="comment"
+                                        label="Comment"
+                                        name="comment"
+                                        className={classes.textFieldWithoutLimits}
+                                        onChange={event =>
+                                            handleComment(
+                                                event.target
+                                                    .value
+                                            )
                                         }
-                                    >
-                                        <TextField
-                                            multiline
-                                            onChange={event =>
-                                                handleComment(
-                                                    event.target
-                                                        .value
-                                                )
-                                            }
-                                            className={
-                                                classes.textFieldWithoutLimits
-                                            }
-                                            margin="normal"
-                                            label="Comment"
-                                        />
-                                    </form>
+                                    />
                                 </Box>
                             </Grid>
                         </Box>
@@ -550,7 +549,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                             name === "";
                                         const invalidEmail: boolean =
                                             emailReminder === "Yes" &&
-                                            email === "";
+                                            !emailCheck(email);
                                         const invalidDate: boolean =
                                             selectedDate.toString().split("T")[0] ===
                                             moment().format().split("T")[0];

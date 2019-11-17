@@ -23,6 +23,7 @@ import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
 import CreateIcon from '@material-ui/icons/Create';
+import emailCheck from "../common/emailChecker"
 
 
 
@@ -127,7 +128,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const theme = useTheme();
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
-    const [email, setEmail] = React.useState<string>("email@example.com");
+    const [email, setEmail] = React.useState<string>("");
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
     const [reminder, setReminder] = React.useState<number>(0);
@@ -157,12 +158,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const StyledCreate = styled(CreateIcon)({
         marginRight: "10px"
     });
-
-    const checkEmail = (): boolean => {
-        const expression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        setEmailError(!expression.test(email));
-        return !expression.test(email)
-    };
 
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
@@ -261,7 +256,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                 name="email"
                                 autoComplete="email"
                                 className={classes.textField2}
-                                value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
+                                value={email === "" && !editStatus ? "Not selected" : email }
                                 onChange={event =>
                                     setEmail(event.target.value)
                                 }
@@ -296,10 +291,13 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         color="primary"
                                         onClick={() => {
                                             /* states -> back-end */
-                                            const value = checkEmail();
-                                            if (!value) {
+                                            const value = emailCheck(email);
+                                            if (value) {
                                                 props.history.push("/settings");
-                                                setEditStatus(false)
+                                                setEditStatus(false) 
+                                                setEmailError(false)
+                                            } else {
+                                                setEmailError(true)
                                             }
                                         }}
                                     >
