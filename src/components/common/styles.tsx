@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     mobileContainer: {
         margin: theme.spacing(2, 0),
         overFlowX: "auto",
-        minWidth: 220
+        minWidth: 270
     },
     link: {
         display: "flex",

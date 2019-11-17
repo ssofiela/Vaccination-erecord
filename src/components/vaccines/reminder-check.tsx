@@ -16,6 +16,7 @@ interface MainProps {
     updateEmailRemainder: any;
     updateEmail: any;
     error: any;
+    emailReminder: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -70,7 +71,7 @@ const ReminderCheck: React.FC<MainProps> = props => {
             <RadioGroup
                 aria-label="position"
                 name="position"
-                value={email}
+                value={props.emailReminder === "Yes" ? "Yes" : email}
                 onChange={handleChange}
             >
                 <FormControlLabel
