@@ -76,7 +76,7 @@ const Header: React.FC<Props> = (props) => {
                             <Tab label="FAQ" value="/frequently-asked-questions" />
                         </Tabs>
                     </div>
-                    <Button color="inherit" onClick={handleLogin}>{props.userId ? "Sign out" : "Sign in"}</Button>
+                    <Button color="inherit" onClick={handleLogin}>{props.userId ? "Log out" : "Log in"}</Button>
                 </Toolbar>
             </AppBar>
         </div>
