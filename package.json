@@ -80,11 +80,7 @@
         "webpack-dev-server": "3.8.2"
     },
     "lint-staged": {
-        "{src,test}/**/*.{ts,tsx}": [
-            "yarn lint",
-            "prettier --write",
-            "git add"
-        ]
+        "**/*.{ts,tsx}": ["eslint", "prettier --write", "git add"]
     },
     "husky": {
         "hooks": {
