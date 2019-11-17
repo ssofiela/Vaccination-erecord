@@ -81,14 +81,14 @@
     },
     "lint-staged": {
         "{src,test}/**/*.{ts,tsx}": [
-            "eslint",
+            "yarn lint",
             "prettier --write",
             "git add"
         ]
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn lint --fix && yarn test && lint-staged"
+            "pre-commit": "yarn lint && yarn test && lint-staged"
         }
     }
 }
