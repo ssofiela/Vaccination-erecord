@@ -62,6 +62,7 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                             We do not store any personal information on our site. In fact, all you
                             need to register is an email address an a password.
                         </Typography>
+                        <Typography>TODO: other content</Typography>
                     </Panel.Body>
                 </Grid>
             </Grid>
