@@ -1,17 +1,19 @@
 import React from "react";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import { TextField } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import { RouteComponentProps,  } from "react-router";
+import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import { RouteComponentProps } from "react-router";
 import Box from "@material-ui/core/Box";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Paper from "@material-ui/core/Paper";
-import { theme } from "../../utils/theme";
-import useStyles from "../common/styles"
 
-const Login: React.FC<RouteComponentProps> = props => {
+import { theme } from "../../utils/theme";
+import useStyles from "../common/styles";
+
+const Login: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
 
     const [error, setError] = React.useState<boolean>(false);
@@ -55,7 +57,6 @@ const Login: React.FC<RouteComponentProps> = props => {
             setWidth(window.outerWidth);
             moobile();
         }
-
     };
 
     React.useEffect(() => {
@@ -63,8 +64,6 @@ const Login: React.FC<RouteComponentProps> = props => {
         //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
-
-
 
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
@@ -78,11 +77,7 @@ const Login: React.FC<RouteComponentProps> = props => {
                         p={1.5}
                     >
                         <Breadcrumbs aria-label="breadcrumb">
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                className={classes.link}
-                            >
+                            <Link variant="body1" color="inherit" className={classes.link}>
                                 Sign In
                             </Link>
                         </Breadcrumbs>
@@ -92,11 +87,7 @@ const Login: React.FC<RouteComponentProps> = props => {
             <form className={classes.form} noValidate>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={2}
-                        >
+                        <Box display="flex" flexDirection="row" p={2}>
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -112,11 +103,7 @@ const Login: React.FC<RouteComponentProps> = props => {
                                 }
                             />
                         </Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={2}
-                        >
+                        <Box display="flex" flexDirection="row" p={2}>
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -134,27 +121,23 @@ const Login: React.FC<RouteComponentProps> = props => {
                                 }
                             />
                         </Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={2}
-                        >
+                        <Box display="flex" flexDirection="row" p={2}>
                             <Grid container>
                                 <Grid item>
-                                    <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                                    <div
+                                        className={
+                                            moobile() ? classes.differentLine : classes.sameLine
+                                        }
+                                    >
                                         <div>New to Vaccination eRecord? </div>
-                                        <Link onClick={() => props.history.push("/register")} >
+                                        <Link onClick={() => props.history.push("/register")}>
                                             {" Sign Up"}
                                         </Link>
                                     </div>
                                 </Grid>
                             </Grid>
                         </Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={3}
-                        >
+                        <Box display="flex" flexDirection="row" p={3}>
                             <Button
                                 fullWidth
                                 variant="contained"

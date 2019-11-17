@@ -1,19 +1,11 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
-import {
-    createStyles,
-    styled,
-    Theme,
-    useTheme,
-    withStyles
-} from "@material-ui/core/styles";
+import { createStyles, styled, Theme, useTheme, withStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -21,14 +13,13 @@ import Colorize from "@material-ui/icons/Colorize";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
-import VaccineName from "./vaccine-name";
 import moment from "moment";
-import useStyles from "../common/styles"
-import emailCheck from "../common/emailChecker"
-
-
-import ReminderCheck from "./reminder-check";
 import { TextField } from "@material-ui/core";
+
+import useStyles from "../common/styles";
+
+import VaccineName from "./vaccine-name";
+import ReminderCheck from "./reminder-check";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -53,21 +44,17 @@ const StyledButton = withStyles((theme: Theme) =>
     })
 )(Button);
 
-const NewVaccine: React.FC<RouteComponentProps> = props => {
+const NewVaccine: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [selectedDate, setSelectedDate] = React.useState<string>(
-        moment().format()
-    );
-    const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(
-        moment().format()
-    );
+    const [selectedDate, setSelectedDate] = React.useState<string>(moment().format());
+    const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(moment().format());
     const [errors, setErrors] = React.useState<string[]>([]);
 
     const handleDateChange = (date: Date | null | any): void => {
         setSelectedDate(date);
-        setErrors(errors.filter(err => err != "date"));
+        setErrors(errors.filter((err) => err != "date"));
     };
     const handleBoosterDateChange = (date: Date | null | any): void => {
         setSelectedBoosterDate(date);
@@ -90,28 +77,26 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
     };
 
     const deleteNameError = (): void => {
-        setErrors(errors.filter(err => err != "name"));
+        setErrors(errors.filter((err) => err != "name"));
     };
 
-    const moobile = (): boolean => {
+    const mobile = (): boolean => {
         const isMobile = window.outerWidth <= 740;
         return isMobile;
     };
     const handleMobile = (): void => {
         if (window.outerWidth !== width) {
             setWidth(window.outerWidth);
-            moobile();
+            mobile();
         }
-
     };
     React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
-    }, [width])
-
+    }, [width]);
 
     return (
-        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        <Paper square className={mobile() ? classes.mobileContainer : classes.container}>
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -131,11 +116,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                                 <StyledColorize />
                                 My vaccines
                             </Link>
-                            <Typography
-                                color="inherit"
-                                variant="body1"
-                                className={classes.link}
-                            >
+                            <Typography color="inherit" variant="body1" className={classes.link}>
                                 New vaccine entry
                             </Typography>
                         </Breadcrumbs>
@@ -143,16 +124,16 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                 </Grid>
             </Grid>
             <Grid container>
-                <Grid item xs={moobile() ? 12 : 6}>
+                <Grid item xs={mobile() ? 12 : 6}>
                     <Box
                         display="flex"
                         flexDirection={"column"}
-                        p={moobile() ? 3 : 5}
+                        p={mobile() ? 3 : 5}
                     >
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={ moobile() ? 3 : 5}
+                            p={ mobile() ? 3 : 5}
                         >
 
                             <VaccineName
@@ -174,7 +155,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={moobile() ? 3 : 5}
+                            p={mobile() ? 3 : 5}
                         >
                             <MuiPickersUtilsProvider
                                 utils={DateFnsUtils}
@@ -212,7 +193,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={moobile() ? 3 : 5}
+                            p={mobile() ? 3 : 5}
                         >
                             <ReminderCheck
                                 sidebarOpen
@@ -234,16 +215,16 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                         </Box>
                     </Box>
                 </Grid>
-                <Grid item xs={moobile() ? 12 : 6}>
+                <Grid item xs={mobile() ? 12 : 6}>
                     <Box
                         display="flex"
                         flexDirection={"column"}
-                        p={moobile() ? 3 : 5}
+                        p={mobile() ? 3 : 5}
                     >
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={ moobile() ? 3 : 5}
+                            p={ mobile() ? 3 : 5}
                         >
                             <VaccineName
                                 sidebarOpen
@@ -263,7 +244,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={moobile() ? 3 : 5}
+                            p={mobile() ? 3 : 5}
                         >
                             <MuiPickersUtilsProvider
                                 utils={DateFnsUtils}
@@ -300,7 +281,7 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
                         <Box
                             display="flex"
                             flexDirection="row"
-                            p={moobile() ? 3 : 5}
+                            p={mobile() ? 3 : 5}
                         >
                             <TextField
                                 variant="outlined"

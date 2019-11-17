@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { RouteComponentProps, withRouter } from "react-router";
 
-import { Panel } from "../common";
+import * as Panel from "../common/panel";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,17 +38,17 @@ const StyledButton = withStyles((theme: Theme) =>
 const Home: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
     return (
-        <Panel
-            header={
-                <Grid container>
-                    <Grid item xs={12}>
+        <Panel.Container>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Panel.Header>
                         <Typography>Why Vaccination eRecord?</Typography>
-                    </Grid>
+                    </Panel.Header>
                 </Grid>
-            }
-            body={
-                <Grid container>
-                    <Grid item xs={12}>
+            </Grid>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Panel.Body>
                         <Typography>
                             Vaccination eRecord is a service that saves all your vaccination
                             information in one place to make them always available to you.
@@ -62,8 +62,12 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                             We do not store any personal information on our site. In fact, all you
                             need to register is an email address an a password.
                         </Typography>
-                        <br />
-                        <br />
+                    </Panel.Body>
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Panel.Footer>
                         <StyledButton
                             variant="outlined"
                             color="primary"
@@ -74,10 +78,10 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                         >
                             Register
                         </StyledButton>
-                    </Grid>
+                    </Panel.Footer>
                 </Grid>
-            }
-        />
+            </Grid>
+        </Panel.Container>
     );
 };
 

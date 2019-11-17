@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
 import {
@@ -15,16 +16,17 @@ import Paper from "@material-ui/core/Paper";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
-import Birthday from "./birthday";
-import { TextField } from "@material-ui/core";
-import Reminder from "./reminder";
+import { InputLabel, TextField } from "@material-ui/core";
 import SettingsIcon from '@material-ui/icons/Settings';
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
 import CreateIcon from '@material-ui/icons/Create';
+
 import emailCheck from "../common/emailChecker"
 
+import Birthday from "./birthday";
+import Reminder from "./reminder";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         container: {
             margin: theme.spacing(2, 4),
-            overFlowX: "auto",
+            overFlowX: "auto"
         },
         mobileContainer: {
             margin: theme.spacing(2, 0),
@@ -65,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         textField: {
             marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1),
+            marginRight: theme.spacing(1)
         },
         dotted: {
             width: "100%",
@@ -78,17 +80,17 @@ const useStyles = makeStyles((theme: Theme) =>
         textField2: {
             marginRight: theme.spacing(1),
             maxWidth: 300,
-            marginTop: theme.spacing(2),
+            marginTop: theme.spacing(2)
         },
         textFieldWithSpace: {
             marginRight: theme.spacing(1),
             minWidth: 300,
-            marginTop: theme.spacing(2),
+            marginTop: theme.spacing(2)
         },
         textFieldWithSpaceMobile: {
             marginRight: theme.spacing(1),
             width: 150,
-            marginTop: theme.spacing(2),
+            marginTop: theme.spacing(2)
         },
         marginDouble: {
             marginBottom: theme.spacing(2),
@@ -98,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         sameLine: {
             flexDirection: "row",
-            display: "flex",
+            display: "flex"
         },
     })
 );
@@ -123,7 +125,7 @@ const StyledButton = withStyles((theme: Theme) =>
     })
 )(Button);
 
-const Settings: React.FC<RouteComponentProps> = props => {
+const Settings: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
 
@@ -145,7 +147,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
             setWidth(window.outerWidth);
             moobile();
         }
-
     };
     const pushData = ():void => {
         /* if (birthday !== oldBirthday && birthday !== 0) {
@@ -236,18 +237,12 @@ const Settings: React.FC<RouteComponentProps> = props => {
             </Grid>
             <Grid container>
                 <Grid item xs={12}>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        p={5}
-                    >
+                    <Box display="flex" flexDirection="column" p={5}>
                         <div className={classes.marginDouble}>Personal information</div>
                         <Birthday
                             sidebarOpen
-                            updateBirthday={(
-                                birthday: number
-                            ): void => {
-                                setBirthday(birthday)
+                            updateBirthday={(birthday: number): void => {
+                                setBirthday(birthday);
                             }}
                             oldBirthday={oldBirthday}
                             mobile={moobile()}
@@ -258,10 +253,8 @@ const Settings: React.FC<RouteComponentProps> = props => {
                         <div className={classes.marginDouble}>Reminder settings</div>
                         <Reminder
                             sidebarOpen
-                            updateBirthday={(
-                                reminder: string
-                            ): void => {
-                                setReminder(reminder)
+                            updateBirthday={(reminder: number): void => {
+                                setReminder(reminder);
                             }}
                             mobile={moobile()}
                             editStatus={editStatus}
@@ -324,18 +317,18 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             bgcolor="#f9f9f9"
                             p={2}
                         >
-                            {!editStatus ?
+                            {!editStatus ? (
                                 <StyledButton
                                     variant="outlined"
                                     color="primary"
                                     onClick={() => {
-                                        setEditStatus(true)
+                                        setEditStatus(true);
                                     }}
                                 >
                                     <StyledCreate />
                                     Edit
                                 </StyledButton>
-                                :
+                            ) : (
                                 <div>
                                     <StyledButton
                                         variant="contained"
@@ -348,8 +341,8 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                             }
                                             if (value) {
                                                 props.history.push("/settings");
-                                                setEditStatus(false) 
-                                                setEmailError(false)
+                                                setEditStatus(false);
+                                                setEmailError(false);
                                                 pushData()
                                             } else {
                                                 setEmailError(true)
@@ -364,13 +357,13 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         onClick={() => {
                                             /* Get the old data from back-end */
                                             props.history.push("/settings");
-                                            setEditStatus(false)
+                                            setEditStatus(false);
                                         }}
                                     >
                                         Cancel
                                     </StyledButton>
                                 </div>
-                            }
+                            )}
                         </Box>
                     </Grid>
                 </Grid>
