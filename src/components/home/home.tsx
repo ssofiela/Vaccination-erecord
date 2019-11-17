@@ -1,34 +1,10 @@
 import React from "react";
-import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { RouteComponentProps, withRouter } from "react-router";
 
+import { OutlinedButton } from "../common/button";
 import * as Panel from "../common/panel";
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        button: {
-            backgroundColor: theme.palette.background.default,
-            borderRadius: 0,
-            borderWidth: "2px"
-        }
-    })
-);
-
-const StyledButton = withStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            backgroundColor: theme.palette.background.default,
-            borderRadius: 0,
-            borderWidth: "2px",
-            "&:hover": {
-                borderWidth: "2px"
-            }
-        }
-    })
-)(Button);
 
 /**
  * Landing page of the site
@@ -36,7 +12,6 @@ const StyledButton = withStyles((theme: Theme) =>
  * @constructor
  */
 const Home: React.FC<RouteComponentProps> = (props) => {
-    const classes = useStyles();
     return (
         <Panel.Container>
             <Grid container>
@@ -63,23 +38,16 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                             need to register is an email address an a password.
                         </Typography>
                         <Typography>TODO: other content</Typography>
-                    </Panel.Body>
-                </Grid>
-            </Grid>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Panel.Footer>
-                        <StyledButton
-                            variant="outlined"
-                            color="primary"
-                            className={classes.button}
+                        <br />
+                        <br />
+                        <OutlinedButton
                             onClick={() => {
                                 props.history.push("/register");
                             }}
                         >
                             Register
-                        </StyledButton>
-                    </Panel.Footer>
+                        </OutlinedButton>
+                    </Panel.Body>
                 </Grid>
             </Grid>
         </Panel.Container>

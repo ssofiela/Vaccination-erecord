@@ -1,9 +1,8 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { createStyles, makeStyles, styled, Theme, withStyles } from "@material-ui/core";
+import { createStyles, makeStyles, styled, withStyles } from "@material-ui/core";
 import Colorize from "@material-ui/icons/Colorize";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -14,6 +13,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import { withRouter, RouteComponentProps } from "react-router";
 
 import * as Panel from "../common/panel";
+import { OutlinedButton } from "../common/button";
 
 interface VaccineData {
     vaccine: string;
@@ -24,35 +24,17 @@ interface VaccineData {
     comment: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         table: {
             minWidth: 650,
             border: "1px solid #e0e0e080"
-        },
-        button: {
-            backgroundColor: theme.palette.background.default,
-            borderRadius: 0,
-            borderWidth: "2px"
         },
         tableCell: {
             borderBottom: "1px solid #e0e0e080"
         }
     })
 );
-
-const StyledButton = withStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            backgroundColor: theme.palette.background.default,
-            borderRadius: 0,
-            borderWidth: "2px",
-            "&:hover": {
-                borderWidth: "2px"
-            }
-        }
-    })
-)(Button);
 
 const StyledTableRow = withStyles(() =>
     createStyles({
@@ -168,17 +150,14 @@ const VaccineList: React.FC<RouteComponentProps> = (props) => {
             <Grid container>
                 <Grid item xs={12}>
                     <Panel.Footer>
-                        <StyledButton
-                            variant="outlined"
-                            color="primary"
-                            className={classes.button}
+                        <OutlinedButton
                             onClick={() => {
                                 props.history.push("/add-vaccine");
                             }}
                             startIcon={<AddIcon />}
                         >
                             Add vaccine
-                        </StyledButton>
+                        </OutlinedButton>
                     </Panel.Footer>
                 </Grid>
             </Grid>

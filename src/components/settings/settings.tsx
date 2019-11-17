@@ -1,39 +1,31 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
-import {
-    createStyles,
-    makeStyles,
-    styled,
-    Theme,
-    useTheme,
-    withStyles
-} from "@material-ui/core/styles";
+import { createStyles, makeStyles, styled, Theme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Link from "@material-ui/core/Link";
+import SettingsIcon from "@material-ui/icons/Settings";
 import { RouteComponentProps, withRouter } from "react-router";
 import { InputLabel, TextField } from "@material-ui/core";
-import SettingsIcon from '@material-ui/icons/Settings';
+import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
 import CreateIcon from '@material-ui/icons/Create';
 
+import * as Panel from "../common/panel";
+import { FilledButton, OutlinedButton } from "../common/button";
 import emailCheck from "../common/emailChecker"
 
 import Birthday from "./birthday";
 import Reminder from "./reminder";
 
+const StyledSettings = styled(SettingsIcon)({
+    marginRight: "10px"
+});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        header: {
-            borderLeft: `7px solid ${theme.palette.primary.main}`
-        },
         container: {
             margin: theme.spacing(2, 4),
             overFlowX: "auto"
@@ -106,28 +98,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-const StyledButton = withStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            borderRadius: 0
-        },
-        outlined: {
-            backgroundColor: theme.palette.background.default,
-            borderWidth: "2px",
-            "&:hover": {
-                borderWidth: "2px"
-            }
-        },
-        contained: {
-            marginRight: theme.spacing(2.5),
-            color: "#fff"
-        }
-    })
-)(Button);
-
 const Settings: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
-    const theme = useTheme();
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
     const [email, setEmail] = React.useState<string>("");
@@ -211,128 +183,107 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
     });
 
     return (
-        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        // TODO mobile support
+        // <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        <Panel.Container>
             <Grid container>
                 <Grid item xs={12}>
-                    <Box
-                        className={classes.header}
-                        display="flex"
-                        flexDirection="row"
-                        bgcolor={theme.palette.secondary.main}
-                        p={1.5}
-                    >
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                href="/settings"
-                                className={classes.link}
-                            >
-                                <StyledSettings />
-                                Settings
-                            </Link>
-                        </Breadcrumbs>
-                    </Box>
+                    <Panel.Header>
+                        <StyledSettings />
+                        <Typography>Settings</Typography>
+                    </Panel.Header>
                 </Grid>
             </Grid>
             <Grid container>
                 <Grid item xs={12}>
-                    <Box display="flex" flexDirection="column" p={5}>
-                        <div className={classes.marginDouble}>Personal information</div>
-                        <Birthday
-                            sidebarOpen
-                            updateBirthday={(birthday: number): void => {
-                                setBirthday(birthday);
-                            }}
-                            oldBirthday={oldBirthday}
-                            mobile={moobile()}
-                            editStatus={editStatus}
-                            type="birthday"
-                        />
-                        <div className={classes.dotted}></div>
-                        <div className={classes.marginDouble}>Reminder settings</div>
-                        <Reminder
-                            sidebarOpen
-                            updateBirthday={(reminder: number): void => {
-                                setReminder(reminder);
-                            }}
-                            mobile={moobile()}
-                            editStatus={editStatus}
-                            type="reminder"
-                        />
-                        {editStatus ?
-                            <Box
-                                display="flex"
-                                flexDirection="row"
-                                p={5}
-                                padding="0px 0px 0px 0px"
-                            >
-                                <div className={classes.sameLine}>
-                                    <TextField
-                                        error={emailError}
-                                        variant="outlined"
-                                        margin="normal"
-                                        id="email"
-                                        label="Email address for reminder"
-                                        name="email"
-                                        autoComplete="email"
-                                        className={moobile() ? classes.textFieldWithSpaceMobile : classes.textFieldWithSpace }
-                                        value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
-                                        onChange={event =>
-                                            setEmail(event.target.value)
-                                        }
-                                        disabled={!editStatus}
-                                    />
-                                    <Tooltip
-                                        title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
-                                        <IconButton aria-label="delete" className={classes.margin} size="small">
-                                            <HelpOutlineOutlinedIcon/>
-                                        </IconButton>
-                                    </Tooltip>
-                                </div>
-                            </Box>
-                            :
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                id="email"
-                                label="Email address for reminder"
-                                name="email"
-                                autoComplete="email"
-                                className={classes.textField2}
-                                value={oldReminderEmail === "" || oldReminderEmail === undefined ? "Not selected" : oldReminderEmail }
-                                onChange={event =>
-                                    setEmail(event.target.value)
-                                }
-                                disabled={!editStatus}
+                    <Panel.Body>
+                        <Box display="flex" flexDirection="column" p={5}>
+                            <div className={classes.marginDouble}>Personal information</div>
+                            <Birthday
+                                sidebarOpen
+                                updateBirthday={(birthday: number): void => {
+                                    setBirthday(birthday);
+                                }}
+                                oldBirthday={oldBirthday}
+                                mobile={moobile()}
+                                editStatus={editStatus}
+                                type="birthday"
                             />
-                        }
-                    </Box>
-
-                    <Grid item xs={12}>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            justifyContent={editStatus ? "flex-end" : "flex-start"}
-                            bgcolor="#f9f9f9"
-                            p={2}
-                        >
-                            {!editStatus ? (
-                                <StyledButton
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => {
-                                        setEditStatus(true);
-                                    }}
+                            <div className={classes.dotted}></div>
+                            <div className={classes.marginDouble}>Reminder settings</div>
+                            <Reminder
+                                sidebarOpen
+                                updateBirthday={(reminder: number): void => {
+                                    setReminder(reminder);
+                                }}
+                                mobile={moobile()}
+                                editStatus={editStatus}
+                                type="reminder"
+                            />
+                            {editStatus ?
+                                <Box
+                                    display="flex"
+                                    flexDirection="row"
+                                    p={5}
+                                    padding="0px 0px 0px 0px"
                                 >
-                                    <StyledCreate />
-                                    Edit
-                                </StyledButton>
+                                    <div className={classes.sameLine}>
+                                        <TextField
+                                            error={emailError}
+                                            variant="outlined"
+                                            margin="normal"
+                                            id="email"
+                                            label="Email address for reminder"
+                                            name="email"
+                                            autoComplete="email"
+                                            className={moobile() ? classes.textFieldWithSpaceMobile : classes.textFieldWithSpace }
+                                            value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
+                                            onChange={event =>
+                                                setEmail(event.target.value)
+                                            }
+                                            disabled={!editStatus}
+                                        />
+                                        <Tooltip
+                                            title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
+                                            <IconButton aria-label="delete" className={classes.margin} size="small">
+                                                <HelpOutlineOutlinedIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </div>
+                                </Box>
+                                :
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    id="email"
+                                    label="Email address for reminder"
+                                    name="email"
+                                    autoComplete="email"
+                                    className={classes.textField2}
+                                    value={oldReminderEmail === "" || oldReminderEmail === undefined ? "Not selected" : oldReminderEmail }
+                                    onChange={event =>
+                                        setEmail(event.target.value)
+                                    }
+                                    disabled={!editStatus}
+                                />
+                            }
+                        </Box>
+                    </Panel.Body>
+                    <Grid item xs={12}>
+                            {!editStatus ? (
+                                <Panel.Footer>
+                                    <OutlinedButton
+                                        onClick={() => {
+                                            setEditStatus(true);
+                                        }}
+                                    >
+                                        <StyledCreate />
+                                        Edit
+                                    </OutlinedButton>
+                                </Panel.Footer>
                             ) : (
-                                <div>
-                                    <StyledButton
-                                        variant="contained"
-                                        color="primary"
+                                <Panel.Footer>
+                                    <FilledButton
                                         onClick={() => {
                                             /* states -> back-end */
                                             let value = true;
@@ -350,10 +301,8 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
                                         }}
                                     >
                                         Save
-                                    </StyledButton>
-                                    <StyledButton
-                                        variant="outlined"
-                                        color="primary"
+                                    </FilledButton>
+                                    <OutlinedButton
                                         onClick={() => {
                                             /* Get the old data from back-end */
                                             props.history.push("/settings");
@@ -361,14 +310,13 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
                                         }}
                                     >
                                         Cancel
-                                    </StyledButton>
-                                </div>
+                                    </OutlinedButton>
+                                </Panel.Footer>
                             )}
-                        </Box>
                     </Grid>
                 </Grid>
             </Grid>
-        </Paper>
+        </Panel.Container>
     );
 };
 

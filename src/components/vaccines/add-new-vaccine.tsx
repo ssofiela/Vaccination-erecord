@@ -1,9 +1,8 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
-import { createStyles, styled, Theme, useTheme, withStyles } from "@material-ui/core/styles";
+import { styled } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Box from "@material-ui/core/Box";
@@ -17,6 +16,7 @@ import { TextField } from "@material-ui/core";
 
 import * as Panel from "../common/panel";
 import useStyles from "../common/styles";
+import { FilledButton, OutlinedButton } from "../common/button";
 
 import VaccineName from "./vaccine-name";
 import ReminderCheck from "./reminder-check";
@@ -25,28 +25,8 @@ const StyledColorize = styled(Colorize)({
     marginRight: "10px"
 });
 
-const StyledButton = withStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            borderRadius: 0
-        },
-        outlined: {
-            backgroundColor: theme.palette.background.default,
-            borderWidth: "2px",
-            "&:hover": {
-                borderWidth: "2px"
-            }
-        },
-        contained: {
-            marginRight: theme.spacing(2.5),
-            color: "#fff"
-        }
-    })
-)(Button);
-
 const NewVaccine: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
-    const theme = useTheme();
 
     const [selectedDate, setSelectedDate] = React.useState<string>(moment().format());
     const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(moment().format());
@@ -110,11 +90,9 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                 className={classes.link}
                             >
                                 <StyledColorize />
-                                My vaccines
+                                <Typography>My vaccines</Typography>
                             </Link>
-                            <Typography color="inherit" variant="body1" className={classes.link}>
-                                New vaccine entry
-                            </Typography>
+                            <Typography>New vaccine entry</Typography>
                         </Breadcrumbs>
                     </Panel.Header>
                 </Grid>
@@ -299,9 +277,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
             </Grid>
             <Grid item xs={12}>
                 <Panel.Footer>
-                    <StyledButton
-                        variant="contained"
-                        color="primary"
+                    <FilledButton
                         onClick={() => {
                             const invalidName: boolean =
                                 name === "";
@@ -332,16 +308,14 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                         }}
                     >
                         Save
-                    </StyledButton>
-                    <StyledButton
-                        variant="outlined"
-                        color="primary"
+                    </FilledButton>
+                    <OutlinedButton
                         onClick={() => {
                             props.history.push("/vaccines");
                         }}
                     >
                         Cancel
-                    </StyledButton>
+                    </OutlinedButton>
                 </Panel.Footer>
             </Grid>
         </Panel.Container>

@@ -2,21 +2,18 @@ import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import { TextField } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import { RouteComponentProps } from "react-router";
-import Box from "@material-ui/core/Box";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Paper from "@material-ui/core/Paper";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import useStyles from "../common/styles"
-import emailCheck from "../common/emailChecker"
+import Typography from "@material-ui/core/Typography";
 
-import { theme } from "../../utils/theme";
 import useStyles from "../common/styles";
+import * as Panel from "../common/panel";
+import { FilledButton } from "../common/button";
+import emailCheck from "../common/emailChecker"
 
 const Register: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
@@ -97,33 +94,20 @@ const Register: React.FC<RouteComponentProps> = (props) => {
     }, [width]);
 
     return (
-        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        // TODO mobile support
+        //<Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        <Panel.Container>
             <Grid container>
                 <Grid item xs={12}>
-                    <Box
-                        className={classes.header}
-                        display="flex"
-                        flexDirection="row"
-                        bgcolor={theme.palette.secondary.main}
-                        p={1.5}
-                    >
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                href="/register"
-                                className={classes.link}
-                            >
-                                Sign Up
-                            </Link>
-                        </Breadcrumbs>
-                    </Box>
+                    <Panel.Header>
+                        <Typography>Register</Typography>
+                    </Panel.Header>
                 </Grid>
             </Grid>
-            <form className={classes.form} noValidate>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <Box display="flex" flexDirection="row" p={2}>
+            <Panel.Body>
+                <form className={classes.form} noValidate>
+                    <Grid container>
+                        <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -146,8 +130,10 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                     <HelpOutlineOutlinedIcon />
                                 </IconButton>
                             </Tooltip>
-                        </Box>
-                        <Box display="flex" flexDirection="row" p={2}>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -171,34 +157,30 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                     <HelpOutlineOutlinedIcon />
                                 </IconButton>
                             </Tooltip>
-                        </Box>
-                        <Box display="flex" flexDirection="row" p={2}>
-                            <Grid container>
-                                <Grid item>
-                                    <div
-                                        className={
-                                            moobile() ? classes.differentLine : classes.sameLine
-                                        }
-                                    >
-                                        <div>Already have an account?</div>
-                                        <Link onClick={() => props.history.push("/login")}>
-                                            {"Sign In"}
-                                        </Link>
-                                    </div>
-                                </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <div
+                                    className={
+                                        moobile() ? classes.differentLine : classes.sameLine
+                                    }
+                                >
+                                    <Typography>Already have an account?</Typography>
+                                    <Link onClick={() => props.history.push("/login")}>
+                                        <Typography>{" Log In"}</Typography>
+                                    </Link>
+                                </div>
                             </Grid>
-                        </Box>
-                        <Box display="flex" flexDirection="row" p={3}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                                onClick={handleInputs2}
-                            >
-                                Sign In
-                            </Button>
-                        </Box>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <FilledButton
+                                    onClick={handleInputs2}
+                                >
+                                    Sign In
+                                </FilledButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </form>
