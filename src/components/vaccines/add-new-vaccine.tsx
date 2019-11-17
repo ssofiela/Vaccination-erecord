@@ -8,7 +8,6 @@ import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import Colorize from "@material-ui/icons/Colorize";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
@@ -16,6 +15,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import moment from "moment";
 import { TextField } from "@material-ui/core";
 
+import * as Panel from "../common/panel";
 import useStyles from "../common/styles";
 
 import VaccineName from "./vaccine-name";
@@ -96,16 +96,12 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
     }, [width]);
 
     return (
-        <Paper square className={mobile() ? classes.mobileContainer : classes.container}>
+        // TODO add mobile support
+        //<Paper square className={mobile() ? classes.mobileContainer : classes.container}>
+        <Panel.Container>
             <Grid container>
                 <Grid item xs={12}>
-                    <Box
-                        className={classes.header}
-                        display="flex"
-                        flexDirection="row"
-                        bgcolor={theme.palette.secondary.main}
-                        p={1.5}
-                    >
+                    <Panel.Header>
                         <Breadcrumbs aria-label="breadcrumb">
                             <Link
                                 variant="body1"
@@ -120,7 +116,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                 New vaccine entry
                             </Typography>
                         </Breadcrumbs>
-                    </Box>
+                    </Panel.Header>
                 </Grid>
             </Grid>
             <Grid container>
@@ -302,13 +298,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <Box
-                    display="flex"
-                    flexDirection="row"
-                    justifyContent="flex-end"
-                    bgcolor="#f9f9f9"
-                    p={2}
-                >
+                <Panel.Footer>
                     <StyledButton
                         variant="contained"
                         color="primary"
@@ -352,9 +342,9 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                     >
                         Cancel
                     </StyledButton>
-                </Box>
+                </Panel.Footer>
             </Grid>
-        </Paper>
+        </Panel.Container>
     );
 };
 export default withRouter(NewVaccine);
