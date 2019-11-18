@@ -156,6 +156,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
             }).then(response => response.json())
         }
         if (email !== oldReminderEmail) {
@@ -166,6 +167,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
             }).then(response => response.json())
         }
     };
@@ -176,6 +178,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             },
+            credentials: 'include',
         }).then(response => response.json())
         .then(data => {
             setOldReminderEmail(data.default_reminder_email);
@@ -335,7 +338,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                             }
                                             if (value) {
                                                 props.history.push("/settings");
-                                                setEditStatus(false) 
+                                                setEditStatus(false)
                                                 setEmailError(false)
                                                 pushData()
                                             } else {

@@ -57,6 +57,7 @@ const Register: React.FC<RouteComponentProps> = props => {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     username: email,
                     password: password
@@ -212,6 +213,3 @@ const Register: React.FC<RouteComponentProps> = props => {
 };
 
 export default Register;
-
-
-

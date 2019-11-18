@@ -59,6 +59,7 @@ const Header: React.FC<Props> = (props) => {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
+                credentials: 'include'
             }).then(response => {
                 console.log("header log out", response)
             })
@@ -72,6 +73,7 @@ const Header: React.FC<Props> = (props) => {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             },
+            credentials: 'include'
         }).then(response => response.json())
             .then(data => {
                 if (data.id !== undefined) {
