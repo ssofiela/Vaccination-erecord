@@ -105,7 +105,7 @@ const Header: React.FC<Props> = (props) => {
                             <Tab label="Home" value="/" />
                             <Tab label="My vaccines" disabled={id < 1} value="/vaccines" />
                             <Tab label="Settings" disabled={id < 1} value="/settings" />
-                            <Tab label="FAQ" value="/frequently-asked-questions" />
+                            <Tab label="FAQ" disabled={id < 1} value="/frequently-asked-questions" />
                         </Tabs>
                     </div>
                     <Button color="inherit" onClick={handleLogin}>{id > 0 ? "Log out" : "Log in"}</Button>
