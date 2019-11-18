@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         display: "flex",
@@ -31,10 +31,6 @@ const useStyles = makeStyles(theme => ({
         overFlowX: "auto",
         minWidth: 270
     },
-    link: {
-        display: "flex",
-        fontWeight: "bold"
-    },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 300
@@ -48,13 +44,15 @@ const useStyles = makeStyles(theme => ({
         maxWidth: 200
     },
     sameLine: {
-        marginLeft: theme.spacing(2),
         flexDirection: "row",
-        display: "flex"
+        display: "flex",
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3)
     },
     differentLine: {
-        marginLeft: theme.spacing(2),
-        flexDirection: "column"
+        flexDirection: "column",
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3)
     },
     margin: {
         margin: theme.spacing(3)
@@ -75,8 +73,14 @@ const useStyles = makeStyles(theme => ({
     },
     errorMessage: {
         color: "red"
+    },
+    link: {
+        cursor: "pointer"
+    },
+    button: {
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3)
     }
 }));
-
 
 export default useStyles;

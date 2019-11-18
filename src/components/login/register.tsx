@@ -1,19 +1,17 @@
 import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
-import { TextField } from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import { RouteComponentProps } from "react-router";
-import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
 import useStyles from "../common/styles";
 import * as Panel from "../common/panel";
 import { FilledButton } from "../common/button";
 import emailCheck from "../common/emailChecker"
+import { TextInput } from "../common/form-input";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
@@ -108,83 +106,58 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                 <form className={classes.form} noValidate>
                     <Grid container>
                         <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
+                            <TextInput
                                 required
-                                fullWidth
                                 id="email"
-                                label="Email Address"
-                                name="email"
+                                name="Email"
                                 autoComplete="email"
-                                className={classes.textField}
-                                helperText={errors.includes("email") && "Invalid email address"}
+                                error={errors.includes("email")}
+                                errorMessage={
+                                    errors.includes("email") ? "Invalid email address" : ""
+                                }
                                 onChange={(event) => setEmail(event.target.value)}
+                                tooltip="Example email address: email@example.com"
                             />
-                            <Tooltip title="Example email address: email@example.com">
-                                <IconButton
-                                    aria-label="help"
-                                    size="small"
-                                    className={classes.margin}
-                                >
-                                    <HelpOutlineOutlinedIcon />
-                                </IconButton>
-                            </Tooltip>
                         </Grid>
                     </Grid>
                     <Grid container>
                         <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
+                            <TextInput
                                 required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                helperText={errors.includes("password") && "Invalid password"}
                                 id="password"
-                                autoComplete="current-password"
-                                className={classes.textField}
+                                name="Password"
+                                type="password"
+                                error={errors.includes("password")}
+                                errorMessage={errors.includes("password") ? "Invalid password" : ""}
                                 onChange={(event) => setPassword(event.target.value)}
+                                tooltip="A password should be at least 5 characters long, and may consist of uppercase and lowercase letter, numerals and other symbols."
                             />
-                            <Tooltip title="Password required: more than 5 marks and upper case, lower case, numerals and other symbol.">
-                                <IconButton
-                                    aria-label="delete"
-                                    className={classes.margin}
-                                    size="small"
-                                >
-                                    <HelpOutlineOutlinedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <div
-                                    className={
-                                        moobile() ? classes.differentLine : classes.sameLine
-                                    }
-                                >
-                                    <Typography>Already have an account?</Typography>
-                                    <Link onClick={() => props.history.push("/login")}>
-                                        <Typography>{" Log In"}</Typography>
-                                    </Link>
-                                </div>
-                            </Grid>
-                        </Grid>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <FilledButton
-                                    onClick={handleInputs2}
-                                >
-                                    Sign In
-                                </FilledButton>
-                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-            </form>
-        </Paper>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Box className={classes.button}>
+                                <FilledButton onClick={handleInputs2}>Register</FilledButton>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                                <Typography>Already have an account?&nbsp;</Typography>
+                                <Link
+                                    underline="none"
+                                    className={classes.link}
+                                    onClick={() => props.history.push("/login")}
+                                >
+                                    <Typography>Log In</Typography>
+                                </Link>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Panel.Body>
+        </Panel.Container>
     );
 };
 
