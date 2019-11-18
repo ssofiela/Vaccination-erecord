@@ -27,13 +27,15 @@ const Login: React.FC<RouteComponentProps> = props => {
             body: JSON.stringify({
                 username: email,
                 password: password
-            })
-        }).then(response => {
-            valid = response.ok;
-            console.log("login", response)
+            }),
+            credentials: 'include',
+        }).then(response => {return response.json()})
+        .then( data => {
+            valid = data.status === "Authorized";
+            console.log("login", data);
 
             if (valid) {
-                props.history.push("home");
+                props.history.push("/home");
             } else {
                 setError(true)
             }

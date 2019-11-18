@@ -148,40 +148,53 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     };
     const pushData = ():void => {
-        if (birthday !== oldBirthday) {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+        if (birthday !== oldBirthday && birthday !== 0) {
+            const data = fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
+                credentials: "include",
                 body: JSON.stringify(birthday),
                 headers: {
-                    "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
-            }).then(response => response.json())
+            }).then(response => {
+                console.log("fetch put birthday", response);
+                return response.json()
+            });
+            console.log("try to birthday fetch data", data)
         }
-        if (email !== oldReminderEmail) {
+        if (email !== oldReminderEmail && email !== "") {
             fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
+                credentials: "include",
                 body: JSON.stringify(email),
                 headers: {
-                    "Accept": "application/json",
                     "Content-Type": "application/json",
                 },
             }).then(response => response.json())
         }
     };
+
     React.useEffect(() => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "GET",
+            credentials: "include",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             },
         }).then(response => response.json())
-        .then(data => {
-            setOldReminderEmail(data.default_reminder_email);
-            setOldBirthday(data.year_born)
+            .then(data => {
+                console.log("fetch old informations", data);
+                if (data.default_reminder_email !== null) {
+                    setOldReminderEmail(data.default_reminder_email);
+                }
+                if (data.year_born !== null) {
+                    setOldBirthday(data.year_born)
+                }
 
-        });
+            });
+    });
+    React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
