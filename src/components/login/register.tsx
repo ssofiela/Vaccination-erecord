@@ -50,8 +50,24 @@ const Register: React.FC<RouteComponentProps> = props => {
         }
         handleErrors(errors);
         if (errors.length === 0) {
-            /* email address and password is correct in here */
-            props.history.push("/home");
+            let valid = true;
+            fetch("https://vaccine-backend.herokuapp.com/api/user/create", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: email,
+                    password: password
+                })
+            }).then(response => {
+                valid = response.ok;
+
+                if (valid) {
+                    props.history.push("/home");
+                }
+            })
         }
     };
 
