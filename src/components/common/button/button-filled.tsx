@@ -1,11 +1,7 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import { ButtonProps } from "@material-ui/core/Button";
 import { createStyles, withStyles } from "@material-ui/core";
-
-interface ButtonProps {
-    onClick: () => void;
-    startIcon?: React.ReactNode;
-}
 
 const StyledButton = withStyles(() =>
     createStyles({
