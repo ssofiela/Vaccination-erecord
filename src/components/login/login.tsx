@@ -30,6 +30,7 @@ const Login: React.FC<RouteComponentProps> = props => {
             })
         }).then(response => {
             valid = response.ok;
+            console.log("login", response)
 
             if (valid) {
                 props.history.push("home");
