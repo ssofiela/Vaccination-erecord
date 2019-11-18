@@ -1,6 +1,5 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import { ButtonProps } from "@material-ui/core/Button";
+import Button, { ButtonProps } from "@material-ui/core/Button";
 import { createStyles, Theme, withStyles } from "@material-ui/core";
 
 const StyledButton = withStyles((theme: Theme) =>
