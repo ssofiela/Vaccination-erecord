@@ -80,6 +80,9 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(3),
         marginBottom: theme.spacing(3)
+    },
+    breadcrumb: {
+        display: "flex"
     }
 }));
 

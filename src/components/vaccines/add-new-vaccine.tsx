@@ -87,7 +87,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                 variant="body1"
                                 color="inherit"
                                 href="/vaccines"
-                                className={classes.link}
+                                className={classes.breadcrumb}
                             >
                                 <StyledColorize />
                                 <Typography>My vaccines</Typography>
@@ -99,11 +99,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
             </Grid>
             <Grid container>
                 <Grid item xs={mobile() ? 12 : 6}>
-                    <Box
-                        display="flex"
-                        flexDirection={"column"}
-                        p={mobile() ? 3 : 5}
-                    >
+                    <Panel.Body>
                         <Box
                             display="flex"
                             flexDirection="row"
@@ -187,14 +183,6 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                 emailReminder={emailReminder}
                             />
                         </Box>
-                    </Box>
-                </Grid>
-                <Grid item xs={mobile() ? 12 : 6}>
-                    <Box
-                        display="flex"
-                        flexDirection={"column"}
-                        p={mobile() ? 3 : 5}
-                    >
                         <Box
                             display="flex"
                             flexDirection="row"
@@ -272,7 +260,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                 }
                             />
                         </Box>
-                    </Box>
+                    </Panel.Body>
                 </Grid>
             </Grid>
             <Grid item xs={12}>

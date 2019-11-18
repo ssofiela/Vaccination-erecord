@@ -1,15 +1,16 @@
 import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
-import { TextField } from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import { RouteComponentProps } from "react-router";
 
 import useStyles from "../common/styles";
 import * as Panel from "../common/panel";
 import { FilledButton } from "../common/button";
+import { TextInput } from "../common/form-input";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
@@ -78,40 +79,39 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                 <form className={classes.form} noValidate>
                     <Grid container>
                         <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
+                            <TextInput
                                 id="email"
-                                label="Email Address"
-                                name="email"
+                                name="Email"
                                 autoComplete="email"
-                                className={classes.textField}
                                 onChange={event =>
                                     setEmail(event.target.value)
                                 }
+                                error={error}
+                                errorMessage={error ? "Incorrect email address or password." : ""}
                             />
                         </Grid>
                     </Grid>
                     <Grid container>
                         <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
+                            <TextInput
                                 id="password"
+                                name="Password"
+                                type="password"
                                 autoComplete="current-password"
                                 className={classes.textField}
-                                helperText={error && "Incorrect email address or password"}
                                 onChange={event =>
                                     setPassword(event.target.value)
                                 }
+                                error={error}
+                                errorMessage={error ? "Incorrect email address or password." : ""}
                             />
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Box className={classes.button}>
+                                <FilledButton onClick={handleBack}>Log In</FilledButton>
+                            </Box>
                         </Grid>
                     </Grid>
                     <Grid container>
@@ -124,7 +124,6 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                             </div>
                         </Grid>
                     </Grid>
-                    <FilledButton onClick={handleBack}>Sign In</FilledButton>
                 </form>
             </Panel.Body>
         </Panel.Container>
