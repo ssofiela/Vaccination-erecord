@@ -14,6 +14,7 @@ interface MainProps {
     editStatus: boolean;
     type: string;
     mobile: boolean;
+    oldBirthday: number;
 }
 
 
@@ -93,6 +94,7 @@ const Birthday: React.FC<MainProps> = props => {
         <div>
             {!props.editStatus ?
                 <div>
+                    {console.log("fafs", props.oldBirthday)}
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -100,7 +102,7 @@ const Birthday: React.FC<MainProps> = props => {
                         label="Birth year"
                         type="string"
                         id="birthday"
-                        value={birthday.birthday === 0 ? "Not selected" : birthday.birthday}
+                        value={props.oldBirthday === 0 || props.oldBirthday === undefined ? "Not selected" : props.oldBirthday}
                         autoComplete="current-password"
                         className={classes.textField}
                         disabled

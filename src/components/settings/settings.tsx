@@ -132,6 +132,8 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
     const [reminder, setReminder] = React.useState<number>(0);
+    const [oldReminderEmail, setOldReminderEmail] = React.useState<string>("");
+    const [oldBirthday, setOldBirthday] = React.useState<number>(0);
 
     const [width, setWidth] = React.useState<number>(0);
     const moobile = (): boolean => {
@@ -145,7 +147,41 @@ const Settings: React.FC<RouteComponentProps> = props => {
         }
 
     };
+    const pushData = ():void => {
+        if (birthday !== oldBirthday) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                body: JSON.stringify(birthday),
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            }).then(response => response.json())
+        }
+        if (email !== oldReminderEmail) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                body: JSON.stringify(email),
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            }).then(response => response.json())
+        }
+    };
     React.useEffect(() => {
+        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        }).then(response => response.json())
+        .then(data => {
+            setOldReminderEmail(data.default_reminder_email);
+            setOldBirthday(data.year_born)
+
+        });
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
@@ -161,6 +197,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+            {console.log("settings render", oldReminderEmail)}
             <Grid container>
                 <Grid item xs={12}>
                     <Box
@@ -199,6 +236,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             ): void => {
                                 setBirthday(birthday)
                             }}
+                            oldBirthday={oldBirthday}
                             mobile={moobile()}
                             editStatus={editStatus}
                             type="birthday"
@@ -256,7 +294,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                 name="email"
                                 autoComplete="email"
                                 className={classes.textField2}
-                                value={email === "" && !editStatus ? "Not selected" : email }
+                                value={oldReminderEmail === "" || oldReminderEmail === undefined ? "Not selected" : oldReminderEmail }
                                 onChange={event =>
                                     setEmail(event.target.value)
                                 }
@@ -291,11 +329,15 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         color="primary"
                                         onClick={() => {
                                             /* states -> back-end */
-                                            const value = emailCheck(email);
+                                            let value = true;
+                                            if (email !== "") {
+                                                value = emailCheck(email);
+                                            }
                                             if (value) {
                                                 props.history.push("/settings");
                                                 setEditStatus(false) 
                                                 setEmailError(false)
+                                                pushData()
                                             } else {
                                                 setEmailError(true)
                                             }
