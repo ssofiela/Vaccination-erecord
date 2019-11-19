@@ -61,7 +61,6 @@ const Header: React.FC<Props> = (props) => {
                     "Content-Type": "application/json",
                 },
             }).then(response => {
-                console.log("header log out", response);
                 props.history.push("/login");
             })
         }
@@ -82,7 +81,6 @@ const Header: React.FC<Props> = (props) => {
                 if (data.id !== undefined) {
                     setId(data.id);
                 }
-                console.log("useEffect id", data, data.id)
             });
     }, []);
 

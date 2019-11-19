@@ -94,7 +94,6 @@ const Birthday: React.FC<MainProps> = props => {
         <div>
             {!props.editStatus ?
                 <div>
-                    {console.log("fafs", props.oldBirthday)}
                     <TextField
                         variant="outlined"
                         margin="normal"

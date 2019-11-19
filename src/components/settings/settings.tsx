@@ -148,7 +148,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     };
     const pushData = ():void => {
-        if (birthday !== oldBirthday && birthday !== 0) {
+        /* if (birthday !== oldBirthday && birthday !== 0) {
             const data = fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
                 credentials: "include",
@@ -171,9 +171,9 @@ const Settings: React.FC<RouteComponentProps> = props => {
                     "Content-Type": "application/json",
                 },
             }).then(response => response.json())
-        }
+        } */
     };
-
+    /*
     React.useEffect(() => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "GET",
@@ -194,6 +194,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
             });
     });
+    */
     React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
@@ -210,7 +211,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
-            {console.log("settings render", oldReminderEmail)}
             <Grid container>
                 <Grid item xs={12}>
                     <Box

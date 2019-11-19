@@ -65,7 +65,6 @@ const Register: React.FC<RouteComponentProps> = props => {
             }).then(response => {
                 valid = response.ok;
                 /*props.userId = userId*/
-                console.log("response", response)
 
                 if (valid) {
                     props.history.push("/home");

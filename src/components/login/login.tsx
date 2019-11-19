@@ -33,7 +33,6 @@ const Login: React.FC<RouteComponentProps> = props => {
         }).then(response => {return response.json()})
         .then( data => {
             valid = data.status === "Authorized";
-            console.log("login", data);
 
             if (valid) {
                 props.history.push("/home");
