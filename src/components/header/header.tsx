@@ -57,12 +57,12 @@ const Header: React.FC<Props> = (props) => {
                 method: "GET",
                 credentials: "include",
                 headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                }
+            }).then(() => {
                 props.history.push("/login");
-            })
+            });
         }
     };
 
@@ -73,17 +73,19 @@ const Header: React.FC<Props> = (props) => {
             method: "GET",
             credentials: "include",
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-        }).then(response => { return response.json()})
-            .then(data => {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
                 if (data.id !== undefined) {
                     setId(data.id);
                 }
             });
     }, []);
-
 
     return (
         <div className={classes.root}>
@@ -103,10 +105,16 @@ const Header: React.FC<Props> = (props) => {
                             <Tab label="Home" value="/" />
                             <Tab label="My vaccines" disabled={id < 1} value="/vaccines" />
                             <Tab label="Settings" disabled={id < 1} value="/settings" />
-                            <Tab label="FAQ" disabled={id < 1} value="/frequently-asked-questions" />
+                            <Tab
+                                label="FAQ"
+                                disabled={id < 1}
+                                value="/frequently-asked-questions"
+                            />
                         </Tabs>
                     </div>
-                    <Button color="inherit" onClick={handleLogin}>{id > 0 ? "Log out" : "Log in"}</Button>
+                    <Button color="inherit" onClick={handleLogin}>
+                        {id > 0 ? "Log out" : "Log in"}
+                    </Button>
                 </Toolbar>
             </AppBar>
         </div>

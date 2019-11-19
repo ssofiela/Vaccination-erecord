@@ -13,9 +13,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
-    updateEmailRemainder: any;
-    updateEmail: any;
-    error: any;
+    updateEmailRemainder: (emailReminder: string) => void;
+    updateEmail: (email: string) => void;
+    error: boolean;
     emailReminder: string;
 }
 
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const ReminderCheck: React.FC<MainProps> = props => {
+const ReminderCheck: React.FC<MainProps> = (props) => {
     const classes = useStyles();
     const [value, setValue] = React.useState("female");
     const [email, setEmail] = React.useState("No");
@@ -97,7 +97,6 @@ const ReminderCheck: React.FC<MainProps> = props => {
                     />
                 ) : null}
                 <FormControlLabel
-
                     value="No"
                     control={<Radio color="primary" />}
                     label="No"

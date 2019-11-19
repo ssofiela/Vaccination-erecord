@@ -1,8 +1,0 @@
-'use strict';
-
-var path = require('path');
-var config = require(path.resolve('config.js'));
-
-module.exports = {
-  'url': config.get('DATABASE_URL'),
-};

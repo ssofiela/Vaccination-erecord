@@ -1,4 +1,5 @@
 import React from "react";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
@@ -10,14 +11,12 @@ import Box from "@material-ui/core/Box";
 interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
-    updateBirthday: any;
+    updateBirthday: (birthday: number) => void;
     editStatus: boolean;
     type: string;
     mobile: boolean;
     oldBirthday: number;
 }
-
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Birthday: React.FC<MainProps> = props => {
+const Birthday: React.FC<MainProps> = (props) => {
     const classes = useStyles();
 
     const [birthday, setBirthday] = React.useState<{
@@ -76,7 +75,7 @@ const Birthday: React.FC<MainProps> = props => {
     }
 
     function createBirthdayOptions(options: number[]): BirthdayOptions[] {
-        return options.map(option => ({ value: option, label: option }));
+        return options.map((option) => ({ value: option, label: option }));
     }
 
     const birthdayOptions = [
@@ -86,13 +85,11 @@ const Birthday: React.FC<MainProps> = props => {
         2003, 2004, 2005, 2006, 2007, 2008, 2010, 2011, 2012, 1013, 2014, 2015, 2016, 2017, 2018, 2019
     ];
 
-
     const mappedBirthdayOptions = createBirthdayOptions(birthdayOptions);
-
 
     return (
         <div>
-            {!props.editStatus ?
+            {!props.editStatus ? (
                 <div>
                     <TextField
                         variant="outlined"
@@ -107,9 +104,7 @@ const Birthday: React.FC<MainProps> = props => {
                         disabled
                     />
                 </div>
-
-
-                :
+                ) : (
                 <Box
                     display="flex"
                     flexDirection="row"
@@ -145,7 +140,7 @@ const Birthday: React.FC<MainProps> = props => {
                         </IconButton>
                     </Tooltip>
                 </Box>
-            }
+            )}
         </div>
     );
 };
