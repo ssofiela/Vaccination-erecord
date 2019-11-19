@@ -18,11 +18,14 @@ export const theme = createMuiTheme({
         action: {
             disabled: "#707070",
             disabledBackground: "#f9f9f9"
-        },
+        }
     },
     typography: {
         h6: {
             fontSize: "1.15rem"
         }
+    },
+    shape: {
+        borderRadius: 0
     }
 });

@@ -2,10 +2,12 @@ import React from "react";
 import InputBase, { InputBaseProps } from "@material-ui/core/InputBase";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
-import { fade, createStyles, Theme, withStyles, makeStyles } from "@material-ui/core/styles";
+import { fade, createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import { FormHelperText } from "@material-ui/core";
+
+import { useStyles } from "./form-styles";
 
 interface OwnProps {
     tooltip?: string;
@@ -13,27 +15,6 @@ interface OwnProps {
 }
 
 type TextInputProps = OwnProps & InputBaseProps;
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        container: {
-            marginTop: theme.spacing(1),
-            marginBottom: theme.spacing(1)
-        },
-        labelContainer: {
-            marginBottom: theme.spacing(1)
-        },
-        tooltip: {
-            color: "#00000054"
-        },
-        errorMessage: {
-            color: theme.palette.error.main
-        },
-        required: {
-            color: theme.palette.error.main
-        }
-    })
-);
 
 const StyledInputField = withStyles((theme: Theme) =>
     createStyles({
@@ -75,7 +56,7 @@ export const TextInput: React.FC<TextInputProps> = ({ tooltip, errorMessage, ...
                     </Tooltip>
                 )}
             </Box>
-            <StyledInputField id={props.id} {...props} />
+            <StyledInputField rows={2} id={props.id} {...props} />
             {props.error && (
                 <FormHelperText className={classes.errorMessage}>{errorMessage}</FormHelperText>
             )}

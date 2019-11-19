@@ -28,7 +28,7 @@ function createVaccineOptions(options: string[]): VaccineOptions[] {
     return options.map((option) => ({ value: option, label: option }));
 }
 
-const vaccineOptions = [
+export const vaccineOptions = [
     "",
     "Cholera",
     "Hib",
@@ -94,6 +94,8 @@ const useStyles2 = makeStyles((theme: Theme) =>
         }
     })
 );
+
+export const mappedVaccineOptions = createVaccineOptions(vaccineOptions);
 
 const VaccineName: React.FC<MainProps> = (props) => {
     const classes = useStyles();
