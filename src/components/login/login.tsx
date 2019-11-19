@@ -1,6 +1,5 @@
 import React from "react";
 import "date-fns";
-import { makeStyles, styled } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
@@ -17,15 +16,36 @@ const Login: React.FC<RouteComponentProps> = props => {
 
     const [error, setError] = React.useState<boolean>(false);
     const handleBack = (): void => {
-        const valid = true; /* Check that email address match with the password */
-        if (valid) {
-            props.history.push("home");
-        } else {
-            setError(true)
-        }
+        let valid = true;
+        /* Check that email address match with the password */
+        fetch("https://vaccine-backend.herokuapp.com/api/login", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                username: email,
+                password: password
+            }),
+            credentials: 'include',
+        }).then(response => {return response.json()})
+        .then( data => {
+            valid = data.status === "Authorized";
+
+            if (valid) {
+                props.history.push("/home");
+            } else {
+                setError(true)
+            }
+        })
+
 
     };
     const [width, setWidth] = React.useState<number>(0);
+    const [email, setEmail] = React.useState<string>("");
+    const [password, setPassword] = React.useState<string>("");
     const moobile = (): boolean => {
         const isMobile = window.outerWidth <= 450;
         return isMobile;
@@ -37,6 +57,7 @@ const Login: React.FC<RouteComponentProps> = props => {
         }
 
     };
+
     React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
@@ -86,6 +107,9 @@ const Login: React.FC<RouteComponentProps> = props => {
                                 name="email"
                                 autoComplete="email"
                                 className={classes.textField}
+                                onChange={event =>
+                                    setEmail(event.target.value)
+                                }
                             />
                         </Box>
                         <Box
@@ -105,6 +129,9 @@ const Login: React.FC<RouteComponentProps> = props => {
                                 autoComplete="current-password"
                                 className={classes.textField}
                                 helperText={error && "Incorrect email address or password"}
+                                onChange={event =>
+                                    setPassword(event.target.value)
+                                }
                             />
                         </Box>
                         <Box
@@ -146,6 +173,3 @@ const Login: React.FC<RouteComponentProps> = props => {
 };
 
 export default Login;
-
-
-

@@ -12,18 +12,20 @@ import {
 } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
-import Colorize from "@material-ui/icons/Colorize";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import Birthday from "./birthday";
-import { InputLabel, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Reminder from "./reminder";
+import SettingsIcon from '@material-ui/icons/Settings';
+import IconButton from "@material-ui/core/IconButton";
+import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
+import Tooltip from "@material-ui/core/Tooltip";
+import CreateIcon from '@material-ui/icons/Create';
+import emailCheck from "../common/emailChecker"
 
 
-const StyledColorize = styled(Colorize)({
-    marginRight: "10px"
-});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,9 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
         mobileContainer: {
             margin: theme.spacing(2, 0),
             overFlowX: "auto",
+            minWidth: 250
         },
         link: {
-            display: "flex"
+            display: "flex",
+            color: "black"
         },
         formControl: {
             margin: theme.spacing(1),
@@ -61,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         textField: {
             marginLeft: theme.spacing(1),
-            marginRight: theme.spacing(1)
+            marginRight: theme.spacing(1),
         },
         dotted: {
             width: "100%",
@@ -72,18 +76,33 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: 40
         },
         textField2: {
-            marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
-            maxWidth: 200,
+            maxWidth: 300,
+            marginTop: theme.spacing(2),
         },
-        margin: {
-            marginTop: 30,
+        textFieldWithSpace: {
+            marginRight: theme.spacing(1),
+            minWidth: 300,
+            marginTop: theme.spacing(2),
+        },
+        textFieldWithSpaceMobile: {
+            marginRight: theme.spacing(1),
+            width: 150,
+            marginTop: theme.spacing(2),
         },
         marginDouble: {
-            marginBottom: 30
-        }
+            marginBottom: theme.spacing(2),
+        },
+        margin: {
+            margin: theme.spacing(3),
+        },
+        sameLine: {
+            flexDirection: "row",
+            display: "flex",
+        },
     })
 );
+
 
 const StyledButton = withStyles((theme: Theme) =>
     createStyles({
@@ -108,15 +127,17 @@ const Settings: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
     const theme = useTheme();
 
-
-    const [email, setEmail] = React.useState<string>("email@example.com");
+    const [emailError, setEmailError] = React.useState<boolean>(false);
+    const [email, setEmail] = React.useState<string>("");
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
     const [reminder, setReminder] = React.useState<number>(0);
+    const [oldReminderEmail, setOldReminderEmail] = React.useState<string>("");
+    const [oldBirthday, setOldBirthday] = React.useState<number>(0);
 
     const [width, setWidth] = React.useState<number>(0);
     const moobile = (): boolean => {
-        const isMobile = window.outerWidth <= 450;
+        const isMobile = window.outerWidth <= 510;
         return isMobile;
     };
     const handleMobile = (): void => {
@@ -126,11 +147,67 @@ const Settings: React.FC<RouteComponentProps> = props => {
         }
 
     };
+    const pushData = ():void => {
+        /* if (birthday !== oldBirthday && birthday !== 0) {
+            const data = fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify(birthday),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                console.log("fetch put birthday", response);
+                return response.json()
+            });
+            console.log("try to birthday fetch data", data)
+        }
+        if (email !== oldReminderEmail && email !== "") {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify(email),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => response.json())
+        } */
+    };
+    /*
+    React.useEffect(() => {
+        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        }).then(response => response.json())
+            .then(data => {
+                console.log("fetch old informations", data);
+                if (data.default_reminder_email !== null) {
+                    setOldReminderEmail(data.default_reminder_email);
+                }
+                if (data.year_born !== null) {
+                    setOldBirthday(data.year_born)
+                }
+
+            });
+    });
+    */
     React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
+
+    const StyledSettings = styled(SettingsIcon)({
+        marginRight: "10px"
+    });
+
+    const StyledCreate = styled(CreateIcon)({
+        marginRight: "10px"
+    });
 
     return (
         <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
@@ -147,10 +224,10 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             <Link
                                 variant="body1"
                                 color="inherit"
-                                href="/"
+                                href="/settings"
                                 className={classes.link}
                             >
-                                <StyledColorize />
+                                <StyledSettings />
                                 Settings
                             </Link>
                         </Breadcrumbs>
@@ -165,7 +242,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
                         p={5}
                     >
                         <div className={classes.marginDouble}>Personal information</div>
-
                         <Birthday
                             sidebarOpen
                             updateBirthday={(
@@ -173,6 +249,8 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             ): void => {
                                 setBirthday(birthday)
                             }}
+                            oldBirthday={oldBirthday}
+                            mobile={moobile()}
                             editStatus={editStatus}
                             type="birthday"
                         />
@@ -185,21 +263,57 @@ const Settings: React.FC<RouteComponentProps> = props => {
                             ): void => {
                                 setReminder(reminder)
                             }}
+                            mobile={moobile()}
                             editStatus={editStatus}
                             type="reminder"
                         />
-                        <InputLabel id="demo-simple-select-label"
-                            className={classes.margin}>
-                            Email address for reminder
-                        </InputLabel>
-                        <TextField
-                            className={classes.textField2}
-                            value={email === "email@example.com" ? "" : email}
-                            onChange={event =>
-                                setEmail(event.target.value)
-                            }
-                            disabled={!editStatus}
-                        />
+                        {editStatus ?
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                p={5}
+                                padding="0px 0px 0px 0px"
+                            >
+                                <div className={classes.sameLine}>
+                                    <TextField
+                                        error={emailError}
+                                        variant="outlined"
+                                        margin="normal"
+                                        id="email"
+                                        label="Email address for reminder"
+                                        name="email"
+                                        autoComplete="email"
+                                        className={moobile() ? classes.textFieldWithSpaceMobile : classes.textFieldWithSpace }
+                                        value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
+                                        onChange={event =>
+                                            setEmail(event.target.value)
+                                        }
+                                        disabled={!editStatus}
+                                    />
+                                    <Tooltip
+                                        title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
+                                        <IconButton aria-label="delete" className={classes.margin} size="small">
+                                            <HelpOutlineOutlinedIcon/>
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            </Box>
+                            :
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                id="email"
+                                label="Email address for reminder"
+                                name="email"
+                                autoComplete="email"
+                                className={classes.textField2}
+                                value={oldReminderEmail === "" || oldReminderEmail === undefined ? "Not selected" : oldReminderEmail }
+                                onChange={event =>
+                                    setEmail(event.target.value)
+                                }
+                                disabled={!editStatus}
+                            />
+                        }
                     </Box>
 
                     <Grid item xs={12}>
@@ -218,6 +332,7 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         setEditStatus(true)
                                     }}
                                 >
+                                    <StyledCreate />
                                     Edit
                                 </StyledButton>
                                 :
@@ -227,8 +342,18 @@ const Settings: React.FC<RouteComponentProps> = props => {
                                         color="primary"
                                         onClick={() => {
                                             /* states -> back-end */
-                                            props.history.push("/settings");
-                                            setEditStatus(false)
+                                            let value = true;
+                                            if (email !== "") {
+                                                value = emailCheck(email);
+                                            }
+                                            if (value) {
+                                                props.history.push("/settings");
+                                                setEditStatus(false) 
+                                                setEmailError(false)
+                                                pushData()
+                                            } else {
+                                                setEmailError(true)
+                                            }
                                         }}
                                     >
                                         Save

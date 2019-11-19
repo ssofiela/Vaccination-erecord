@@ -42,18 +42,48 @@ const Header: React.FC<Props> = (props) => {
     const classes = useStyles();
 
     const [value, setValue] = React.useState("/");
+    const [id, setId] = React.useState<number>(0);
 
     const handleChange = (_event: React.ChangeEvent<{}>, newValue: string): void => {
         setValue(newValue);
         props.history.push(newValue);
     };
     const handleLogin = (): void => {
-        // if (props.userId) {
+        if (id == 0) {
             props.history.push("/login");
-       //  } else {
+        } else {
             /* Sign out */
-        // }
+            fetch("https://vaccine-backend.herokuapp.com/api/logout", {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                props.history.push("/login");
+            })
+        }
     };
+
+    /* Check user id */
+    /* TODO do that not need refresh after log in */
+    React.useEffect(() => {
+        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        }).then(response => { return response.json()})
+            .then(data => {
+                if (data.id !== undefined) {
+                    setId(data.id);
+                }
+            });
+    }, []);
+
 
     return (
         <div className={classes.root}>
@@ -71,12 +101,12 @@ const Header: React.FC<Props> = (props) => {
                             aria-label="tabs"
                         >
                             <Tab label="Home" value="/" />
-                            <Tab label="My vaccines" value="/vaccines" />
-                            <Tab label="Settings" value="/settings" />
-                            <Tab label="FAQ" value="/frequently-asked-questions" />
+                            <Tab label="My vaccines" disabled={id < 1} value="/vaccines" />
+                            <Tab label="Settings" disabled={id < 1} value="/settings" />
+                            <Tab label="FAQ" disabled={id < 1} value="/frequently-asked-questions" />
                         </Tabs>
                     </div>
-                    <Button color="inherit" onClick={handleLogin}>{props.userId ? "Log out" : "Log in"}</Button>
+                    <Button color="inherit" onClick={handleLogin}>{id > 0 ? "Log out" : "Log in"}</Button>
                 </Toolbar>
             </AppBar>
         </div>

@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     mobileContainer: {
         margin: theme.spacing(2, 0),
         overFlowX: "auto",
-        minWidth: 220
+        minWidth: 270
     },
     link: {
         display: "flex",
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 200
+        minWidth: 300
     },
     textField: {
         marginLeft: theme.spacing(2),
@@ -45,8 +45,7 @@ const useStyles = makeStyles(theme => ({
         minWidth: 130
     },
     textFieldWithoutLimits: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1)
+        maxWidth: 200
     },
     sameLine: {
         marginLeft: theme.spacing(2),
