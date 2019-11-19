@@ -148,7 +148,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
 
     };
     const pushData = ():void => {
-        console.log("pushdata", birthday, birthday !== oldBirthday && birthday !== 0)
          if (birthday !== oldBirthday && birthday !== 0) {
             fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
@@ -203,7 +202,6 @@ const Settings: React.FC<RouteComponentProps> = props => {
                         if (data.year_born !== null) {
                             setOldBirthday(data.year_born)
                         }
-
                     });
             })
         }

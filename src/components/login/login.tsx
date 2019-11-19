@@ -29,7 +29,6 @@ const Login: React.FC<RouteComponentProps> = props => {
                 username: email,
                 password: password
             }),
-            credentials: 'include',
         }).then(response => {return response.json()})
         .then( data => {
             valid = data.status === "Authorized";

@@ -1,6 +1,6 @@
 import React from "react";
 import "date-fns";
-import { TextField } from "@material-ui/core";
+import { createStyles, TextField, Theme, withStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
@@ -14,13 +14,42 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import useStyles from "../common/styles"
 import emailCheck from "../common/emailChecker"
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import clsx from "clsx";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Input from "@material-ui/core/Input";
+
+const StyledButton = withStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            borderRadius: 0
+        },
+        outlined: {
+            backgroundColor: theme.palette.background.default,
+            borderWidth: "2px",
+            "&:hover": {
+                borderWidth: "2px"
+            }
+        },
+        contained: {
+            marginRight: theme.spacing(2.5),
+            color: "#fff"
+        }
+    })
+)(Button);
 
 const Register: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
+    const classes2 = StyledButton
 
     const [errors, setErrors] = React.useState<string[]>([]);
     const [email, setEmail] = React.useState<string>("");
     const [password, setPassword] = React.useState<string>("");
+    const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
     const handleErrors = (newErrors: string[]): void => {
         setErrors(newErrors);
@@ -157,7 +186,7 @@ const Register: React.FC<RouteComponentProps> = props => {
                                 fullWidth
                                 name="password"
                                 label="Password"
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 helperText={errors.includes("password") && "Invalid password"}
                                 id="password"
                                 autoComplete="current-password"
@@ -165,6 +194,15 @@ const Register: React.FC<RouteComponentProps> = props => {
                                 onChange={event =>
                                     setPassword(event.target.value)
                                 }
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
                             />
                             <Tooltip
                                 title="Password required: more than 5 marks and upper case, lower case, numerals and other symbol.">
