@@ -6,7 +6,7 @@ import { createStyles, makeStyles, styled, Theme } from "@material-ui/core/style
 import Box from "@material-ui/core/Box";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { RouteComponentProps, withRouter } from "react-router";
-import { InputLabel, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";

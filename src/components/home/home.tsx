@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { RouteComponentProps, withRouter } from "react-router";
 
-import { OutlinedButton } from "../common/button";
+import { FilledButton } from "../common/button";
 import * as Panel from "../common/panel";
 
 /**
@@ -40,13 +40,13 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                         <Typography>TODO: other content</Typography>
                         <br />
                         <br />
-                        <OutlinedButton
+                        <FilledButton
                             onClick={() => {
                                 props.history.push("/register");
                             }}
                         >
                             Register
-                        </OutlinedButton>
+                        </FilledButton>
                     </Panel.Body>
                 </Grid>
             </Grid>
