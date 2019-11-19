@@ -11,18 +11,14 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
-import CreateIcon from '@material-ui/icons/Create';
+import CreateIcon from "@material-ui/icons/Create";
 
 import * as Panel from "../common/panel";
 import { FilledButton, OutlinedButton } from "../common/button";
-import emailCheck from "../common/emailChecker"
+import emailCheck from "../common/email-checker";
 
 import Birthday from "./birthday";
 import Reminder from "./reminder";
-
-const StyledSettings = styled(SettingsIcon)({
-    marginRight: "10px"
-});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -85,18 +81,17 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(2)
         },
         marginDouble: {
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacing(2)
         },
         margin: {
-            margin: theme.spacing(3),
+            margin: theme.spacing(3)
         },
         sameLine: {
             flexDirection: "row",
             display: "flex"
-        },
+        }
     })
 );
-
 
 const Settings: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
@@ -120,7 +115,7 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
             moobile();
         }
     };
-    const pushData = ():void => {
+    const pushData = (): void => {
         /* if (birthday !== oldBirthday && birthday !== 0) {
             const data = fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
@@ -220,7 +215,7 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
                                 editStatus={editStatus}
                                 type="reminder"
                             />
-                            {editStatus ?
+                            {editStatus ? (
                                 <Box
                                     display="flex"
                                     flexDirection="row"
@@ -236,22 +231,33 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
                                             label="Email address for reminder"
                                             name="email"
                                             autoComplete="email"
-                                            className={moobile() ? classes.textFieldWithSpaceMobile : classes.textFieldWithSpace }
-                                            value={email === "email@example.com" && !editStatus ? "Not selected" : email === "email@example.com" && editStatus ? "" : email}
-                                            onChange={event =>
-                                                setEmail(event.target.value)
+                                            className={
+                                                moobile()
+                                                    ? classes.textFieldWithSpaceMobile
+                                                    : classes.textFieldWithSpace
                                             }
+                                            value={
+                                                email === "email@example.com" && !editStatus
+                                                    ? "Not selected"
+                                                    : email === "email@example.com" && editStatus
+                                                    ? ""
+                                                    : email
+                                            }
+                                            onChange={(event) => setEmail(event.target.value)}
                                             disabled={!editStatus}
                                         />
-                                        <Tooltip
-                                            title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
-                                            <IconButton aria-label="delete" className={classes.margin} size="small">
-                                                <HelpOutlineOutlinedIcon/>
+                                        <Tooltip title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
+                                            <IconButton
+                                                aria-label="delete"
+                                                className={classes.margin}
+                                                size="small"
+                                            >
+                                                <HelpOutlineOutlinedIcon />
                                             </IconButton>
                                         </Tooltip>
                                     </div>
                                 </Box>
-                                :
+                            ) : (
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -260,59 +266,61 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
                                     name="email"
                                     autoComplete="email"
                                     className={classes.textField2}
-                                    value={oldReminderEmail === "" || oldReminderEmail === undefined ? "Not selected" : oldReminderEmail }
-                                    onChange={event =>
-                                        setEmail(event.target.value)
+                                    value={
+                                        oldReminderEmail === "" || oldReminderEmail === undefined
+                                            ? "Not selected"
+                                            : oldReminderEmail
                                     }
+                                    onChange={(event) => setEmail(event.target.value)}
                                     disabled={!editStatus}
                                 />
-                            }
+                            )}
                         </Box>
                     </Panel.Body>
                     <Grid item xs={12}>
-                            {!editStatus ? (
-                                <Panel.Footer>
-                                    <OutlinedButton
-                                        onClick={() => {
-                                            setEditStatus(true);
-                                        }}
-                                    >
-                                        <StyledCreate />
-                                        Edit
-                                    </OutlinedButton>
-                                </Panel.Footer>
-                            ) : (
-                                <Panel.Footer>
-                                    <FilledButton
-                                        onClick={() => {
-                                            /* states -> back-end */
-                                            let value = true;
-                                            if (email !== "") {
-                                                value = emailCheck(email);
-                                            }
-                                            if (value) {
-                                                props.history.push("/settings");
-                                                setEditStatus(false);
-                                                setEmailError(false);
-                                                pushData()
-                                            } else {
-                                                setEmailError(true)
-                                            }
-                                        }}
-                                    >
-                                        Save
-                                    </FilledButton>
-                                    <OutlinedButton
-                                        onClick={() => {
-                                            /* Get the old data from back-end */
+                        {!editStatus ? (
+                            <Panel.Footer>
+                                <OutlinedButton
+                                    onClick={() => {
+                                        setEditStatus(true);
+                                    }}
+                                >
+                                    <StyledCreate />
+                                    Edit
+                                </OutlinedButton>
+                            </Panel.Footer>
+                        ) : (
+                            <Panel.Footer>
+                                <FilledButton
+                                    onClick={() => {
+                                        /* states -> back-end */
+                                        let value = true;
+                                        if (email !== "") {
+                                            value = emailCheck(email);
+                                        }
+                                        if (value) {
                                             props.history.push("/settings");
                                             setEditStatus(false);
-                                        }}
-                                    >
-                                        Cancel
-                                    </OutlinedButton>
-                                </Panel.Footer>
-                            )}
+                                            setEmailError(false);
+                                            pushData();
+                                        } else {
+                                            setEmailError(true);
+                                        }
+                                    }}
+                                >
+                                    Save
+                                </FilledButton>
+                                <OutlinedButton
+                                    onClick={() => {
+                                        /* Get the old data from back-end */
+                                        props.history.push("/settings");
+                                        setEditStatus(false);
+                                    }}
+                                >
+                                    Cancel
+                                </OutlinedButton>
+                            </Panel.Footer>
+                        )}
                     </Grid>
                 </Grid>
             </Grid>

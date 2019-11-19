@@ -10,7 +10,7 @@ import Box from "@material-ui/core/Box";
 import useStyles from "../common/styles";
 import * as Panel from "../common/panel";
 import { FilledButton } from "../common/button";
-import emailCheck from "../common/emailChecker"
+import emailCheck from "../common/email-checker";
 import { TextInput } from "../common/form-input";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
@@ -27,7 +27,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
     /* Check that email address and the password are valid */
     const handleInputs2 = (): void => {
         const emailValid = emailCheck(email);
-        let errors = [];
+        const errors = [];
         if (!emailValid) {
             errors.push("email");
         }
@@ -55,34 +55,34 @@ const Register: React.FC<RouteComponentProps> = (props) => {
             fetch("https://vaccine-backend.herokuapp.com/api/user/create", {
                 method: "POST",
                 headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
                 },
-                credentials: 'include',
+                credentials: "include",
                 body: JSON.stringify({
                     username: email,
                     password: password
                 })
-            }).then(response => {
+            }).then((response) => {
                 valid = response.ok;
                 /*props.userId = userId*/
 
                 if (valid) {
                     props.history.push("/home");
                 }
-            })
+            });
         }
     };
 
     const [width, setWidth] = React.useState<number>(0);
-    const moobile = (): boolean => {
+    const mobile = (): boolean => {
         const isMobile = window.outerWidth <= 450;
         return isMobile;
     };
     const handleMobile = (): void => {
         if (window.outerWidth !== width) {
             setWidth(window.outerWidth);
-            moobile();
+            mobile();
         }
     };
     React.useEffect(() => {
@@ -93,7 +93,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 
     return (
         // TODO mobile support
-        //<Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        //<Paper square className={mobile() ? classes.mobileContainer : classes.container}>
         <Panel.Container>
             <Grid container>
                 <Grid item xs={12}>
@@ -143,7 +143,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                     </Grid>
                     <Grid container>
                         <Grid item xs={12}>
-                            <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                            <div className={mobile() ? classes.differentLine : classes.sameLine}>
                                 <Typography>Already have an account?&nbsp;</Typography>
                                 <Link
                                     underline="none"

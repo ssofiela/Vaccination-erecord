@@ -12,15 +12,15 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import moment from "moment";
-import { TextField } from "@material-ui/core";
 
 import * as Panel from "../common/panel";
 import useStyles from "../common/styles";
 import { FilledButton, OutlinedButton } from "../common/button";
-import ComboBox, { OptionType } from "../common/form-input/combo-box";
+import ComboBox from "../common/form-input/combo-box";
 import TextInput from "../common/form-input/text-input";
+import emailCheck from "../common/email-checker";
 
-import VaccineName, { mappedVaccineOptions } from "./vaccine-name";
+import { mappedVaccineOptions } from "./vaccine-name";
 import ReminderCheck from "./reminder-check";
 
 const StyledColorize = styled(Colorize)({
@@ -102,11 +102,7 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
             <Grid container>
                 <Grid item xs={mobile() ? 12 : 6}>
                     <Panel.Body>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={ mobile() ? 3 : 5}
-                        >
+                        <Box display="flex" flexDirection="row" p={mobile() ? 3 : 5}>
                             <ComboBox
                                 required
                                 error={errors.includes("name")}
@@ -121,17 +117,11 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                         <Grid item xs={12}>
                             <Box display="flex" flexDirection="row">
                                 <Grid item xs={6}>
-                                    <MuiPickersUtilsProvider
-                                        utils={DateFnsUtils}
-                                    >
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <Grid container>
                                             <KeyboardDatePicker
                                                 name="date"
-                                                autoOk={
-                                                    !errors.includes(
-                                                        "date"
-                                                    )
-                                                }
+                                                autoOk={!errors.includes("date")}
                                                 error={errors.includes("date")}
                                                 disableToolbar
                                                 variant="inline"
@@ -141,31 +131,20 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                                 label="Date*"
                                                 value={selectedDate}
                                                 className={classes.menu}
-                                                onChange={event =>
-                                                    handleDateChange(
-                                                        event
-                                                    )
-                                                }
+                                                onChange={(event) => handleDateChange(event)}
                                                 KeyboardButtonProps={{
-                                                    "aria-label":
-                                                        "change date"
+                                                    "aria-label": "change date"
                                                 }}
                                             />
                                         </Grid>
                                     </MuiPickersUtilsProvider>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <MuiPickersUtilsProvider
-                                        utils={DateFnsUtils}
-                                    >
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <Grid container>
                                             <KeyboardDatePicker
                                                 name="date"
-                                                autoOk={
-                                                    !errors.includes(
-                                                        "date"
-                                                    )
-                                                }
+                                                autoOk={!errors.includes("date")}
                                                 disableToolbar
                                                 variant="inline"
                                                 format="dd/MM/yyyy"
@@ -174,14 +153,9 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                                 label="Booster date"
                                                 className={classes.menu}
                                                 value={selectedBoosterDate}
-                                                onChange={event =>
-                                                    handleBoosterDateChange(
-                                                        event
-                                                    )
-                                                }
+                                                onChange={(event) => handleBoosterDateChange(event)}
                                                 KeyboardButtonProps={{
-                                                    "aria-label":
-                                                        "change date"
+                                                    "aria-label": "change date"
                                                 }}
                                             />
                                         </Grid>
@@ -190,32 +164,19 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                             </Box>
                         </Grid>
                         <Grid>
-                            <Box
-                                display="flex"
-                                flexDirection="row"
-                                p={mobile() ? 3 : 5}
-                            >
+                            <Box display="flex" flexDirection="row" p={mobile() ? 3 : 5}>
                                 <ReminderCheck
                                     sidebarOpen
-                                    updateEmailRemainder={(
-                                        emailReminder: string
-                                    ): void =>
-                                        setReminder(
-                                            emailReminder
-                                        )
+                                    updateEmailRemainder={(emailReminder: string): void =>
+                                        setReminder(emailReminder)
                                     }
-                                    updateEmail={(
-                                        email: string
-                                    ): void => setEmail(email)}
-                                    error={errors.includes("email")
-                                        ? "email"
-                                        : ""}
+                                    updateEmail={(email: string): void => setEmail(email)}
+                                    error={errors.includes("email") ? "email" : ""}
                                     emailReminder={emailReminder}
                                 />
                             </Box>
-
                         </Grid>
-                        <Grid xs={12}>
+                        <Grid item xs={12}>
                             <TextInput
                                 multiline
                                 onChange={(event) => handleComment(event.target.value)}
@@ -229,19 +190,16 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                 <Panel.Footer>
                     <FilledButton
                         onClick={() => {
-                            const invalidName: boolean =
-                                name === "";
+                            const invalidName: boolean = name === "";
                             const invalidEmail: boolean =
-                                emailReminder === "Yes" &&
-                                !emailCheck(email);
+                                emailReminder === "Yes" && !emailCheck(email);
                             const invalidDate: boolean =
                                 selectedDate.toString().split("T")[0] ===
-                                moment().format().split("T")[0];
-                            const invalid: boolean =
-                                invalidName ||
-                                invalidEmail ||
-                                invalidDate;
-                            let newErrors: string[] = [];
+                                moment()
+                                    .format()
+                                    .split("T")[0];
+                            const invalid: boolean = invalidName || invalidEmail || invalidDate;
+                            const newErrors: string[] = [];
                             if (invalidName) {
                                 newErrors.push("name");
                             }

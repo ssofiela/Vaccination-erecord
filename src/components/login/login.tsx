@@ -15,6 +15,9 @@ import { TextInput } from "../common/form-input";
 const Login: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
 
+    const [width, setWidth] = React.useState<number>(0);
+    const [email, setEmail] = React.useState<string>("");
+    const [password, setPassword] = React.useState<string>("");
     const [error, setError] = React.useState<boolean>(false);
     const handleBack = (): void => {
         let valid = true;
@@ -22,31 +25,29 @@ const Login: React.FC<RouteComponentProps> = (props) => {
         fetch("https://vaccine-backend.herokuapp.com/api/login", {
             method: "POST",
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Content-Type": "application/json"
             },
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
                 username: email,
                 password: password
-            }),
-            credentials: 'include',
-        }).then(response => {return response.json()})
-        .then( data => {
-            valid = data.status === "Authorized";
-
-            if (valid) {
-                props.history.push("/home");
-            } else {
-                setError(true)
-            }
+            })
         })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                valid = data.status === "Authorized";
 
-
+                if (valid) {
+                    props.history.push("/home");
+                } else {
+                    setError(true);
+                }
+            });
     };
-    const [width, setWidth] = React.useState<number>(0);
-    const [email, setEmail] = React.useState<string>("");
-    const [password, setPassword] = React.useState<string>("");
+
     const moobile = (): boolean => {
         const isMobile = window.outerWidth <= 450;
         return isMobile;
@@ -83,9 +84,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                                 id="email"
                                 name="Email"
                                 autoComplete="email"
-                                onChange={event =>
-                                    setEmail(event.target.value)
-                                }
+                                onChange={(event) => setEmail(event.target.value)}
                                 error={error}
                                 errorMessage={error ? "Incorrect email address or password." : ""}
                             />
@@ -98,10 +97,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                                 name="Password"
                                 type="password"
                                 autoComplete="current-password"
-                                className={classes.textField}
-                                onChange={event =>
-                                    setPassword(event.target.value)
-                                }
+                                onChange={(event) => setPassword(event.target.value)}
                                 error={error}
                                 errorMessage={error ? "Incorrect email address or password." : ""}
                             />
