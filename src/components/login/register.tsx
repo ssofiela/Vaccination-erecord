@@ -134,11 +134,22 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                 required
                                 id="password"
                                 name="Password"
-                                type="password"
                                 error={errors.includes("password")}
                                 errorMessage={errors.includes("password") ? "Invalid password" : ""}
                                 onChange={(event) => setPassword(event.target.value)}
                                 tooltip="A password should be at least 5 characters long, and may consist of uppercase and lowercase letter, numerals and other symbols."
+                                fullWidth
+                                label="Password"
+                                type={showPassword ? "text" : "password"}
+                                helperText={errors.includes("password") && "Invalid password"}
+                                autoComplete="current-password"
+                                /*endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }*/
                             />
                         </Grid>
                     </Grid>
