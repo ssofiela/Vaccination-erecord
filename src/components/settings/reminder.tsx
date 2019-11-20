@@ -1,4 +1,5 @@
 import React from "react";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
@@ -10,33 +11,31 @@ import Box from "@material-ui/core/Box";
 interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
-    updateBirthday: any;
+    updateBirthday: (birthday: number) => void;
     editStatus: boolean;
     type: string;
     mobile: boolean;
 }
-
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
             marginRight: theme.spacing(1),
             maxWidth: 300,
-            display:"flex",
-            flexDirection:"column"
+            display: "flex",
+            flexDirection: "column"
         },
         formControl: {
             marginTop: theme.spacing(1),
             marginRight: theme.spacing(1),
             minWidth: 300,
-            display:"flex",
-            flexDirection:"column"
+            display: "flex",
+            flexDirection: "column"
         },
         formControlMobile: {
             minWidth: 150,
-            display:"flex",
-            flexDirection:"column",
+            display: "flex",
+            flexDirection: "column",
             marginRight: theme.spacing(1),
         },
         margin: {
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Reminder: React.FC<MainProps> = props => {
+const Reminder: React.FC<MainProps> = (props) => {
     const classes = useStyles();
 
     const [reminder, setReminder] = React.useState<{
@@ -61,7 +60,7 @@ const Reminder: React.FC<MainProps> = props => {
             ...reminder,
             [time]: event.target.value
         });
-        props.updateBirthday(event.target.value);
+        props.updateBirthday(parseInt(event.target.value));
     };
 
     interface BirthdayOptions {
@@ -70,19 +69,28 @@ const Reminder: React.FC<MainProps> = props => {
     }
 
     function createBirthdayOptions(options: string[]): BirthdayOptions[] {
-        return options.map(option => ({ value: option, label: option }));
+        return options.map((option) => ({ value: option, label: option }));
     }
 
     const reminderOptions = [
-        "1 week before", "2 weeks before", "3 weeks before", "1 months before", "2 months before", "3 months before", "4 months before", "5 months before", "6 months before", "1 year before", "2 years before"
+        "1 week before",
+        "2 weeks before",
+        "3 weeks before",
+        "1 months before",
+        "2 months before",
+        "3 months before",
+        "4 months before",
+        "5 months before",
+        "6 months before",
+        "1 year before",
+        "2 years before"
     ];
 
     const mappedBirthdayOptions = createBirthdayOptions(reminderOptions);
 
-
     return (
         <div>
-            {!props.editStatus ?
+            {!props.editStatus ? (
                 <div>
                     <TextField
                         variant="outlined"
@@ -97,7 +105,7 @@ const Reminder: React.FC<MainProps> = props => {
                         disabled
                     />
                 </div>
-                :
+            ) : (
                 <Box
                     display="flex"
                     flexDirection="row"
@@ -117,7 +125,7 @@ const Reminder: React.FC<MainProps> = props => {
                                     id: "outlined-age-native-simple"
                                 }}
                             >
-                                {mappedBirthdayOptions.map(option => (
+                                {mappedBirthdayOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
                                         {option.label}
                                     </option>
@@ -131,7 +139,7 @@ const Reminder: React.FC<MainProps> = props => {
                         </IconButton>
                     </Tooltip>
                 </Box>
-            }
+            )}
         </div>
     );
 };

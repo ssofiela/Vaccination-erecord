@@ -1,34 +1,10 @@
 import React from "react";
-import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { RouteComponentProps, withRouter } from "react-router";
 
-import { Panel } from "../common";
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        button: {
-            backgroundColor: theme.palette.background.default,
-            borderRadius: 0,
-            borderWidth: "2px"
-        }
-    })
-);
-
-const StyledButton = withStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            backgroundColor: theme.palette.background.default,
-            borderRadius: 0,
-            borderWidth: "2px",
-            "&:hover": {
-                borderWidth: "2px"
-            }
-        }
-    })
-)(Button);
+import { FilledButton } from "../common/button";
+import * as Panel from "../common/panel";
 
 /**
  * Landing page of the site
@@ -36,19 +12,18 @@ const StyledButton = withStyles((theme: Theme) =>
  * @constructor
  */
 const Home: React.FC<RouteComponentProps> = (props) => {
-    const classes = useStyles();
     return (
-        <Panel
-            header={
-                <Grid container>
-                    <Grid item xs={12}>
+        <Panel.Container>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Panel.Header>
                         <Typography>Why Vaccination eRecord?</Typography>
-                    </Grid>
+                    </Panel.Header>
                 </Grid>
-            }
-            body={
-                <Grid container>
-                    <Grid item xs={12}>
+            </Grid>
+            <Grid container>
+                <Grid item xs={12}>
+                    <Panel.Body>
                         <Typography>
                             Vaccination eRecord is a service that saves all your vaccination
                             information in one place to make them always available to you.
@@ -62,22 +37,20 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                             We do not store any personal information on our site. In fact, all you
                             need to register is an email address an a password.
                         </Typography>
+                        <Typography>TODO: other content</Typography>
                         <br />
                         <br />
-                        <StyledButton
-                            variant="outlined"
-                            color="primary"
-                            className={classes.button}
+                        <FilledButton
                             onClick={() => {
                                 props.history.push("/register");
                             }}
                         >
                             Register
-                        </StyledButton>
-                    </Grid>
+                        </FilledButton>
+                    </Panel.Body>
                 </Grid>
-            }
-        />
+            </Grid>
+        </Panel.Container>
     );
 };
 

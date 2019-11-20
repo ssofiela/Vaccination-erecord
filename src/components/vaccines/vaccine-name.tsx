@@ -2,31 +2,33 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import React from "react";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
-import useStyles from "../common/styles"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
 
+import useStyles from "../common/styles"
+
 interface MainProps {
     sidebarOpen: boolean;
     children?: React.ReactNode;
-    updateName: any;
+    updateName: (name: string) => void;
     error: string;
     type: string;
 }
 
 interface VaccineOptions {
-    value: string;
+    value: number;
     label: string;
 }
 
 function createVaccineOptions(options: string[]): VaccineOptions[] {
-    return options.map(option => ({ value: option, label: option }));
+    return options.map((option) => ({ value: options.indexOf(option)+1, label: option }));
 }
 
-const vaccineOptions = [
+export const vaccineOptions = [
     "",
     "Cholera",
     "Hib",
@@ -93,7 +95,8 @@ const useStyles2 = makeStyles((theme: Theme) =>
     })
 );
 
-const VaccineName: React.FC<MainProps> = props => {
+
+const VaccineName: React.FC<MainProps> = (props) => {
     const classes = useStyles();
     const classes2 = useStyles2();
 
@@ -135,10 +138,7 @@ const VaccineName: React.FC<MainProps> = props => {
                             Select vaccine*
                         </InputLabel>
                     ) : (
-                        <InputLabel
-                            ref={inputLabel}
-                            htmlFor="outlined-age-native-simple"
-                        >
+                        <InputLabel ref={inputLabel} htmlFor="outlined-age-native-simple">
                             {props.type === "name" ? "Select vaccine*" : "Select abbreviation"}
                         </InputLabel>
                     )}
@@ -156,7 +156,7 @@ const VaccineName: React.FC<MainProps> = props => {
                                 id: "outlined-age-native-simple"
                             }}
                         >
-                            {mappedVaccineOptions.map(option => (
+                            {mappedVaccineOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
                                     {option.label}
                                 </option>

@@ -1,19 +1,23 @@
 import React from "react";
+//eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
-import { TextField } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import { RouteComponentProps,  } from "react-router";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Paper from "@material-ui/core/Paper";
-import { theme } from "../../utils/theme";
-import useStyles from "../common/styles"
+import { RouteComponentProps } from "react-router";
 
-const Login: React.FC<RouteComponentProps> = props => {
+import useStyles from "../common/styles";
+import * as Panel from "../common/panel";
+import { FilledButton } from "../common/button";
+import { TextInput } from "../common/form-input";
+
+const Login: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
 
+    const [width, setWidth] = React.useState<number>(0);
+    const [email, setEmail] = React.useState<string>("");
+    const [password, setPassword] = React.useState<string>("");
     const [error, setError] = React.useState<boolean>(false);
     const handleBack = (): void => {
         let valid = true;
@@ -21,30 +25,29 @@ const Login: React.FC<RouteComponentProps> = props => {
         fetch("https://vaccine-backend.herokuapp.com/api/login", {
             method: "POST",
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Content-Type": "application/json"
             },
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
                 username: email,
                 password: password
-            }),
-        }).then(response => {return response.json()})
-        .then( data => {
-            valid = data.status === "Authorized";
-
-            if (valid) {
-                props.history.push("/home");
-            } else {
-                setError(true)
-            }
+            })
         })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                valid = data.status === "Authorized";
 
-
+                if (valid) {
+                    props.history.push("/home");
+                } else {
+                    setError(true);
+                }
+            });
     };
-    const [width, setWidth] = React.useState<number>(0);
-    const [email, setEmail] = React.useState<string>("");
-    const [password, setPassword] = React.useState<string>("");
+
     const moobile = (): boolean => {
         const isMobile = window.outerWidth <= 450;
         return isMobile;
@@ -54,7 +57,6 @@ const Login: React.FC<RouteComponentProps> = props => {
             setWidth(window.outerWidth);
             moobile();
         }
-
     };
 
     React.useEffect(() => {
@@ -63,111 +65,64 @@ const Login: React.FC<RouteComponentProps> = props => {
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
 
-
-
     return (
-        <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        // TODO mobile support
+        // <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
+        <Panel.Container>
             <Grid container>
                 <Grid item xs={12}>
-                    <Box
-                        className={classes.header}
-                        display="flex"
-                        flexDirection="row"
-                        bgcolor={theme.palette.secondary.main}
-                        p={1.5}
-                    >
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <Link
-                                variant="body1"
-                                color="inherit"
-                                className={classes.link}
-                            >
-                                Sign In
-                            </Link>
-                        </Breadcrumbs>
-                    </Box>
+                    <Panel.Header>
+                        <Typography>Log in</Typography>
+                    </Panel.Header>
                 </Grid>
             </Grid>
-            <form className={classes.form} noValidate>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={2}
-                        >
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
+            <Panel.Body>
+                <form className={classes.form} noValidate>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <TextInput
                                 id="email"
-                                label="Email Address"
-                                name="email"
+                                name="Email"
                                 autoComplete="email"
-                                className={classes.textField}
-                                onChange={event =>
-                                    setEmail(event.target.value)
-                                }
+                                onChange={(event) => setEmail(event.target.value)}
+                                error={error}
+                                errorMessage={error ? "Incorrect email address or password." : ""}
                             />
-                        </Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={2}
-                        >
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                className={classes.textField}
-                                helperText={error && "Incorrect email address or password"}
-                                onChange={event =>
-                                    setPassword(event.target.value)
-                                }
-                            />
-                        </Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={2}
-                        >
-                            <Grid container>
-                                <Grid item>
-                                    <div className={moobile() ? classes.differentLine : classes.sameLine}>
-                                        <div>New to Vaccination eRecord? </div>
-                                        <Link onClick={() => props.history.push("/register")} >
-                                            {" Sign Up"}
-                                        </Link>
-                                    </div>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                        <Box
-                            display="flex"
-                            flexDirection="row"
-                            p={3}
-                        >
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                                onClick={handleBack}
-                            >
-                                Sign In
-                            </Button>
-                        </Box>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </form>
-        </Paper>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <TextInput
+                                id="password"
+                                name="Password"
+                                type="password"
+                                autoComplete="current-password"
+                                onChange={(event) => setPassword(event.target.value)}
+                                error={error}
+                                errorMessage={error ? "Incorrect email address or password." : ""}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Box className={classes.button}>
+                                <FilledButton onClick={handleBack}>Log In</FilledButton>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item>
+                            <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                                <Typography>New to Vaccination eRecord?</Typography>
+                                <Link onClick={() => props.history.push("/register")}>
+                                    <Typography>{" Register"}</Typography>
+                                </Link>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Panel.Body>
+        </Panel.Container>
     );
 };
 
