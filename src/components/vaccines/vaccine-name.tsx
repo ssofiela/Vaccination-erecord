@@ -20,12 +20,12 @@ interface MainProps {
 }
 
 interface VaccineOptions {
-    value: string;
+    value: number;
     label: string;
 }
 
 function createVaccineOptions(options: string[]): VaccineOptions[] {
-    return options.map((option) => ({ value: option, label: option }));
+    return options.map((option) => ({ value: options.indexOf(option)+1, label: option }));
 }
 
 export const vaccineOptions = [
@@ -95,7 +95,6 @@ const useStyles2 = makeStyles((theme: Theme) =>
     })
 );
 
-export const mappedVaccineOptions = createVaccineOptions(vaccineOptions);
 
 const VaccineName: React.FC<MainProps> = (props) => {
     const classes = useStyles();

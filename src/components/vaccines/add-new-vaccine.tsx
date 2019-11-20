@@ -20,12 +20,20 @@ import ComboBox from "../common/form-input/combo-box";
 import TextInput from "../common/form-input/text-input";
 import emailCheck from "../common/email-checker";
 
-import { mappedVaccineOptions } from "./vaccine-name";
 import ReminderCheck from "./reminder-check";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
 });
+
+interface VaccineOptions {
+    value: number;
+    label: string;
+}
+
+function createVaccineOptions(options: string[] ): VaccineOptions[] {
+    return options.map((option) => ({ value: options.indexOf(option)+1, label: option}));
+}
 
 const NewVaccine: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
@@ -49,6 +57,12 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
 
     const [comment, setComment] = React.useState<string>("");
     const [width, setWidth] = React.useState<number>(0);
+    const [vaccineList, setVaccineList] = React.useState<string[]>([]);
+    const [abbreviation, setAbbreviation] = React.useState<string[]>([]);
+
+    const mappedVaccineOptions = createVaccineOptions(vaccineList);
+    const mappedAbbserviationOptions = createVaccineOptions(abbreviation);
+
 
     const handleComment = (event: string): void => {
         setComment(event);
@@ -73,6 +87,25 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
         }
     };
     React.useEffect(() => {
+        fetch("https://vaccine-backend.herokuapp.com/api/vaccine", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        }).then(response => response.json())
+            .then(data => {
+                let vaccines = [];
+                let abb = [];
+                for (let i = 0; i < data.length; i++) {
+                    vaccines.push(data[i].name);
+                    abb.push(data[i].abbreviation)
+
+                }
+                setVaccineList(vaccines);
+                setAbbreviation(abb);
+            });
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
@@ -110,6 +143,16 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                                 id="vaccineName"
                                 name="Vaccine"
                                 options={mappedVaccineOptions}
+                                tooltip="Select vaccine from options."
+                                placeholder="Type to search..."
+                            />
+                        </Box>
+                        <Box display="flex" flexDirection="row" p={mobile() ? 3 : 5}>
+                            <ComboBox
+                                required
+                                id="vaccineAbbreviation"
+                                name="Abbreviation"
+                                options={mappedAbbserviationOptions}
                                 tooltip="Select vaccine from options."
                                 placeholder="Type to search..."
                             />

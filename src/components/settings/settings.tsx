@@ -88,12 +88,13 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         sameLine: {
             flexDirection: "row",
-            display: "flex"
-        }
+            display: "flex",
+        },
     })
 );
 
-const Settings: React.FC<RouteComponentProps> = (props) => {
+
+const Settings: React.FC<RouteComponentProps> = props => {
     const classes = useStyles();
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
@@ -115,33 +116,66 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
             moobile();
         }
     };
-    const pushData = (): void => {
-        /* if (birthday !== oldBirthday && birthday !== 0) {
-            const data = fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+    const pushData = ():void => {
+         if (birthday !== oldBirthday && birthday !== 0) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
                 credentials: "include",
-                body: JSON.stringify(birthday),
+                body: JSON.stringify({year_born: birthday}),
                 headers: {
                     "Content-Type": "application/json",
                 },
             }).then(response => {
-                console.log("fetch put birthday", response);
-                return response.json()
+                 response.json()
+                fetch("https://vaccine-backend.herokuapp.com/api/user", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.default_reminder_email !== null) {
+                            setOldReminderEmail(data.default_reminder_email);
+                        }
+                        if (data.year_born !== null) {
+                            setOldBirthday(data.year_born)
+                        }
+
+                    });
             });
-            console.log("try to birthday fetch data", data)
         }
         if (email !== oldReminderEmail && email !== "") {
             fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
                 credentials: "include",
-                body: JSON.stringify(email),
+                body: JSON.stringify({default_reminder_email: email}),
                 headers: {
                     "Content-Type": "application/json",
                 },
-            }).then(response => response.json())
-        } */
+            }).then(response => {
+                response.json()
+                fetch("https://vaccine-backend.herokuapp.com/api/user", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.default_reminder_email !== null) {
+                            setOldReminderEmail(data.default_reminder_email);
+                        }
+                        if (data.year_born !== null) {
+                            setOldBirthday(data.year_born)
+                        }
+                    });
+            })
+        }
     };
-    /*
+
     React.useEffect(() => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "GET",
@@ -152,7 +186,6 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
             },
         }).then(response => response.json())
             .then(data => {
-                console.log("fetch old informations", data);
                 if (data.default_reminder_email !== null) {
                     setOldReminderEmail(data.default_reminder_email);
                 }
@@ -162,7 +195,7 @@ const Settings: React.FC<RouteComponentProps> = (props) => {
 
             });
     });
-    */
+
     React.useEffect(() => {
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.

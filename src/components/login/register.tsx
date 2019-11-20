@@ -6,6 +6,10 @@ import Grid from "@material-ui/core/Grid";
 import { RouteComponentProps } from "react-router";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import useStyles from "../common/styles";
 import * as Panel from "../common/panel";
@@ -13,12 +17,15 @@ import { FilledButton } from "../common/button";
 import emailCheck from "../common/email-checker";
 import { TextInput } from "../common/form-input";
 
+
 const Register: React.FC<RouteComponentProps> = (props) => {
     const classes = useStyles();
+    // const classes2 = StyledButton
 
     const [errors, setErrors] = React.useState<string[]>([]);
     const [email, setEmail] = React.useState<string>("");
     const [password, setPassword] = React.useState<string>("");
+    const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
     const handleErrors = (newErrors: string[]): void => {
         setErrors(newErrors);
@@ -68,7 +75,8 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                 /*props.userId = userId*/
 
                 if (valid) {
-                    props.history.push("/home");
+                    props.history.push("/")
+                    window.location.reload(true);
                 }
             });
         }
@@ -126,11 +134,22 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                 required
                                 id="password"
                                 name="Password"
-                                type="password"
                                 error={errors.includes("password")}
                                 errorMessage={errors.includes("password") ? "Invalid password" : ""}
                                 onChange={(event) => setPassword(event.target.value)}
                                 tooltip="A password should be at least 5 characters long, and may consist of uppercase and lowercase letter, numerals and other symbols."
+                                fullWidth
+                                label="Password"
+                                type={showPassword ? "text" : "password"}
+                                helperText={errors.includes("password") && "Invalid password"}
+                                autoComplete="current-password"
+                                /*endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }*/
                             />
                         </Grid>
                     </Grid>

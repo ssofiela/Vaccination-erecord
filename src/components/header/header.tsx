@@ -61,6 +61,7 @@ const Header: React.FC<Props> = (props) => {
                     "Content-Type": "application/json"
                 }
             }).then(() => {
+                setId(0);
                 props.history.push("/login");
             });
         }
