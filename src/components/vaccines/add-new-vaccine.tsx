@@ -80,6 +80,8 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
 
     const [comment, setComment] = React.useState<string>("");
     const [width, setWidth] = React.useState<number>(0);
+    const [vaccineList, setVaccineList] = React.useState<string[]>([]);
+    const [abbreviation, setAbbreviation] = React.useState<string[]>([]);
 
     const handleComment = (event: string): void => {
         setComment(event);
@@ -105,6 +107,21 @@ const NewVaccine: React.FC<RouteComponentProps> = props => {
 
     };
     React.useEffect(() => {
+        fetch("https://vaccine-backend.herokuapp.com/api/vaccine", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        }).then(response => response.json())
+            .then(data => {
+                for (let i = 0; i < data.lenght; i++) {
+                    setVaccineList(data[i].name)
+                    setAbbreviation(data[i].abbreviation)
+                }
+
+            });
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
     }, [width])
