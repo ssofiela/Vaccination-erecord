@@ -67,7 +67,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                 },
                 credentials: "include",
                 body: JSON.stringify({
-                    username: email,
+                    email: email,
                     password: password
                 })
             }).then((response) => {
