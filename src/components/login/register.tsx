@@ -75,7 +75,8 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                 /*props.userId = userId*/
 
                 if (valid) {
-                    props.history.push("/home");
+                    props.history.push("/")
+                    window.location.reload(true);
                 }
             });
         }
@@ -138,26 +139,6 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                 errorMessage={errors.includes("password") ? "Invalid password" : ""}
                                 onChange={(event) => setPassword(event.target.value)}
                                 tooltip="A password should be at least 5 characters long, and may consist of uppercase and lowercase letter, numerals and other symbols."
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type={showPassword ? "text" : "password"}
-                                helperText={errors.includes("password") && "Invalid password"}
-                                id="password"
-                                autoComplete="current-password"
-                                className={classes.textField}
-                                onChange={event =>
-                                    setPassword(event.target.value)
-                                }
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
                             />
                         </Grid>
                     </Grid>

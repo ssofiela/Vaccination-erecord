@@ -41,7 +41,9 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                 valid = data.status === "Authorized";
 
                 if (valid) {
-                    props.history.push("/home");
+                    props.history.push("/")
+                    window.location.reload(true);
+
                 } else {
                     setError(true);
                 }
