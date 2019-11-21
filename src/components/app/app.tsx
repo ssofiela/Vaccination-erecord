@@ -30,6 +30,7 @@ class App extends React.Component {
                             path="/frequently-asked-questions"
                             component={FrequentlyAskedQuestions}
                         />
+                        <Route key="settings" path="/" component={Settings} /> /* Makes that invalid urls goes to login page */
                     </Switch>
                 </Main>
             </Router>

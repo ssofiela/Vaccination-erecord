@@ -13,6 +13,10 @@ import { RESPONSE_STATUS } from "../../utils/constants";
 import { mapToVaccineFormState } from "../../utils/data-mapper";
 
 import { Table } from "./vaccine-table";
+import { storeUserId } from "../../redux/actions/user";
+import { UserState } from "../../interfaces/user";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
 
 interface State {
     vaccines: Vaccine[];
@@ -27,7 +31,9 @@ const StyledColorize = styled(Colorize)({
  * @param props
  * @constructor
  */
-class VaccineList extends React.Component<RouteComponentProps, State> {
+
+type Props = RouteComponentProps & MapStateToProps & DispatchProps
+class VaccineList extends React.Component<Props, State> {
     readonly state = {
         vaccines: []
     };
@@ -58,6 +64,9 @@ class VaccineList extends React.Component<RouteComponentProps, State> {
                 }
             }
         });
+        if (this.props.user.userId === undefined || this.props.user.userId < 1) {
+            this.props.history.push("/login")
+        }
     }
 
     deleteVaccine = (id: number): void => {
@@ -137,4 +146,26 @@ class VaccineList extends React.Component<RouteComponentProps, State> {
     }
 }
 
-export default withRouter(VaccineList);
+interface DispatchProps {
+    storeUserId: typeof storeUserId
+}
+
+interface MapStateToProps {
+    user: UserState
+}
+
+const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+    return {
+        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+    }
+};
+function mapStateToProps(state: any):MapStateToProps {
+    return {
+        user: state.user
+    }
+};
+
+export default compose(
+    withRouter,
+    connect( mapStateToProps, mapDispatchToProps)
+)(VaccineList);

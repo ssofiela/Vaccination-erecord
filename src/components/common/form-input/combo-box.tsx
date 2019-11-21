@@ -56,13 +56,14 @@ const StyledTextInput = withStyles((theme: Theme) =>
 )(TextField);
 type Props = ComboBoxProps & AutocompleteProps;
 
-const ComboBox: React.FC<Props> = (props) => {
+const ComboBox: React.FC<Props> = ({errorMessage, error, id, name, options, placeholder, required, tooltip, editStatus, ...props}) => {
     const classes = useStyles();
     return (
         <Autocomplete
-            id={props.id}
-            options={props.options}
+            id={id}
+            options={options}
             getOptionLabel={(option: OptionType) => option.label}
+            {...props}
             renderInput={(params) => (
                 <Box className={classes.container}>
                     <Box
@@ -71,11 +72,11 @@ const ComboBox: React.FC<Props> = (props) => {
                         flexDirection="row"
                         justifyContent="space-between"
                     >
-                        <InputLabel htmlFor={props.id} required={props.required}>
-                            {props.name}
+                        <InputLabel htmlFor={id} required={required}>
+                            {name}
                         </InputLabel>
-                        {props.tooltip && (
-                            <Tooltip title={props.tooltip}>
+                        {tooltip && (
+                            <Tooltip title={tooltip}>
                                 <HelpOutlineOutlinedIcon
                                     style={{ fontSize: "1.2rem", color: "rgba(0, 0, 0, 0.54)" }}
                                 />
@@ -83,13 +84,13 @@ const ComboBox: React.FC<Props> = (props) => {
                         )}
                     </Box>
                     <StyledTextInput
-                        placeholder={props.placeholder}
+                        placeholder={placeholder}
                         variant="outlined"
                         {...params}
                     />
-                    {props.error && (
+                    {error && (
                         <FormHelperText className={classes.errorMessage}>
-                            {props.errorMessage}
+                            {errorMessage}
                         </FormHelperText>
                     )}
                 </Box>

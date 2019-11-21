@@ -7,7 +7,7 @@ export interface RootState {
     userId?: number;
 }
 
-export const rootReducer = combineReducers<RootState>({
-    userReducer,
-    vaccineReducer
+export const rootReducer = combineReducers({
+    user: userReducer,
+    vaccine: vaccineReducer
 });

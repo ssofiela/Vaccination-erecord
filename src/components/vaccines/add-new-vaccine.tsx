@@ -21,6 +21,10 @@ import TextInput from "../common/form-input/text-input";
 import emailCheck from "../common/email-checker";
 
 import ReminderCheck from "./reminder-check";
+import { storeUserId } from "../../redux/actions/user";
+import { UserState } from "../../interfaces/user";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -35,7 +39,9 @@ function createVaccineOptions(options: string[] ): VaccineOptions[] {
     return options.map((option) => ({ value: options.indexOf(option)+1, label: option}));
 }
 
-const NewVaccine: React.FC<RouteComponentProps> = (props) => {
+type Props = RouteComponentProps & MapStateToProps & DispatchProps
+
+const NewVaccine: React.FC<Props> = (props) => {
     const classes = useStyles();
 
     const [selectedDate, setSelectedDate] = React.useState<string>(moment().format());
@@ -106,6 +112,9 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
                 setVaccineList(vaccines);
                 setAbbreviation(abb);
             });
+        if (props.user.userId === undefined || props.user.userId < 1) {
+            props.history.push("/login")
+        }
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
@@ -272,4 +281,26 @@ const NewVaccine: React.FC<RouteComponentProps> = (props) => {
         </Panel.Container>
     );
 };
-export default withRouter(NewVaccine);
+interface DispatchProps {
+    storeUserId: typeof storeUserId
+}
+
+interface MapStateToProps {
+    user: UserState
+}
+
+const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+    return {
+        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+    }
+};
+function mapStateToProps(state: any):MapStateToProps {
+    return {
+        user: state.user
+    }
+};
+
+export default compose(
+    withRouter,
+    connect( mapStateToProps, mapDispatchToProps)
+)(NewVaccine);

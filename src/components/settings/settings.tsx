@@ -21,6 +21,10 @@ import TextInput from "../common/form-input/text-input";
 import Birthday, { mappedBirthdayOptions } from "./birthday";
 import Reminder, { mappedReminderOptions } from "./reminder";
 import ComboBox from "../common/form-input/combo-box";
+import { UserState } from "../../interfaces/user";
+import { compose, Dispatch } from "redux";
+import { storeUserId } from "../../redux/actions/user";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -76,13 +80,18 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: theme.spacing(1),
             width: 300,
         },
+        textFieldWithSpace2:{
+            minWidth: 400,
+        },
         textFieldWithSpaceMobile: {
             marginRight: theme.spacing(1),
             width: 150,
             marginTop: theme.spacing(2)
         },
         marginDouble: {
-            marginBottom: theme.spacing(2)
+            marginBottom: theme.spacing(2),
+            color: theme.palette.action.disabled,
+            fontSize: 18
         },
         margin: {
             margin: theme.spacing(3)
@@ -94,8 +103,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
     })
 );
+type Props = RouteComponentProps & MapStateToProps & DispatchProps
 
-const Settings: React.FC<RouteComponentProps, > = props => {
+const Settings: React.FC<Props, > = props => {
     const classes = useStyles();
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
@@ -103,6 +113,7 @@ const Settings: React.FC<RouteComponentProps, > = props => {
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
     const [reminder, setReminder] = React.useState<number>(0);
+    const [oldReminder, setOldReminder] = React.useState<number>(0);
     const [oldReminderEmail, setOldReminderEmail] = React.useState<string>("");
     const [oldBirthday, setOldBirthday] = React.useState<number>(0);
 
@@ -117,67 +128,8 @@ const Settings: React.FC<RouteComponentProps, > = props => {
             moobile();
         }
     };
-    const pushData = ():void => {
-         if (birthday !== oldBirthday && birthday !== 0) {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({year_born: birthday}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                 response.json()
-                fetch("https://vaccine-backend.herokuapp.com/api/user", {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                    },
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.default_reminder_email !== null) {
-                            setOldReminderEmail(data.default_reminder_email);
-                        }
-                        if (data.year_born !== null) {
-                            setOldBirthday(data.year_born)
-                        }
 
-                    });
-            });
-        }
-        if (email !== oldReminderEmail && email !== "") {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({default_reminder_email: email}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                response.json()
-                fetch("https://vaccine-backend.herokuapp.com/api/user", {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                    },
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.default_reminder_email !== null) {
-                            setOldReminderEmail(data.default_reminder_email);
-                        }
-                        if (data.year_born !== null) {
-                            setOldBirthday(data.year_born)
-                        }
-                    });
-            })
-        }
-    };
-
-    React.useEffect(() => {
+    const getData = ():void => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "GET",
             credentials: "include",
@@ -193,11 +145,62 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                 if (data.year_born !== null) {
                     setOldBirthday(data.year_born)
                 }
-
+                if (data.reminder_days_before_due !== null) {
+                    setOldReminder(data.reminder_days_before_due)
+                }
             });
+    };
+
+    const pushData = ():void => {
+         if (birthday !== oldBirthday && birthday !== 0) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({year_born: birthday}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                 response.json()
+                getData()
+            });
+        }
+        if (email !== oldReminderEmail && email !== "") {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({default_reminder_email: email}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                response.json()
+                getData()
+            })
+        }
+        if (reminder !== 0) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({reminder_days_before_due: reminder}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                response.json()
+                getData()
+            })
+        }
+    };
+
+    React.useEffect(() => {
+        getData()
     });
 
     React.useEffect(() => {
+        if ( props.user.userId < 1){
+            props.history.push("/login")
+        }
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
@@ -246,10 +249,9 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                                     tooltip={editStatus &&"By giving your birth year we can estimate what vaccines you should have."}
                                     placeholder="Select your birth year"
                                     editStatus={editStatus}
-                                    onChange={(event, value) => {
-                                        setBirthday(value)
+                                    onChange={(label, value) => {
+                                        setBirthday((value.value))
                                     }}
-
                                 />
                             }
                             <div className={classes.dotted}></div>
@@ -260,7 +262,7 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                                     className={classes.textFieldWithSpace}
                                     type="string"
                                     id="reminder"
-                                   // TODO tähän old arvo! value={reminder === "" ? "Not selected" : reminder}
+                                    value={oldReminder === 0 || oldReminder === undefined ? "Not selected" : `${oldReminder} day(s) before`}
                                     disabled
                                 />
                                 :
@@ -271,8 +273,8 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                                     tooltip={editStatus &&"You reserve reminder selected days before the actual date"}
                                     placeholder="Select when you want your reminder"
                                     editStatus={editStatus}
-                                    onChange={(event) => {
-                                        setReminder(event)
+                                    onChange={(label, event) => {
+                                        setReminder(event.value)
                                     }}
                                 />
                             }
@@ -282,14 +284,15 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                                 p={5}
                                 padding="0px 0px 0px 0px"
                             >
-
                                     <TextInput
                                         error={emailError}
+                                        errorMessage={"Invalid email address"}
                                         id="email"
                                         name="Email address for reminder"
                                         autoComplete="email"
+
                                         tooltip={editStatus ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
-                                        className={!editStatus ? classes.textFieldWithSpace : undefined}
+                                        className={!editStatus ? classes.textFieldWithSpace : classes.textFieldWithSpace2 }
                                         value={
                                             email === "" && !editStatus
                                                 ? "Not selected"
@@ -351,5 +354,26 @@ const Settings: React.FC<RouteComponentProps, > = props => {
         </Panel.Container>
     );
 };
+interface DispatchProps {
+    storeUserId: typeof storeUserId
+}
 
-export default withRouter(Settings);
+interface MapStateToProps {
+    user: UserState
+}
+
+const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+    return {
+        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+    }
+};
+function mapStateToProps(state: any):MapStateToProps {
+    return {
+        user: state.user
+    }
+};
+
+export default compose(
+    withRouter,
+    connect( mapStateToProps, mapDispatchToProps)
+)(Settings);

@@ -5,13 +5,18 @@ import { RouteComponentProps, withRouter } from "react-router";
 
 import { FilledButton } from "../common/button";
 import * as Panel from "../common/panel";
+import { storeUserId } from "../../redux/actions/user";
+import { UserState } from "../../interfaces/user";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
 
 /**
  * Landing page of the site
  * @param props
  * @constructor
  */
-const Home: React.FC<RouteComponentProps> = (props) => {
+type Props = RouteComponentProps & MapStateToProps & DispatchProps
+const Home: React.FC<Props> = (props) => {
     return (
         <Panel.Container>
             <Grid container>
@@ -50,13 +55,15 @@ const Home: React.FC<RouteComponentProps> = (props) => {
                         </ul>
                         <br />
                         <br />
-                        <FilledButton
-                            onClick={() => {
-                                props.history.push("/register");
-                            }}
-                        >
-                            Register
-                        </FilledButton>
+                        {props.user.userId < 1 &&
+                            <FilledButton
+                                onClick={() => {
+                                    props.history.push("/register");
+                                }}
+                            >
+                                Register
+                            </FilledButton>
+                        }
                     </Panel.Body>
                 </Grid>
             </Grid>
@@ -64,4 +71,27 @@ const Home: React.FC<RouteComponentProps> = (props) => {
     );
 };
 
-export default withRouter(Home);
+interface DispatchProps {
+    storeUserId: typeof storeUserId
+}
+
+interface MapStateToProps {
+    user: UserState
+}
+
+const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+    return {
+        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+    }
+};
+function mapStateToProps(state: any):MapStateToProps {
+    return {
+        user: state.user
+    }
+};
+
+export default compose(
+    withRouter,
+    connect( mapStateToProps, mapDispatchToProps)
+)(Home);
+
