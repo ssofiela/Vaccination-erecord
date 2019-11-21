@@ -1,21 +1,18 @@
-import { handleActions, Action } from "redux-actions";
+import { userActionTypes, UserState } from "../../interfaces/user";
+import { STORE_USER_ID } from "../../interfaces/user";
 
-import { User } from "../../interfaces/user";
-import { Type } from "../actions/user";
 
-export type UserState = {
-    userId?: number;
+const initialState: UserState = {
+    userId: 0
 };
 
-const initialState: UserState = {};
+export const userReducer = (state = initialState, action: userActionTypes): UserState => {
+    switch(action.type) {
+        case STORE_USER_ID:
+            const res = Object.assign({}, state, {userId: action.payload});
+            return res;
+        default:
+            return state;
+    }
+};
 
-export const userReducer = handleActions<UserState, User>(
-    {
-        [Type.STORE_USER_ID]: (state: UserState, action: Action<User>) => {
-            return {
-                userId: action.payload.userId
-            };
-        }
-    },
-    initialState
-);

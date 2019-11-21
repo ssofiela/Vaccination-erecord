@@ -21,6 +21,10 @@ import TextInput from "../common/form-input/text-input";
 import Birthday, { mappedBirthdayOptions } from "./birthday";
 import Reminder, { mappedReminderOptions } from "./reminder";
 import ComboBox from "../common/form-input/combo-box";
+import { UserState } from "../../interfaces/user";
+import { compose, Dispatch } from "redux";
+import { storeUserId } from "../../redux/actions/user";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -94,8 +98,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
     })
 );
+type Props = RouteComponentProps & MapStateToProps & DispatchProps
 
-const Settings: React.FC<RouteComponentProps, > = props => {
+const Settings: React.FC<Props, > = props => {
     const classes = useStyles();
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
@@ -188,6 +193,9 @@ const Settings: React.FC<RouteComponentProps, > = props => {
     });
 
     React.useEffect(() => {
+        if (props.user.userId === undefined || props.user.userId < 1){
+            props.history.push("/login")
+        }
         window.addEventListener("resize", handleMobile);
         //It is important to remove EventListener attached on window.
         () => window.removeEventListener("resize", handleMobile);
@@ -237,9 +245,9 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                                     placeholder="Select your birth year"
                                     editStatus={editStatus}
                                     onChange={(event, value) => {
+                                        console.log("adsdassad")
                                         setBirthday(value)
                                     }}
-
                                 />
                             }
                             <div className={classes.dotted}></div>
@@ -262,6 +270,7 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                                     placeholder="Select when you want your reminder"
                                     editStatus={editStatus}
                                     onChange={(event) => {
+                                        console.log("fasf")
                                         setReminder(event)
                                     }}
                                 />
@@ -341,5 +350,26 @@ const Settings: React.FC<RouteComponentProps, > = props => {
         </Panel.Container>
     );
 };
+interface DispatchProps {
+    storeUserId: typeof storeUserId
+}
 
-export default withRouter(Settings);
+interface MapStateToProps {
+    user: UserState
+}
+
+const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+    return {
+        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+    }
+};
+function mapStateToProps(state: any):MapStateToProps {
+    return {
+        user: state.user
+    }
+};
+
+export default compose(
+    withRouter,
+    connect( mapStateToProps, mapDispatchToProps)
+)(Settings);

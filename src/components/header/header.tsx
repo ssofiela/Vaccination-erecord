@@ -8,12 +8,17 @@ import Typography from "@material-ui/core/Typography";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
+import { connect } from 'react-redux';
+import { userReducer } from "../../redux/reducers/user";
+import { storeUserId, UserState } from "../../redux/actions/user"
+import { compose, Dispatch } from "redux";
+
 
 interface HeaderProps {
     userId?: number;
 }
 
-type Props = HeaderProps & RouteComponentProps;
+type Props = HeaderProps & RouteComponentProps & DispatchProps;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -84,6 +89,7 @@ const Header: React.FC<Props> = (props) => {
             .then((data) => {
                 if (data.id !== undefined) {
                     setId(data.id);
+                    props.storeUserId(data.id)
                 }
             });
     }, []);
@@ -126,4 +132,26 @@ Header.propTypes = {
     userId: PropTypes.number
 };
 
-export default withRouter(Header);
+interface DispatchProps {
+    storeUserId: typeof storeUserId
+}
+
+interface MapStateToProps {
+    userReducer: UserState
+}
+
+const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+    return {
+        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+    }
+};
+/*function mapStateToProps(state: any):MapStateToProps {
+    return {
+        userReducer: state.userReducer
+    }
+};*/
+
+export default compose(
+    withRouter,
+    connect( null, mapDispatchToProps)
+)(Header);
