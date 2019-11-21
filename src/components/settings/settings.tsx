@@ -103,6 +103,7 @@ const Settings: React.FC<RouteComponentProps, > = props => {
     const [editStatus, setEditStatus] = React.useState<boolean>(false);
     const [birthday, setBirthday] = React.useState<number>(0);
     const [reminder, setReminder] = React.useState<number>(0);
+    const [oldReminder, setOldReminder] = React.useState<number>(0);
     const [oldReminderEmail, setOldReminderEmail] = React.useState<string>("");
     const [oldBirthday, setOldBirthday] = React.useState<number>(0);
 
@@ -117,67 +118,8 @@ const Settings: React.FC<RouteComponentProps, > = props => {
             moobile();
         }
     };
-    const pushData = ():void => {
-         if (birthday !== oldBirthday && birthday !== 0) {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({year_born: birthday}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                 response.json()
-                fetch("https://vaccine-backend.herokuapp.com/api/user", {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                    },
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.default_reminder_email !== null) {
-                            setOldReminderEmail(data.default_reminder_email);
-                        }
-                        if (data.year_born !== null) {
-                            setOldBirthday(data.year_born)
-                        }
 
-                    });
-            });
-        }
-        if (email !== oldReminderEmail && email !== "") {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({default_reminder_email: email}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                response.json()
-                fetch("https://vaccine-backend.herokuapp.com/api/user", {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                    },
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.default_reminder_email !== null) {
-                            setOldReminderEmail(data.default_reminder_email);
-                        }
-                        if (data.year_born !== null) {
-                            setOldBirthday(data.year_born)
-                        }
-                    });
-            })
-        }
-    };
-
-    React.useEffect(() => {
+    const getData = ():void => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "GET",
             credentials: "include",
@@ -193,8 +135,56 @@ const Settings: React.FC<RouteComponentProps, > = props => {
                 if (data.year_born !== null) {
                     setOldBirthday(data.year_born)
                 }
-
+                if (data.reminder_days_before_due !== null) {
+                    setOldReminder(data.reminder_days_before_due)
+                }
             });
+    };
+
+    const pushData = ():void => {
+         if (birthday !== oldBirthday && birthday !== 0) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({year_born: birthday}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                 response.json()
+                getData()
+            });
+        }
+        if (email !== oldReminderEmail && email !== "") {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({default_reminder_email: email}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                response.json()
+                getData()
+            })
+        }
+        if (reminder !== oldReminder && reminder !== 0) {
+            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({reminder_days_before_due: reminder}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                response.json()
+                getData()
+            })
+        }
+    };
+
+    React.useEffect(() => {
+        getData()
     });
 
     React.useEffect(() => {
