@@ -12,7 +12,11 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import moment from "moment";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
 
+import { storeUserId } from "../../redux/actions/user";
+import { UserState } from "../../interfaces/user";
 import * as Panel from "../common/panel";
 import useStyles from "../common/styles";
 import { FilledButton, OutlinedButton } from "../common/button";
@@ -21,10 +25,6 @@ import TextInput from "../common/form-input/text-input";
 import emailCheck from "../common/email-checker";
 
 import ReminderCheck from "./reminder-check";
-import { storeUserId } from "../../redux/actions/user";
-import { UserState } from "../../interfaces/user";
-import { compose, Dispatch } from "redux";
-import { connect } from "react-redux";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -103,13 +103,13 @@ const NewVaccine: React.FC<Props> = (props) => {
             },
         }).then(response => response.json())
             .then(data => {
-                let vaccines = [];
-                let abb = [];
-                for (let i = 0; i < data.length; i++) {
-                    vaccines.push(data[i].name);
-                    abb.push(data[i].abbreviation)
-
+                const vaccines = [];
+                const abb = [];
+                for (const element of data) {
+                    vaccines.push(element.name);
+                    abb.push(element.vaccine_abbreviation)
                 }
+                
                 setVaccineList(vaccines);
                 setAbbreviation(abb);
             });

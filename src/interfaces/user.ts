@@ -4,9 +4,9 @@ export type UserState = {
     userId?: number;
 };
 
-interface userIdAction {
+interface UserIdAction {
     type: typeof STORE_USER_ID
     payload: number
 }
 
-export type userActionTypes = userIdAction;
+export type userActionTypes = UserIdAction;

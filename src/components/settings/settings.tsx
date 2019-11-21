@@ -6,25 +6,21 @@ import { createStyles, makeStyles, styled, Theme } from "@material-ui/core/style
 import Box from "@material-ui/core/Box";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { RouteComponentProps, withRouter } from "react-router";
-import { TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
-import Tooltip from "@material-ui/core/Tooltip";
 import CreateIcon from "@material-ui/icons/Create";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
 
+import { UserState } from "../../interfaces/user";
+import { storeUserId } from "../../redux/actions/user";
 import * as Panel from "../common/panel";
 import { FilledButton, OutlinedButton } from "../common/button";
 import emailCheck from "../common/email-checker";
 import TextInput from "../common/form-input/text-input";
+import ComboBox from "../common/form-input/combo-box";
 
 import Birthday, { mappedBirthdayOptions } from "./birthday";
 import Reminder, { mappedReminderOptions } from "./reminder";
-import ComboBox from "../common/form-input/combo-box";
-import { UserState } from "../../interfaces/user";
-import { compose, Dispatch } from "redux";
-import { storeUserId } from "../../redux/actions/user";
-import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

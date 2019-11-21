@@ -1,5 +1,5 @@
 import React from "react";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import Autocomplete, { AutocompleteProps } from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import { createStyles, InputLabel, Theme, withStyles } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -9,7 +9,6 @@ import { fade } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { useStyles } from "./form-styles";
-import { AutocompleteProps } from "@material-ui/lab/Autocomplete/Autocomplete";
 
 interface ComboBoxProps {
     errorMessage?: string;

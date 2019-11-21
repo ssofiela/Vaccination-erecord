@@ -9,9 +9,10 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 import { connect } from 'react-redux';
+import { compose, Dispatch } from "redux";
+
 import { userReducer } from "../../redux/reducers/user";
 import { storeUserId, UserState } from "../../redux/actions/user"
-import { compose, Dispatch } from "redux";
 
 
 interface HeaderProps {

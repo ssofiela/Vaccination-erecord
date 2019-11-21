@@ -2,13 +2,14 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { RouteComponentProps, withRouter } from "react-router";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
+
 
 import { FilledButton } from "../common/button";
 import * as Panel from "../common/panel";
 import { storeUserId } from "../../redux/actions/user";
 import { UserState } from "../../interfaces/user";
-import { compose, Dispatch } from "redux";
-import { connect } from "react-redux";
 
 /**
  * Landing page of the site
