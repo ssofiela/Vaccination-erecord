@@ -86,7 +86,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: theme.spacing(2)
         },
         marginDouble: {
-            marginBottom: theme.spacing(2)
+            marginBottom: theme.spacing(2),
+            color: theme.palette.action.disabled,
+            fontSize: 18
         },
         margin: {
             margin: theme.spacing(3)
@@ -257,7 +259,7 @@ const Settings: React.FC<Props, > = props => {
                                     className={classes.textFieldWithSpace}
                                     type="string"
                                     id="reminder"
-                                    value={oldReminder === 0 || oldReminder === undefined ? "Not selected" : oldReminder}
+                                    value={oldReminder === 0 || oldReminder === undefined ? "Not selected" : `${oldReminder} day(s) before`}
                                     disabled
                                 />
                                 :
@@ -279,12 +281,13 @@ const Settings: React.FC<Props, > = props => {
                                 p={5}
                                 padding="0px 0px 0px 0px"
                             >
-
                                     <TextInput
                                         error={emailError}
+                                        errorMessage={"Invalid email address"}
                                         id="email"
                                         name="Email address for reminder"
                                         autoComplete="email"
+
                                         tooltip={editStatus ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
                                         className={!editStatus ? classes.textFieldWithSpace : undefined}
                                         value={
