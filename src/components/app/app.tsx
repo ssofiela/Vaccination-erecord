@@ -25,6 +25,7 @@ class App extends React.Component {
                         <Route key="vaccines" exact path="/vaccines" component={VaccineList} />
                         <Route key="addVaccine" path="/add-vaccine" component={NewVaccine} />
                         <Route key="settings" path="/settings" component={Settings} />
+                        <Route key="settings" path="/" component={Settings} /> /* Makes that invalid urls goes to login page */
                         <Route
                             key="frequentlyAskedQuestions"
                             path="/frequently-asked-questions"

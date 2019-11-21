@@ -80,6 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginRight: theme.spacing(1),
             width: 300,
         },
+        textFieldWithSpace2:{
+            minWidth: 400,
+        },
         textFieldWithSpaceMobile: {
             marginRight: theme.spacing(1),
             width: 150,
@@ -289,7 +292,7 @@ const Settings: React.FC<Props, > = props => {
                                         autoComplete="email"
 
                                         tooltip={editStatus ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
-                                        className={!editStatus ? classes.textFieldWithSpace : undefined}
+                                        className={!editStatus ? classes.textFieldWithSpace : classes.textFieldWithSpace2 }
                                         value={
                                             email === "" && !editStatus
                                                 ? "Not selected"
