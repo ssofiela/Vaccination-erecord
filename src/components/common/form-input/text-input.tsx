@@ -29,6 +29,10 @@ const StyledInputField = withStyles((theme: Theme) =>
             "&:focus": {
                 boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
                 borderColor: theme.palette.primary.main
+            },
+            "&.Mui-disabled": {
+                backgroundColor: theme.palette.action.disabledBackground,
+                borderColor: theme.palette.action.disabled
             }
         }
     })

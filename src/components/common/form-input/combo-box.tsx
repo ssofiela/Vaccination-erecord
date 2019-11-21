@@ -9,6 +9,7 @@ import { fade } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { useStyles } from "./form-styles";
+import { AutocompleteProps } from "@material-ui/lab/Autocomplete/Autocomplete";
 
 interface ComboBoxProps {
     errorMessage?: string;
@@ -19,6 +20,7 @@ interface ComboBoxProps {
     placeholder?: string;
     required: boolean;
     tooltip?: string;
+    editStatus: boolean;
 }
 
 export interface OptionType {
@@ -43,13 +45,18 @@ const StyledTextInput = withStyles((theme: Theme) =>
                 "&.Mui-focused fieldset": {
                     boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
                     borderColor: theme.palette.primary.main
+                },
+                "&.Mui-disabled fieldset": {
+                    backgroundColor: theme.palette.action.disabledBackground,
+                    borderColor: theme.palette.action.disabled
                 }
             }
         }
     })
 )(TextField);
+type Props = ComboBoxProps & AutocompleteProps;
 
-const ComboBox: React.FC<ComboBoxProps> = (props) => {
+const ComboBox: React.FC<Props> = (props) => {
     const classes = useStyles();
     return (
         <Autocomplete
