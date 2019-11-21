@@ -14,7 +14,7 @@ import { Vaccine } from "../../interfaces/vaccine";
 
 interface TableProps {
     vaccines: Vaccine[];
-    editOnClick: (id: number) => void;
+    editOnClick: (vaccine: Vaccine) => void;
     deleteOnClick: (id: number) => void;
 }
 
@@ -26,10 +26,15 @@ const useStyles = makeStyles(() =>
     createStyles({
         table: {
             minWidth: 650,
-            border: "1px solid #e0e0e080"
         },
         tableCell: {
             borderBottom: "1px solid #e0e0e080"
+        },
+        tableWrapper: {
+            overflowX: "auto",
+            overflowY: "auto",
+            border: "1px solid #e0e0e080",
+            maxHeight: 620
         }
     })
 );
@@ -47,54 +52,62 @@ const StyledTableRow = withStyles(() =>
 const Table: React.FC<TableProps> = (props) => {
     const classes = useStyles();
     return (
-        <MUITable stickyHeader className={classes.table} aria-label="vaccine-table">
-            <TableHead>
-                <StyledTableRow>
-                    <TableCell>Vaccine</TableCell>
-                    <TableCell>Abbreviation</TableCell>
-                    <TableCell>Date taken</TableCell>
-                    <TableCell>Booster due date</TableCell>
-                    <TableCell>Reminder</TableCell>
-                    <TableCell>Comment</TableCell>
-                    <TableCell>Actions</TableCell>
-                </StyledTableRow>
-            </TableHead>
-            <TableBody>
-                {props.vaccines.length > 0 ? (
-                    props.vaccines.map((vaccine) => (
-                        <StyledTableRow key={vaccine.id}>
-                            <TableCell component="th" scope="row">
-                                {vaccine.vaccine_name}
-                            </TableCell>
-                            <TableCell size="small">{vaccine.vaccine_abbreviation}</TableCell>
-                            <TableCell size="small">{vaccine.date_taken}</TableCell>
-                            <TableCell size="small">{vaccine.booster_due_date}</TableCell>
-                            <TableCell align="center" size="small">
-                                {vaccine.booster_email_reminder && <StyledCheckIcon />}
-                            </TableCell>
-                            <TableCell>{vaccine.comment}</TableCell>
-                            <TableCell>
-                                <IconButton aria-label="edit" onClick={props.editOnClick}>
-                                    <CreateIcon color="primary" fontSize="small" />
-                                </IconButton>
-                                <IconButton
-                                    aria-label="delete"
-                                    onClick={() => {
-                                        props.deleteOnClick(vaccine.id);
-                                    }}
-                                >
-                                    <DeleteIcon color="primary" fontSize="small" />
-                                </IconButton>
-                            </TableCell>
-                        </StyledTableRow>
-                    ))
-                ) : (
+        <div className={classes.tableWrapper}>
+            <MUITable stickyHeader className={classes.table} aria-label="vaccine-table">
+                <TableHead>
                     <StyledTableRow>
-                        <TableCell colSpan={7}>{"No vaccines"}</TableCell>
+                        <TableCell>Vaccine</TableCell>
+                        <TableCell>Abbreviation</TableCell>
+                        <TableCell>Date taken</TableCell>
+                        <TableCell>Booster due date</TableCell>
+                        <TableCell>Reminder</TableCell>
+                        <TableCell>Comment</TableCell>
+                        <TableCell>Actions</TableCell>
                     </StyledTableRow>
-                )}
-            </TableBody>
-        </MUITable>
+                </TableHead>
+                <TableBody>
+                    {props.vaccines.length > 0 ? (
+                        props.vaccines.map((vaccine) => (
+                            <StyledTableRow key={vaccine.id}>
+                                <TableCell component="th" scope="row">
+                                    {vaccine.vaccine_name}
+                                </TableCell>
+                                <TableCell size="small">{vaccine.vaccine_abbreviation}</TableCell>
+                                <TableCell size="small">{vaccine.date_taken}</TableCell>
+                                <TableCell size="small">{vaccine.booster_due_date}</TableCell>
+                                <TableCell align="center" size="small">
+                                    {vaccine.booster_email_reminder && <StyledCheckIcon />}
+                                </TableCell>
+                                <TableCell>{vaccine.comment}</TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        aria-label="edit"
+                                        onClick={() => {
+                                            props.editOnClick(vaccine)
+                                        }}
+                                    >
+                                        <CreateIcon color="primary" fontSize="small" />
+                                    </IconButton>
+                                    <IconButton
+                                        aria-label="delete"
+                                        onClick={() => {
+                                            props.deleteOnClick(vaccine.id);
+                                        }}
+                                    >
+                                        <DeleteIcon color="primary" fontSize="small" />
+                                    </IconButton>
+                                </TableCell>
+                            </StyledTableRow>
+                        ))
+                    ) : (
+                        <StyledTableRow>
+                            <TableCell colSpan={7}>{"No vaccines"}</TableCell>
+                        </StyledTableRow>
+                    )}
+                </TableBody>
+            </MUITable>
+        </div>
+
     );
 };
 
