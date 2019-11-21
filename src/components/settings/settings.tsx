@@ -173,7 +173,7 @@ const Settings: React.FC<Props, > = props => {
                 getData()
             })
         }
-        if (reminder !== oldReminder && reminder !== 0) {
+        if (reminder !== 0) {
             fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
                 credentials: "include",
@@ -193,7 +193,7 @@ const Settings: React.FC<Props, > = props => {
     });
 
     React.useEffect(() => {
-        if (props.user.userId === undefined || props.user.userId < 1){
+        if ( props.user.userId < 1){
             props.history.push("/login")
         }
         window.addEventListener("resize", handleMobile);
@@ -244,9 +244,8 @@ const Settings: React.FC<Props, > = props => {
                                     tooltip={editStatus &&"By giving your birth year we can estimate what vaccines you should have."}
                                     placeholder="Select your birth year"
                                     editStatus={editStatus}
-                                    onChange={(event, value) => {
-                                        console.log("adsdassad")
-                                        setBirthday(value)
+                                    onChange={(label, value) => {
+                                        setBirthday((value.value))
                                     }}
                                 />
                             }
@@ -258,7 +257,7 @@ const Settings: React.FC<Props, > = props => {
                                     className={classes.textFieldWithSpace}
                                     type="string"
                                     id="reminder"
-                                   // TODO tähän old arvo! value={reminder === "" ? "Not selected" : reminder}
+                                    value={oldReminder === 0 || oldReminder === undefined ? "Not selected" : oldReminder}
                                     disabled
                                 />
                                 :
@@ -269,9 +268,8 @@ const Settings: React.FC<Props, > = props => {
                                     tooltip={editStatus &&"You reserve reminder selected days before the actual date"}
                                     placeholder="Select when you want your reminder"
                                     editStatus={editStatus}
-                                    onChange={(event) => {
-                                        console.log("fasf")
-                                        setReminder(event)
+                                    onChange={(label, event) => {
+                                        setReminder(event.value)
                                     }}
                                 />
                             }
