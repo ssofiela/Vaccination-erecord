@@ -15,8 +15,7 @@ module.exports = {
     // By default the output directory is `dist`
     output: {
         filename: "build.js",
-        path: path.join(__dirname, "/build"),
-        publicPath: "/"
+        path: path.join(__dirname, "/build")
     },
 
     // Supported file loaders
