@@ -2,7 +2,7 @@ import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
-import { styled } from "@material-ui/core/styles";
+import { styled, useTheme } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Box from "@material-ui/core/Box";
@@ -43,6 +43,7 @@ type Props = RouteComponentProps & MapStateToProps & DispatchProps
 
 const NewVaccine: React.FC<Props> = (props) => {
     const classes = useStyles();
+    const theme = useTheme();
 
     const [selectedDate, setSelectedDate] = React.useState<string>(moment().format());
     const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(moment().format());
@@ -118,6 +119,9 @@ const NewVaccine: React.FC<Props> = (props) => {
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
+
+    //const initialValues = props.location.state.vaccine;
+    console.log(props);
 
     return (
         // TODO add mobile support
@@ -239,8 +243,9 @@ const NewVaccine: React.FC<Props> = (props) => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <Panel.Footer>
+                <Panel.Footer justifyContent="flex-end">
                     <FilledButton
+                        style={{ marginRight: theme.spacing(2)}}
                         onClick={() => {
                             const invalidName: boolean = name === "";
                             const invalidEmail: boolean =
