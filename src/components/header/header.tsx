@@ -98,6 +98,7 @@ const Header: React.FC<Props> = (props) => {
         <div className={classes.root}>
             <AppBar elevation={0} position="fixed" color="inherit" className={classes.appBar}>
                 <Toolbar variant="dense">
+                    <a href="/"><img src="img/vaccine.png" style={{marginRight: "1em", width: "2em", verticalAlign: "middle"}} /></a>
                     <Typography variant="h6" color="primary">
                         Vaccination eRecord
                     </Typography>

@@ -2,6 +2,7 @@
 /*eslint @typescript-eslint/no-var-requires:0*/
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     // Set debugging source maps to be "inline" for simplicity and ease of use
@@ -14,8 +15,7 @@ module.exports = {
     // By default the output directory is `dist`
     output: {
         filename: "build.js",
-        path: path.join(__dirname, "/build"),
-        publicPath: "/"
+        path: path.join(__dirname, "/build")
     },
 
     // Supported file loaders
@@ -45,6 +45,13 @@ module.exports = {
     },
 
     plugins: [
+        new CopyWebpackPlugin([
+            {
+                //Note:- No wildcard is specified hence will copy all files and folders
+                from: 'public', //Will resolve to RepoDir/public
+                to: '.' //Copies all files from above dest to build/
+            }
+        ]),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "public/index.html")
         })
