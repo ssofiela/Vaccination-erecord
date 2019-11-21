@@ -16,9 +16,11 @@ import CreateIcon from "@material-ui/icons/Create";
 import * as Panel from "../common/panel";
 import { FilledButton, OutlinedButton } from "../common/button";
 import emailCheck from "../common/email-checker";
+import TextInput from "../common/form-input/text-input";
 
-import Birthday from "./birthday";
-import Reminder from "./reminder";
+import Birthday, { mappedBirthdayOptions } from "./birthday";
+import Reminder, { mappedReminderOptions } from "./reminder";
+import ComboBox from "../common/form-input/combo-box";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -72,8 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         textFieldWithSpace: {
             marginRight: theme.spacing(1),
-            minWidth: 300,
-            marginTop: theme.spacing(2)
+            width: 300,
         },
         textFieldWithSpaceMobile: {
             marginRight: theme.spacing(1),
@@ -90,11 +91,11 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: "row",
             display: "flex",
         },
+
     })
 );
 
-
-const Settings: React.FC<RouteComponentProps> = props => {
+const Settings: React.FC<RouteComponentProps, > = props => {
     const classes = useStyles();
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
@@ -227,87 +228,77 @@ const Settings: React.FC<RouteComponentProps> = props => {
                     <Panel.Body>
                         <Box display="flex" flexDirection="column" p={5}>
                             <div className={classes.marginDouble}>Personal information</div>
-                            <Birthday
-                                sidebarOpen
-                                updateBirthday={(birthday: number): void => {
-                                    setBirthday(birthday);
-                                }}
-                                oldBirthday={oldBirthday}
-                                mobile={moobile()}
-                                editStatus={editStatus}
-                                type="birthday"
-                            />
+                            {!editStatus ?
+                                <TextInput
+                                    name="Birth year"
+                                    type="string"
+                                    className={classes.textFieldWithSpace}
+                                    id="birthday"
+                                    value={oldBirthday === 0 || oldBirthday === undefined ? "Not selected" : oldBirthday}
+                                    autoComplete="current-password"
+                                    disabled
+                                />
+                            :
+                                <ComboBox
+                                    id="birthday"
+                                    name="Birth year"
+                                    options={mappedBirthdayOptions}
+                                    tooltip={editStatus &&"By giving your birth year we can estimate what vaccines you should have."}
+                                    placeholder="Select your birth year"
+                                    editStatus={editStatus}
+                                    onChange={(event, value) => {
+                                        setBirthday(value)
+                                    }}
+
+                                />
+                            }
                             <div className={classes.dotted}></div>
                             <div className={classes.marginDouble}>Reminder settings</div>
-                            <Reminder
-                                sidebarOpen
-                                updateBirthday={(reminder: number): void => {
-                                    setReminder(reminder);
-                                }}
-                                mobile={moobile()}
-                                editStatus={editStatus}
-                                type="reminder"
-                            />
-                            {editStatus ? (
-                                <Box
-                                    display="flex"
-                                    flexDirection="row"
-                                    p={5}
-                                    padding="0px 0px 0px 0px"
-                                >
-                                    <div className={classes.sameLine}>
-                                        <TextField
-                                            error={emailError}
-                                            variant="outlined"
-                                            margin="normal"
-                                            id="email"
-                                            label="Email address for reminder"
-                                            name="email"
-                                            autoComplete="email"
-                                            className={
-                                                moobile()
-                                                    ? classes.textFieldWithSpaceMobile
-                                                    : classes.textFieldWithSpace
-                                            }
-                                            value={
-                                                email === "email@example.com" && !editStatus
-                                                    ? "Not selected"
-                                                    : email === "email@example.com" && editStatus
-                                                    ? ""
-                                                    : email
-                                            }
-                                            onChange={(event) => setEmail(event.target.value)}
-                                            disabled={!editStatus}
-                                        />
-                                        <Tooltip title="Email address is only for the reminders. It is the address where you will deserve a reminder.">
-                                            <IconButton
-                                                aria-label="delete"
-                                                className={classes.margin}
-                                                size="small"
-                                            >
-                                                <HelpOutlineOutlinedIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                </Box>
-                            ) : (
-                                <TextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    id="email"
-                                    label="Email address for reminder"
-                                    name="email"
-                                    autoComplete="email"
-                                    className={classes.textField2}
-                                    value={
-                                        oldReminderEmail === "" || oldReminderEmail === undefined
-                                            ? "Not selected"
-                                            : oldReminderEmail
-                                    }
-                                    onChange={(event) => setEmail(event.target.value)}
-                                    disabled={!editStatus}
+                            {!editStatus ?
+                                <TextInput
+                                    name="Reminder time"
+                                    className={classes.textFieldWithSpace}
+                                    type="string"
+                                    id="reminder"
+                                   // TODO tähän old arvo! value={reminder === "" ? "Not selected" : reminder}
+                                    disabled
                                 />
-                            )}
+                                :
+                                <ComboBox
+                                    id="reminder"
+                                    name="Reminder time"
+                                    options={mappedReminderOptions}
+                                    tooltip={editStatus &&"You reserve reminder selected days before the actual date"}
+                                    placeholder="Select when you want your reminder"
+                                    editStatus={editStatus}
+                                    onChange={(event) => {
+                                        setReminder(event)
+                                    }}
+                                />
+                            }
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                p={5}
+                                padding="0px 0px 0px 0px"
+                            >
+
+                                    <TextInput
+                                        error={emailError}
+                                        id="email"
+                                        name="Email address for reminder"
+                                        autoComplete="email"
+                                        tooltip={editStatus ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
+                                        className={!editStatus ? classes.textFieldWithSpace : undefined}
+                                        value={
+                                            email === "" && !editStatus
+                                                ? "Not selected"
+                                                : email
+                                        }
+                                        onChange={(event) => setEmail(event.target.value)}
+                                        disabled={!editStatus}
+                                    />
+                            </Box>
                         </Box>
                     </Panel.Body>
                     <Grid item xs={12}>

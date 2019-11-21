@@ -2,11 +2,12 @@ import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { FormControl, InputLabel, Select, TextField } from "@material-ui/core";
+import { FormControl, InputLabel, Select} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
 import Box from "@material-ui/core/Box";
+import TextInput from "../common/form-input/text-input";
 
 interface MainProps {
     sidebarOpen: boolean;
@@ -22,8 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
         textField: {
             marginRight: theme.spacing(1),
             maxWidth: 300,
-            display: "flex",
-            flexDirection: "column"
         },
         formControl: {
             marginTop: theme.spacing(1),
@@ -44,6 +43,24 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+interface BirthdayOptions {
+    value: number;
+    label: string;
+}
+
+function createBirthdayOptions(options: string[]): BirthdayOptions[] {
+    return options.map((option) => ({ value: options.indexOf(option) +1, label: option }));
+}
+
+const reminderOptions = [
+    "1 day before", "2 days before", "3 days before",
+    "4 days before", "5 days before", "6 days before", "7 days before", "8 days before", "9 days before", "10 days before", "11 days before", "12 days before",
+    "13 days before", "14 days before", "15 days before", "16 days before", "17 days before", "18 days before", "19 days before", "20 days before", "21 days before",
+    "22 days before", "23 days before", "24 days before", "25 days before", "26 days before", "27 days before", "28 days before", "29 days before", "30 days before",
+];
+
+export const mappedReminderOptions = createBirthdayOptions(reminderOptions);
+
 const Reminder: React.FC<MainProps> = (props) => {
     const classes = useStyles();
 
@@ -63,38 +80,12 @@ const Reminder: React.FC<MainProps> = (props) => {
         props.updateBirthday(parseInt(event.target.value));
     };
 
-    interface BirthdayOptions {
-        value: string;
-        label: string;
-    }
-
-    function createBirthdayOptions(options: string[]): BirthdayOptions[] {
-        return options.map((option) => ({ value: option, label: option }));
-    }
-
-    const reminderOptions = [
-        "1 week before",
-        "2 weeks before",
-        "3 weeks before",
-        "1 months before",
-        "2 months before",
-        "3 months before",
-        "4 months before",
-        "5 months before",
-        "6 months before",
-        "1 year before",
-        "2 years before"
-    ];
-
-    const mappedBirthdayOptions = createBirthdayOptions(reminderOptions);
-
     return (
         <div>
             {!props.editStatus ? (
                 <div>
-                    <TextField
+                    <TextInput
                         variant="outlined"
-                        margin="normal"
                         name="reminder"
                         label="Reminder time"
                         type="string"
