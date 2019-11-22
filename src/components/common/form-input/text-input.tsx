@@ -22,7 +22,6 @@ const StyledInputField = withStyles((theme: Theme) =>
             width: "100%"
         },
         input: {
-            position: "relative",
             border: `1.5px solid ${theme.palette.secondary.main}`,
             padding: "10px 12px",
             transition: theme.transitions.create(["border-color"]),
@@ -49,7 +48,7 @@ export const TextInput: React.FC<TextInputProps> = ({ tooltip, errorMessage, ...
                 flexDirection="row"
                 justifyContent="space-between"
             >
-                <InputLabel htmlFor={props.id} required={props.required}>
+                <InputLabel className={classes.label} focused={false} shrink={false} required={props.required}>
                     {props.name}
                 </InputLabel>
                 {tooltip && (

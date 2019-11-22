@@ -2,7 +2,7 @@ import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
-import { createStyles, makeStyles, styled, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, styled, Theme, useTheme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { RouteComponentProps, withRouter } from "react-router";
@@ -11,7 +11,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import { compose, Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { UserState } from "../../interfaces/user";
+import { AccountSettingsFormState, UserState } from "../../interfaces/user";
 import { storeUserId } from "../../redux/actions/user";
 import * as Panel from "../common/panel";
 import { FilledButton, OutlinedButton } from "../common/button";
@@ -21,6 +21,21 @@ import ComboBox from "../common/form-input/combo-box";
 
 import Birthday, { mappedBirthdayOptions } from "./birthday";
 import Reminder, { mappedReminderOptions } from "./reminder";
+import { Formik } from "formik";
+import { RESPONSE_STATUS } from "../../utils/constants";
+import { createAccountSettingsInitialValues, mapToAccountSettingsFormState } from "../../utils/data-mapper";
+
+interface FormState {
+    settings: AccountSettingsFormState
+}
+
+const StyledSettings = styled(SettingsIcon)({
+    marginRight: "10px"
+});
+
+const StyledCreate = styled(CreateIcon)({
+    marginRight: "10px"
+});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -86,7 +101,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         marginDouble: {
             marginBottom: theme.spacing(2),
-            color: theme.palette.action.disabled,
             fontSize: 18
         },
         margin: {
@@ -101,17 +115,16 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 type Props = RouteComponentProps & MapStateToProps & DispatchProps
 
-const Settings: React.FC<Props, > = props => {
+const Settings: React.FC<Props> = props => {
     const classes = useStyles();
+    const theme = useTheme();
+    const [accountSettings, setInitialAccountSettings] = React.useState<AccountSettingsFormState>(createAccountSettingsInitialValues());
+    const [failedFetchDialogOpen, setFailedFetchDialogOpen] = React.useState<boolean>(false);
+
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
     const [email, setEmail] = React.useState<string>("");
-    const [editStatus, setEditStatus] = React.useState<boolean>(false);
-    const [birthday, setBirthday] = React.useState<number>(0);
-    const [reminder, setReminder] = React.useState<number>(0);
-    const [oldReminder, setOldReminder] = React.useState<number>(0);
-    const [oldReminderEmail, setOldReminderEmail] = React.useState<string>("");
-    const [oldBirthday, setOldBirthday] = React.useState<number>(0);
+    const [isEditable, setEditable] = React.useState<boolean>(false);
 
     const [width, setWidth] = React.useState<number>(0);
     const moobile = (): boolean => {
@@ -125,7 +138,7 @@ const Settings: React.FC<Props, > = props => {
         }
     };
 
-    const getData = ():void => {
+    const getData = () :void => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "GET",
             credentials: "include",
@@ -133,21 +146,43 @@ const Settings: React.FC<Props, > = props => {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             },
-        }).then(response => response.json())
-            .then(data => {
-                if (data.default_reminder_email !== null) {
-                    setOldReminderEmail(data.default_reminder_email);
+        }).then(response => {
+            switch (response.status) {
+                case RESPONSE_STATUS.SUCCESS: {
+                    response.json().then((data) => {
+                        setInitialAccountSettings(mapToAccountSettingsFormState(data))
+                    });
+                    break;
                 }
-                if (data.year_born !== null) {
-                    setOldBirthday(data.year_born)
+                case RESPONSE_STATUS.UNAUTHORIZED: {
+                    props.history.push("/login");
+                    break;
                 }
-                if (data.reminder_days_before_due !== null) {
-                    setOldReminder(data.reminder_days_before_due)
+                default: {
+                    setFailedFetchDialogOpen(true);
+                    break;
                 }
-            });
+            }
+        })
     };
 
-    const pushData = ():void => {
+    const pushData = () :void => {
+        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: {}
+        }).then(response => {
+            switch (response.status) {
+
+            }
+        })
+
+
+
          if (birthday !== oldBirthday && birthday !== 0) {
             fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
                 method: "PUT",
@@ -202,152 +237,135 @@ const Settings: React.FC<Props, > = props => {
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
 
-    const StyledSettings = styled(SettingsIcon)({
-        marginRight: "10px"
-    });
-
-    const StyledCreate = styled(CreateIcon)({
-        marginRight: "10px"
-    });
-
     return (
-        // TODO mobile support
-        // <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
-        <Panel.Container>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Panel.Header>
-                        <StyledSettings />
-                        <Typography>Settings</Typography>
-                    </Panel.Header>
-                </Grid>
-            </Grid>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Panel.Body>
-                        <Box display="flex" flexDirection="column" p={5}>
-                            <div className={classes.marginDouble}>Personal information</div>
-                            {!editStatus ?
-                                <TextInput
-                                    name="Birth year"
-                                    type="string"
-                                    className={classes.textFieldWithSpace}
-                                    id="birthday"
-                                    value={oldBirthday === 0 || oldBirthday === undefined ? "Not selected" : oldBirthday}
-                                    autoComplete="current-password"
-                                    disabled
-                                />
-                            :
-                                <ComboBox
-                                    id="birthday"
-                                    name="Birth year"
-                                    options={mappedBirthdayOptions}
-                                    tooltip={editStatus &&"By giving your birth year we can estimate what vaccines you should have."}
-                                    placeholder="Select your birth year"
-                                    editStatus={editStatus}
-                                    onChange={(label, value) => {
-                                        setBirthday((value.value))
-                                    }}
-                                />
-                            }
-                            <div className={classes.dotted}></div>
-                            <div className={classes.marginDouble}>Reminder settings</div>
-                            {!editStatus ?
-                                <TextInput
-                                    name="Reminder time"
-                                    className={classes.textFieldWithSpace}
-                                    type="string"
-                                    id="reminder"
-                                    value={oldReminder === 0 || oldReminder === undefined ? "Not selected" : `${oldReminder} day(s) before`}
-                                    disabled
-                                />
-                                :
-                                <ComboBox
-                                    id="reminder"
-                                    name="Reminder time"
-                                    options={mappedReminderOptions}
-                                    tooltip={editStatus &&"You reserve reminder selected days before the actual date"}
-                                    placeholder="Select when you want your reminder"
-                                    editStatus={editStatus}
-                                    onChange={(label, event) => {
-                                        setReminder(event.value)
-                                    }}
-                                />
-                            }
-                            <Box
-                                display="flex"
-                                flexDirection="row"
-                                p={5}
-                                padding="0px 0px 0px 0px"
-                            >
-                                    <TextInput
-                                        error={emailError}
-                                        errorMessage={"Invalid email address"}
-                                        id="email"
-                                        name="Email address for reminder"
-                                        autoComplete="email"
-
-                                        tooltip={editStatus ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
-                                        className={!editStatus ? classes.textFieldWithSpace : classes.textFieldWithSpace2 }
-                                        value={
-                                            email === "" && !editStatus
-                                                ? "Not selected"
-                                                : email
-                                        }
-                                        onChange={(event) => setEmail(event.target.value)}
-                                        disabled={!editStatus}
-                                    />
-                            </Box>
-                        </Box>
-                    </Panel.Body>
-                    <Grid item xs={12}>
-                        {!editStatus ? (
-                            <Panel.Footer>
-                                <OutlinedButton
-                                    onClick={() => {
-                                        setEditStatus(true);
-                                    }}
-                                >
-                                    <StyledCreate />
-                                    Edit
-                                </OutlinedButton>
-                            </Panel.Footer>
-                        ) : (
-                            <Panel.Footer>
-                                <FilledButton
-                                    onClick={() => {
-                                        /* states -> back-end */
-                                        let value = true;
-                                        if (email !== "") {
-                                            value = emailCheck(email);
-                                        }
-                                        if (value) {
-                                            props.history.push("/settings");
-                                            setEditStatus(false);
-                                            setEmailError(false);
-                                            pushData();
-                                        } else {
-                                            setEmailError(true);
-                                        }
-                                    }}
-                                >
-                                    Save
-                                </FilledButton>
-                                <OutlinedButton
-                                    onClick={() => {
-                                        /* Get the old data from back-end */
-                                        props.history.push("/settings");
-                                        setEditStatus(false);
-                                    }}
-                                >
-                                    Cancel
-                                </OutlinedButton>
-                            </Panel.Footer>
-                        )}
+        <Formik<FormState>
+            initialValues={{ settings: accountSettings }}
+            validationSchema={{}}
+            onSubmit={(values, _formikActions) => {}}
+            enableReinitialize
+            render={(form) => {
+                console.log(form.initialValues);
+                return (
+                    <Grid item xs={12} sm={11} md={10}>
+                        <Panel.Container>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <Panel.Header>
+                                        <StyledSettings />
+                                        <Typography>Settings</Typography>
+                                    </Panel.Header>
+                                </Grid>
+                            </Grid>
+                            <Panel.Body>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6" className={classes.marginDouble}>Personal information</Typography>
+                                        <ComboBox
+                                            id="birthday"
+                                            name="Year of birth"
+                                            value={{
+                                                label: form.values.settings.birthYear,
+                                                value: form.values.settings.birthYear
+                                            }}
+                                            options={mappedBirthdayOptions}
+                                            tooltip={isEditable ? "By giving your year of birth we can estimate what vaccines you should have." : undefined}
+                                            placeholder="Select your birth year."
+                                            isEditable={isEditable}
+                                            onChange={(option) => {
+                                                form.setFieldValue("settings.birthYear", option.value)
+                                            }}
+                                        />
+                                        <div className={classes.dotted}/>
+                                        <Typography variant="h6" className={classes.marginDouble}>Reminder settings</Typography>
+                                        <ComboBox
+                                            id="reminder"
+                                            name="Reminder time"
+                                            value={{
+                                                value: form.values.settings.reminderDaysBeforeDue,
+                                                label: form.values.settings.reminderDaysBeforeDue
+                                            }}
+                                            options={mappedReminderOptions}
+                                            tooltip={isEditable ? "This option defined how many days prior to the vaccine booster due date you'd like to receive the reminder." : undefined}
+                                            placeholder="Select when you want your reminder"
+                                            isEditable={isEditable}
+                                            onChange={((option) => {
+                                                form.setFieldValue("settings.reminderDaysBeforeDue", option.value)
+                                                }
+                                            )}
+                                        />
+                                        <Box
+                                            display="flex"
+                                            flexDirection="row"
+                                            p={5}
+                                            padding="0px 0px 0px 0px"
+                                        >
+                                            <TextInput
+                                                error={emailError}
+                                                errorMessage={"Invalid email address"}
+                                                id="email"
+                                                name="Email address for reminder"
+                                                autoComplete="email"
+                                                tooltip={isEditable ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
+                                                className={!isEditable ? classes.textFieldWithSpace : classes.textFieldWithSpace2 }
+                                                value={form.values.settings.reminderEmail}
+                                                onChange={(event) => setEmail(event.target.value)}
+                                                disabled={!isEditable}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+                            </Panel.Body>
+                            <Grid item xs={12}>
+                                {!isEditable ? (
+                                    <Panel.Footer>
+                                        <OutlinedButton
+                                            onClick={() => {
+                                                setEditable(true);
+                                            }}
+                                        >
+                                            <StyledCreate />
+                                            Edit
+                                        </OutlinedButton>
+                                    </Panel.Footer>
+                                ) : (
+                                    <Panel.Footer justifyContent="flex-end">
+                                        <FilledButton
+                                            style={{ marginRight: theme.spacing(2)}}
+                                            onClick={() => {
+                                                /* states -> back-end */
+                                                let value = true;
+                                                if (email !== "") {
+                                                    value = emailCheck(email);
+                                                }
+                                                if (value) {
+                                                    props.history.push("/settings");
+                                                    setEditable(false);
+                                                    setEmailError(false);
+                                                    pushData();
+                                                } else {
+                                                    setEmailError(true);
+                                                }
+                                            }}
+                                        >
+                                            Save
+                                        </FilledButton>
+                                        <OutlinedButton
+                                            onClick={() => {
+                                                form.resetForm();
+                                                props.history.push("/settings");
+                                                setEditable(false);
+                                            }}
+                                        >
+                                            Cancel
+                                        </OutlinedButton>
+                                    </Panel.Footer>
+                                )}
+                            </Grid>
+                        </Panel.Container>
                     </Grid>
-                </Grid>
-            </Grid>
-        </Panel.Container>
+                );
+            }}
+        />
     );
 };
 interface DispatchProps {

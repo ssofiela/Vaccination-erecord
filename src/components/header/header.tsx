@@ -116,7 +116,6 @@ const Header: React.FC<Props> = (props) => {
                             <Tab label="Settings" disabled={id < 1} value="/settings" />
                             <Tab
                                 label="FAQ"
-                                disabled={id < 1}
                                 value="/frequently-asked-questions"
                             />
                         </Tabs>

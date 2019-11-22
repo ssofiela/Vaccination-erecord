@@ -11,9 +11,30 @@ export const registrationValidationSchema = yup.object().shape({
         .required("Password is required.")
 });
 
-export const addNewVaccineValidationSchema = yup.object().shape({
-    vaccine: yup.string().required("Vaccine is required."),
-    date: yup.date().required("The date when the vaccine was taken is required."),
-    boosterDueDate: yup.date(),
-    reminder: yup.string().required("Required.")
-});
+export function addNewVaccineValidationSchema(): yup.ObjectSchema<{}> {
+    return yup.object().shape({
+        id: yup.string(),
+        vaccineType: yup.object().shape({
+            id: yup.string().required("Vaccine type is required."),
+            name: yup.string().required("Vaccine name is required."),
+            abbreviation: yup.string().required("Vaccine abbreviation is required.")
+        }),
+        dateTaken: yup.date().required("Date when vaccine was taken is required."),
+        boosterDate: yup.date(),
+        reminder: yup.boolean(),
+        reminderEmail: yup.string().when("reminder", {
+            is: (reminder) => reminder,
+            then: yup.string()
+                .trim()
+                .required("Turning on email reminders requires an email address.")
+                .email("Email is not a valid email address.")
+
+        }),
+        comment: yup.string()
+    });
+}
+
+export function isNonEmpty(str?: string): boolean {
+    console.log(str);
+    return str !== undefined && str !== null && (str.trim().length > 0);
+}

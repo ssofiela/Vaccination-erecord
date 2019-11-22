@@ -12,17 +12,20 @@ import { UserState } from "../../interfaces/user";
 import { Vaccine } from "../../interfaces/vaccine";
 import { storeUserId } from "../../redux/actions/user";
 import { RESPONSE_STATUS } from "../../utils/constants";
-import { mapToVaccineFormState } from "../../utils/data-mapper";
+import { mapToVaccinePayload } from "../../utils/data-mapper";
 import * as Panel from "../common/panel";
 import { OutlinedButton } from "../common/button";
 import { Dialog } from "../common/dialog";
 
 import { Table } from "./vaccine-table";
+import VaccineEntry from "./vaccine-entry";
 
 interface State {
     vaccines: Vaccine[]
     deleteFailedDialogOpen: boolean
     failedFetchDialogOpen: boolean
+    vaccineEntryOpen: boolean
+    vaccine?: Vaccine
 }
 
 const StyledColorize = styled(Colorize)({
@@ -40,7 +43,9 @@ class VaccineList extends React.Component<Props, State> {
     readonly state = {
         vaccines: [],
         deleteFailedDialogOpen: false,
-        failedFetchDialogOpen: false
+        failedFetchDialogOpen: false,
+        vaccineEntryOpen: false,
+        vaccine: undefined
     };
 
     componentDidMount(): void {
@@ -59,7 +64,7 @@ class VaccineList extends React.Component<Props, State> {
             switch (response.status) {
                 case RESPONSE_STATUS.SUCCESS: {
                     response.json().then((data) => {
-                        this.setState({ vaccines: data.map(mapToVaccineFormState) });
+                        this.setState({ vaccines: data.map(mapToVaccinePayload) });
                     });
                     break;
                 }
@@ -84,6 +89,10 @@ class VaccineList extends React.Component<Props, State> {
 
     closeFailedFetchDialog = (): void => {
         this.setState({ failedFetchDialogOpen: false })
+    };
+
+    closeVaccineEntry = (): void => {
+        this.setState({ vaccineEntryOpen: false })
     };
 
     deleteVaccine = (id: number): void => {
@@ -116,8 +125,9 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     editVaccine = (vaccine: Vaccine): void => {
-        this.props.history.push("/add-vaccine", { vaccine: vaccine });
+        //this.props.history.push("/add-vaccine", { vaccine: vaccine });
         // TODO pass vaccine data to add new vaccine page.
+        this.setState({ vaccineEntryOpen: true, vaccine: vaccine })
     };
 
     render(): React.ReactNode {
@@ -175,6 +185,13 @@ class VaccineList extends React.Component<Props, State> {
                         content="Could not fetch vaccine entries."
                         primaryAction="Ok"
                         handleClose={this.closeFailedFetchDialog}
+                    />
+                }
+                {state.vaccineEntryOpen &&
+                    <VaccineEntry
+                        handleClose={this.closeVaccineEntry}
+                        open={state.vaccineEntryOpen}
+                        vaccine={state.vaccine}
                     />
                 }
             </>

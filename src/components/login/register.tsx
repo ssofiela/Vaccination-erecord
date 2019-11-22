@@ -75,7 +75,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                 /*props.userId = userId*/
 
                 if (valid) {
-                    props.history.push("/")
+                    props.history.push("/vaccines");
                     window.location.reload(true);
                 }
             });
@@ -100,83 +100,81 @@ const Register: React.FC<RouteComponentProps> = (props) => {
     }, [width]);
 
     return (
-        // TODO mobile support
-        //<Paper square className={mobile() ? classes.mobileContainer : classes.container}>
-        <Panel.Container>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Panel.Header>
-                        <Typography>Register</Typography>
-                    </Panel.Header>
+        <Grid item xs={12} sm={8} md={6}>
+            <Panel.Container>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Panel.Header>
+                            <Typography>Register</Typography>
+                        </Panel.Header>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Panel.Body>
-                <form className={classes.form} noValidate>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <TextInput
-                                required
-                                id="email"
-                                name="Email"
-                                autoComplete="email"
-                                error={errors.includes("email")}
-                                errorMessage={
-                                    errors.includes("email") ? "Invalid email address" : ""
-                                }
-                                onChange={(event) => setEmail(event.target.value)}
-                                tooltip="Example email address: email@example.com"
-                            />
+                <Panel.Body>
+                    <form className={classes.form} noValidate>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <TextInput
+                                    required
+                                    id="email"
+                                    name="Email"
+                                    autoComplete="email"
+                                    error={errors.includes("email")}
+                                    errorMessage={
+                                        errors.includes("email") ? "Invalid email address" : ""
+                                    }
+                                    onChange={(event) => setEmail(event.target.value)}
+                                    tooltip="Example email address: email@example.com"
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <TextInput
-                                required
-                                id="password"
-                                name="Password"
-                                error={errors.includes("password")}
-                                errorMessage={errors.includes("password") ? "Invalid password" : ""}
-                                onChange={(event) => setPassword(event.target.value)}
-                                tooltip="A password should be at least 5 characters long, and may consist of uppercase and lowercase letter, numerals and other symbols."
-                                fullWidth
-                                label="Password"
-                                type={showPassword ? "text" : "password"}
-                                helperText={errors.includes("password") && "Invalid password"}
-                                autoComplete="current-password"
-                                /*endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
-                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }*/
-                            />
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <TextInput
+                                    required
+                                    id="password"
+                                    name="Password"
+                                    error={errors.includes("password")}
+                                    errorMessage={errors.includes("password") ? "Invalid password" : ""}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    tooltip="A password should be at least 6 characters long, and should contain one lowercase and one uppercase letter, a numeral and one special character."
+                                    fullWidth
+                                    type={showPassword ? "text" : "password"}
+                                    autoComplete="current-password"
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Box className={classes.button}>
-                                <FilledButton onClick={handleInputs2}>Register</FilledButton>
-                            </Box>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Box className={classes.button}>
+                                    <FilledButton onClick={handleInputs2}>Register</FilledButton>
+                                </Box>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <div className={mobile() ? classes.differentLine : classes.sameLine}>
-                                <Typography>Already have an account?&nbsp;</Typography>
-                                <Link
-                                    underline="none"
-                                    className={classes.link}
-                                    onClick={() => props.history.push("/login")}
-                                >
-                                    <Typography>Log In</Typography>
-                                </Link>
-                            </div>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <div className={mobile() ? classes.differentLine : classes.sameLine}>
+                                    <Typography>Already have an account?&nbsp;</Typography>
+                                    <Link
+                                        underline="none"
+                                        className={classes.link}
+                                        onClick={() => props.history.push("/login")}
+                                    >
+                                        <Typography>Log In</Typography>
+                                    </Link>
+                                </div>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </form>
-            </Panel.Body>
-        </Panel.Container>
+                    </form>
+                </Panel.Body>
+            </Panel.Container>
+        </Grid>
     );
 };
 

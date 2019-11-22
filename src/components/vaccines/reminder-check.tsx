@@ -1,14 +1,30 @@
 import React from "react";
 import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
+import RadioGroup, { RadioGroupProps } from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import { createStyles, makeStyles, TextField, Theme } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
+import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import Tooltip from "@material-ui/core/Tooltip";
+import InputLabel from "@material-ui/core/InputLabel";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
 
+import { useStyles } from "../common/form-input/form-styles";
+import { TextInput } from "../common/form-input";
+
+
+interface OwnProps {
+    radioValue: boolean
+    inputValue?: string
+    tooltip?: string
+    errorMessage?: string
+    required?: boolean
+    name: string
+    id: string
+}
+
+type Props = OwnProps & RadioGroupProps;
 
 interface MainProps {
     sidebarOpen: boolean;
@@ -19,7 +35,7 @@ interface MainProps {
     emailReminder: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const reminderStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
             marginRight: theme.spacing(1),
@@ -36,15 +52,17 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const ReminderCheck: React.FC<MainProps> = (props) => {
+const ReminderCheck: React.FC<Props> = (props) => {
     const classes = useStyles();
-    const [value, setValue] = React.useState("female");
+    const theme = useTheme();
+    //const reminderClasses = reminderStyles();
+    const [value, setValue] = React.useState(props.radioValue);
     const [email, setEmail] = React.useState("No");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setValue((event.target as HTMLInputElement).value);
+        setValue((event.target as HTMLInputElement).value === "true");
     };
-    const addInput = (): void => {
+    /*const addInput = (): void => {
         setEmail("Yes");
         props.updateEmailRemainder("Yes");
     };
@@ -55,11 +73,65 @@ const ReminderCheck: React.FC<MainProps> = (props) => {
 
     const changeEmail = (email: string): void => {
         props.updateEmail(email);
-    };
+    };*/
 
     return (
-        <FormControl component="fieldset">
-            <div className={classes.sameLine}>
+        <Box style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(3) }}>
+            <Grid container>
+                <Grid item xs={12} sm={6}>
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                    >
+                        <InputLabel required={props.required}>
+                            {props.name}
+                        </InputLabel>
+                        {props.tooltip && (
+                            <Tooltip title={props.tooltip}>
+                                <HelpOutlineOutlinedIcon
+                                    style={{ fontSize: "1.2rem", color: "rgba(0, 0, 0, 0.54)" }}
+                                />
+                            </Tooltip>
+                        )}
+                    </Box>
+                </Grid>
+                <FormControl hiddenLabel fullWidth component="fieldset">
+                    <RadioGroup
+                        value={value}
+                        onChange={handleChange}
+                    >
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                        >
+                            <Grid item xs={12} sm={6}>
+                                <FormControlLabel
+                                    value={true}
+                                    control={ <Radio color="primary"/> }
+                                    label="Yes"
+                                />
+                            </Grid>
+                            {value &&
+                            <Grid item xs={12} sm={6}>
+                                <TextInput
+                                    value={props.inputValue}
+                                    name="Email for reminder"
+                                />
+                            </Grid>
+                            }
+                            <Grid item xs={12} sm={6}>
+                                <FormControlLabel
+                                    value={false}
+                                    control={< Radio color="primary"/> }
+                                    label="No"
+                                />
+                            </Grid>
+                        </Box>
+
+                    </RadioGroup>
+
+                    {/*<div className={reminderClasses.sameLine}>
                 <FormLabel component="legend">Turn on email reminder</FormLabel>
                 <Tooltip
                     title="If you want to get email reminder for this vaccine select yes, otherwise select no.">
@@ -90,7 +162,7 @@ const ReminderCheck: React.FC<MainProps> = (props) => {
                         label="Email"
                         name="email"
                         autoComplete="email"
-                        className={classes.textField}
+                        className={reminderClasses.textField}
                         onChange={event =>
                             changeEmail(event.target.value)
                         }
@@ -103,8 +175,10 @@ const ReminderCheck: React.FC<MainProps> = (props) => {
                     onChange={removeInput}
                     labelPlacement="end"
                 />
-            </RadioGroup>
-        </FormControl>
+            </RadioGroup>*/}
+                </FormControl>
+            </Grid>
+        </Box>
     );
 };
 

@@ -109,7 +109,7 @@ const NewVaccine: React.FC<Props> = (props) => {
                     vaccines.push(element.name);
                     abb.push(element.vaccine_abbreviation)
                 }
-                
+
                 setVaccineList(vaccines);
                 setAbbreviation(abb);
             });

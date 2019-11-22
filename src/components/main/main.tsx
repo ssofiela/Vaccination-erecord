@@ -9,7 +9,9 @@ interface MainProps {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         content: {
+            display: "flex",
             flexGrow: 1,
+            justifyContent: "center",
             padding: theme.spacing(8, 3, 3)
         }
     })
