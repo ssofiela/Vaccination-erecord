@@ -25,7 +25,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
         fetch("https://vaccine-backend.herokuapp.com/api/login", {
             method: "POST",
             headers: {
-                Accept: "application/json",
+                "Accept": "application/json",
                 "Content-Type": "application/json"
             },
             credentials: "include",
@@ -41,7 +41,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                 valid = data.status === "Authorized";
 
                 if (valid) {
-                    props.history.push("/")
+                    props.history.push("/vaccines");
                     window.location.reload(true);
 
                 } else {
@@ -68,63 +68,68 @@ const Login: React.FC<RouteComponentProps> = (props) => {
     }, [width]);
 
     return (
-        // TODO mobile support
-        // <Paper square className={moobile() ? classes.mobileContainer : classes.container}>
-        <Panel.Container>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Panel.Header>
-                        <Typography>Log in</Typography>
-                    </Panel.Header>
+        <Grid item xs={12} sm={8} md={6}>
+            <Panel.Container>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Panel.Header>
+                            <Typography>Log in</Typography>
+                        </Panel.Header>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Panel.Body>
-                <form className={classes.form} noValidate>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <TextInput
-                                id="email"
-                                name="Email"
-                                autoComplete="email"
-                                onChange={(event) => setEmail(event.target.value)}
-                                error={error}
-                                errorMessage={error ? "Incorrect email address or password." : ""}
-                            />
+                <Panel.Body>
+                    <form className={classes.form} noValidate>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <TextInput
+                                    id="email"
+                                    name="Email"
+                                    autoComplete="email"
+                                    onChange={(event) => setEmail(event.target.value)}
+                                    error={error}
+                                    errorMessage={error ? "Incorrect email address or password." : ""}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <TextInput
-                                id="password"
-                                name="Password"
-                                type="password"
-                                autoComplete="current-password"
-                                onChange={(event) => setPassword(event.target.value)}
-                                error={error}
-                                errorMessage={error ? "Incorrect email address or password." : ""}
-                            />
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <TextInput
+                                    id="password"
+                                    name="Password"
+                                    type="password"
+                                    autoComplete="current-password"
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    error={error}
+                                    errorMessage={error ? "Incorrect email address or password." : ""}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Box className={classes.button}>
-                                <FilledButton onClick={handleBack}>Log In</FilledButton>
-                            </Box>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Box className={classes.button}>
+                                    <FilledButton onClick={handleBack}>Log In</FilledButton>
+                                </Box>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item>
-                            <div className={moobile() ? classes.differentLine : classes.sameLine}>
-                                <Typography>New to Vaccination eRecord?</Typography>
-                                <Link onClick={() => props.history.push("/register")}>
-                                    <Typography>{" Register"}</Typography>
-                                </Link>
-                            </div>
+                        <Grid container>
+                            <Grid item>
+                                <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                                    <Typography>New to Vaccination eRecord?&nbsp;</Typography>
+                                    <Link
+                                        underline="none"
+                                        className={classes.link}
+                                        onClick={() => props.history.push("/register")}
+                                    >
+                                        <Typography>Register</Typography>
+                                    </Link>
+                                </div>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </form>
-            </Panel.Body>
-        </Panel.Container>
+                    </form>
+                </Panel.Body>
+            </Panel.Container>
+        </Grid>
+
     );
 };
 

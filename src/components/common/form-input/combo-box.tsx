@@ -9,18 +9,19 @@ import { fade } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { useStyles } from "./form-styles";
-import { AutocompleteProps } from "@material-ui/lab/Autocomplete/Autocomplete";
 
 interface ComboBoxProps {
-    errorMessage?: string;
-    error: boolean;
-    id: string;
-    name: string;
-    options: OptionType[];
-    placeholder?: string;
-    required: boolean;
-    tooltip?: string;
-    editStatus: boolean;
+    errorMessage?: string
+    error?: boolean
+    id: string
+    name: string
+    options: OptionType[]
+    placeholder?: string
+    required?: boolean
+    tooltip?: string
+    isEditable: boolean
+    value: OptionType
+    onChange: (option: OptionType) => void
 }
 
 export interface OptionType {
@@ -49,21 +50,27 @@ const StyledTextInput = withStyles((theme: Theme) =>
                 "&.Mui-disabled fieldset": {
                     backgroundColor: theme.palette.action.disabledBackground,
                     borderColor: theme.palette.action.disabled
+                },
+                "&.Mui-disabled:hover fieldset": {
+                    boxShadow: "none",
+                    borderColor: theme.palette.action.disabled
                 }
             }
         }
     })
 )(TextField);
-type Props = ComboBoxProps & AutocompleteProps;
+type Props = ComboBoxProps;
 
-const ComboBox: React.FC<Props> = ({errorMessage, error, id, name, options, placeholder, required, tooltip, editStatus, ...props}) => {
+const ComboBox: React.FC<Props> = (props) => {
     const classes = useStyles();
     return (
         <Autocomplete
-            id={id}
-            options={options}
+            disabled={!props.isEditable}
+            id={props.id}
+            options={props.options}
             getOptionLabel={(option: OptionType) => option.label}
-            {...props}
+            value={props.value}
+            onChange={(_event, option) => {props.onChange(option)}}
             renderInput={(params) => (
                 <Box className={classes.container}>
                     <Box
@@ -72,11 +79,11 @@ const ComboBox: React.FC<Props> = ({errorMessage, error, id, name, options, plac
                         flexDirection="row"
                         justifyContent="space-between"
                     >
-                        <InputLabel htmlFor={id} required={required}>
-                            {name}
+                        <InputLabel htmlFor={props.id} required={props.required}>
+                            {props.name}
                         </InputLabel>
-                        {tooltip && (
-                            <Tooltip title={tooltip}>
+                        {props.tooltip && (
+                            <Tooltip title={props.tooltip}>
                                 <HelpOutlineOutlinedIcon
                                     style={{ fontSize: "1.2rem", color: "rgba(0, 0, 0, 0.54)" }}
                                 />
@@ -84,13 +91,13 @@ const ComboBox: React.FC<Props> = ({errorMessage, error, id, name, options, plac
                         )}
                     </Box>
                     <StyledTextInput
-                        placeholder={placeholder}
+                        placeholder={props.placeholder}
                         variant="outlined"
                         {...params}
                     />
-                    {error && (
+                    {props.error && (
                         <FormHelperText className={classes.errorMessage}>
-                            {errorMessage}
+                            {props.errorMessage}
                         </FormHelperText>
                     )}
                 </Box>

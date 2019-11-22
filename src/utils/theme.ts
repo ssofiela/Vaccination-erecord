@@ -4,7 +4,7 @@ export const theme = createMuiTheme({
     palette: {
         primary: {
             main: "#0fa7bf",
-            contrastText: "white"
+            contrastText: "#fff"
         },
         secondary: {
             main: "#cfedf2"
@@ -16,8 +16,11 @@ export const theme = createMuiTheme({
             default: "#fff"
         },
         action: {
-            disabled: "#707070",
+            disabled: "#bfbfbf",
             disabledBackground: "#f9f9f9"
+        },
+        text: {
+            primary: "rgba(0, 0, 0, 0.54)"
         }
     },
     typography: {

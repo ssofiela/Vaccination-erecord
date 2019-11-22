@@ -9,6 +9,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         labelContainer: {
             marginBottom: theme.spacing(1)
         },
+        label: {
+            position: "relative",
+            transform: "none"
+        },
         tooltip: {
             color: "#00000054"
         },
@@ -17,6 +21,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         required: {
             color: theme.palette.error.main
+        },
+        datePicker: {
+            "": {
+
+            }
         }
     })
 );

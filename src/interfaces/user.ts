@@ -4,9 +4,15 @@ export type UserState = {
     userId?: number;
 };
 
-interface userIdAction {
+export interface AccountSettingsFormState {
+    reminderEmail: string,
+    birthYear: string,
+    reminderDaysBeforeDue: string
+}
+
+interface UserIdAction {
     type: typeof STORE_USER_ID
     payload: number
 }
 
-export type userActionTypes = userIdAction;
+export type userActionTypes = UserIdAction;

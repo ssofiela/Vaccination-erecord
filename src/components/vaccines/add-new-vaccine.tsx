@@ -2,7 +2,7 @@ import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import Grid from "@material-ui/core/Grid";
-import { styled } from "@material-ui/core/styles";
+import { styled, useTheme } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Box from "@material-ui/core/Box";
@@ -12,7 +12,11 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { RouteComponentProps, withRouter } from "react-router";
 import moment from "moment";
+import { compose, Dispatch } from "redux";
+import { connect } from "react-redux";
 
+import { storeUserId } from "../../redux/actions/user";
+import { UserState } from "../../interfaces/user";
 import * as Panel from "../common/panel";
 import useStyles from "../common/styles";
 import { FilledButton, OutlinedButton } from "../common/button";
@@ -21,10 +25,6 @@ import TextInput from "../common/form-input/text-input";
 import emailCheck from "../common/email-checker";
 
 import ReminderCheck from "./reminder-check";
-import { storeUserId } from "../../redux/actions/user";
-import { UserState } from "../../interfaces/user";
-import { compose, Dispatch } from "redux";
-import { connect } from "react-redux";
 
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
@@ -43,6 +43,7 @@ type Props = RouteComponentProps & MapStateToProps & DispatchProps
 
 const NewVaccine: React.FC<Props> = (props) => {
     const classes = useStyles();
+    const theme = useTheme();
 
     const [selectedDate, setSelectedDate] = React.useState<string>(moment().format());
     const [selectedBoosterDate, setSelectedBoosterDate] = React.useState<string>(moment().format());
@@ -102,13 +103,13 @@ const NewVaccine: React.FC<Props> = (props) => {
             },
         }).then(response => response.json())
             .then(data => {
-                let vaccines = [];
-                let abb = [];
-                for (let i = 0; i < data.length; i++) {
-                    vaccines.push(data[i].name);
-                    abb.push(data[i].abbreviation)
-
+                const vaccines = [];
+                const abb = [];
+                for (const element of data) {
+                    vaccines.push(element.name);
+                    abb.push(element.vaccine_abbreviation)
                 }
+
                 setVaccineList(vaccines);
                 setAbbreviation(abb);
             });
@@ -118,6 +119,9 @@ const NewVaccine: React.FC<Props> = (props) => {
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
+
+    //const initialValues = props.location.state.vaccine;
+    console.log(props);
 
     return (
         // TODO add mobile support
@@ -239,8 +243,9 @@ const NewVaccine: React.FC<Props> = (props) => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <Panel.Footer>
+                <Panel.Footer justifyContent="flex-end">
                     <FilledButton
+                        style={{ marginRight: theme.spacing(2)}}
                         onClick={() => {
                             const invalidName: boolean = name === "";
                             const invalidEmail: boolean =
