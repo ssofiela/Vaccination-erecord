@@ -184,6 +184,7 @@ const VaccineEntry: React.FC<Props> = props => {
                                         <Box className={classes.leftInputContainer}>
                                             <ComboBox
                                                 error
+                                                isEditable={true}
                                                 required
                                                 id="name"
                                                 name="Vaccine name"
@@ -225,6 +226,7 @@ const VaccineEntry: React.FC<Props> = props => {
                                             <ComboBox
                                                 error
                                                 required
+                                                isEditable={true}
                                                 id="abbreviation"
                                                 name="Vaccine abbreviation"
                                                 value={{
@@ -335,7 +337,6 @@ const VaccineEntry: React.FC<Props> = props => {
                     primaryAction="Ok"
                     handleClose={() => {setFailedRequestDialogOpen(false)}}
                 />
-
             }
         </>
 

@@ -24,6 +24,7 @@ import Reminder, { mappedReminderOptions } from "./reminder";
 import { Formik } from "formik";
 import { RESPONSE_STATUS } from "../../utils/constants";
 import { createAccountSettingsInitialValues, mapToAccountSettingsFormState } from "../../utils/data-mapper";
+import { Dialog } from "../common/dialog";
 
 interface FormState {
     settings: AccountSettingsFormState
@@ -120,7 +121,7 @@ const Settings: React.FC<Props> = props => {
     const theme = useTheme();
     const [accountSettings, setInitialAccountSettings] = React.useState<AccountSettingsFormState>(createAccountSettingsInitialValues());
     const [failedFetchDialogOpen, setFailedFetchDialogOpen] = React.useState<boolean>(false);
-
+    const [failedRequestDialogOpen, setFailedRequestDialogOpen] = React.useState<boolean>(false);
 
     const [emailError, setEmailError] = React.useState<boolean>(false);
     const [email, setEmail] = React.useState<string>("");
@@ -166,7 +167,7 @@ const Settings: React.FC<Props> = props => {
         })
     };
 
-    const pushData = () :void => {
+    const pushData = (values: AccountSettingsFormState) :void => {
         fetch("https://vaccine-backend.herokuapp.com/api/user", {
             method: "PUT",
             credentials: "include",
@@ -174,10 +175,26 @@ const Settings: React.FC<Props> = props => {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             },
-            body: {}
+            body: JSON.stringify({
+                reminder_days_before_due: values.reminderDaysBeforeDue,
+                year_born: values.birthYear,
+                default_reminder_email: values.reminderEmail
+            })
         }).then(response => {
             switch (response.status) {
-
+                case RESPONSE_STATUS.SUCCESS: {
+                    setInitialAccountSettings(values);
+                    setEditable(false);
+                    break;
+                }
+                case RESPONSE_STATUS.UNAUTHORIZED: {
+                    props.history.push("/login");
+                    break;
+                }
+                default: {
+                    setFailedRequestDialogOpen(true);
+                    break;
+                }
             }
         })
 
@@ -238,13 +255,13 @@ const Settings: React.FC<Props> = props => {
     }, [width]);
 
     return (
-        <Formik<FormState>
+        <>
+            <Formik<FormState>
             initialValues={{ settings: accountSettings }}
             validationSchema={{}}
             onSubmit={(values, _formikActions) => {}}
             enableReinitialize
             render={(form) => {
-                console.log(form.initialValues);
                 return (
                     <Grid item xs={12} sm={11} md={10}>
                         <Panel.Container>
@@ -289,7 +306,7 @@ const Settings: React.FC<Props> = props => {
                                             placeholder="Select when you want your reminder"
                                             isEditable={isEditable}
                                             onChange={((option) => {
-                                                form.setFieldValue("settings.reminderDaysBeforeDue", option.value)
+                                                    form.setFieldValue("settings.reminderDaysBeforeDue", option.value)
                                                 }
                                             )}
                                         />
@@ -308,7 +325,9 @@ const Settings: React.FC<Props> = props => {
                                                 tooltip={isEditable ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
                                                 className={!isEditable ? classes.textFieldWithSpace : classes.textFieldWithSpace2 }
                                                 value={form.values.settings.reminderEmail}
-                                                onChange={(event) => setEmail(event.target.value)}
+                                                onChange={(_event, value) => {
+                                                    form.setFieldValue("settings.reminderEmail", value)
+                                                }}
                                                 disabled={!isEditable}
                                             />
                                         </Box>
@@ -366,6 +385,26 @@ const Settings: React.FC<Props> = props => {
                 );
             }}
         />
+            {failedFetchDialogOpen &&
+            <Dialog
+                open={failedFetchDialogOpen}
+                content="Could not fetch account settings."
+                primaryAction="Ok"
+                handleClose={() => {setFailedFetchDialogOpen(false)}}
+            />
+            }
+
+            {failedRequestDialogOpen &&
+            <Dialog
+                open={failedRequestDialogOpen}
+                content={"Could not save account settings"}
+                primaryAction="Ok"
+                handleClose={() => {setFailedRequestDialogOpen(false)}}
+            />
+
+            }
+        </>
+
     );
 };
 interface DispatchProps {

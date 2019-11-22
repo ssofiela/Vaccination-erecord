@@ -23,7 +23,6 @@ class App extends React.Component {
                         <Route key="login" path="/login" component={Login} />
                         <Route key="register" path="/register" component={Register} />
                         <Route key="vaccines" exact path="/vaccines" component={VaccineList} />
-                        <Route key="addVaccine" path="/add-vaccine" component={NewVaccine} />
                         <Route key="settings" path="/settings" component={Settings} />
                         <Route
                             key="frequentlyAskedQuestions"

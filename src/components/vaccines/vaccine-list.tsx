@@ -125,9 +125,11 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     editVaccine = (vaccine: Vaccine): void => {
-        //this.props.history.push("/add-vaccine", { vaccine: vaccine });
-        // TODO pass vaccine data to add new vaccine page.
         this.setState({ vaccineEntryOpen: true, vaccine: vaccine })
+    };
+
+    createNewVaccineEntry = (): void => {
+        this.setState({ vaccineEntryOpen: true })
     };
 
     render(): React.ReactNode {
@@ -161,7 +163,7 @@ class VaccineList extends React.Component<Props, State> {
                             <Panel.Footer>
                                 <OutlinedButton
                                     onClick={() => {
-                                        props.history.push("/add-vaccine");
+                                        this.createNewVaccineEntry()
                                     }}
                                     startIcon={<AddIcon />}
                                 >
