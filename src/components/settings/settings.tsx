@@ -197,48 +197,6 @@ const Settings: React.FC<Props> = props => {
                 }
             }
         })
-
-
-
-         if (birthday !== oldBirthday && birthday !== 0) {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({year_born: birthday}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                 response.json()
-                getData()
-            });
-        }
-        if (email !== oldReminderEmail && email !== "") {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({default_reminder_email: email}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                response.json()
-                getData()
-            })
-        }
-        if (reminder !== 0) {
-            fetch("https://vaccine-backend.herokuapp.com/api/user/update", {
-                method: "PUT",
-                credentials: "include",
-                body: JSON.stringify({reminder_days_before_due: reminder}),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
-                response.json()
-                getData()
-            })
-        }
     };
 
     React.useEffect(() => {
@@ -259,7 +217,9 @@ const Settings: React.FC<Props> = props => {
             <Formik<FormState>
             initialValues={{ settings: accountSettings }}
             validationSchema={{}}
-            onSubmit={(values, _formikActions) => {}}
+            onSubmit={(values, _formikActions) => {
+                pushData(values.settings);
+            }}
             enableReinitialize
             render={(form) => {
                 return (
@@ -325,8 +285,8 @@ const Settings: React.FC<Props> = props => {
                                                 tooltip={isEditable ? "Email address is only for the reminders. It is the address where you will deserve a reminder." : undefined}
                                                 className={!isEditable ? classes.textFieldWithSpace : classes.textFieldWithSpace2 }
                                                 value={form.values.settings.reminderEmail}
-                                                onChange={(_event, value) => {
-                                                    form.setFieldValue("settings.reminderEmail", value)
+                                                onChange={(event) => {
+                                                    form.setFieldValue("settings.reminderEmail", event.target.value)
                                                 }}
                                                 disabled={!isEditable}
                                             />
@@ -351,19 +311,7 @@ const Settings: React.FC<Props> = props => {
                                         <FilledButton
                                             style={{ marginRight: theme.spacing(2)}}
                                             onClick={() => {
-                                                /* states -> back-end */
-                                                let value = true;
-                                                if (email !== "") {
-                                                    value = emailCheck(email);
-                                                }
-                                                if (value) {
-                                                    props.history.push("/settings");
-                                                    setEditable(false);
-                                                    setEmailError(false);
-                                                    pushData();
-                                                } else {
-                                                    setEmailError(true);
-                                                }
+                                                form.submitForm()
                                             }}
                                         >
                                             Save
