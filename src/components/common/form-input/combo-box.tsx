@@ -8,20 +8,21 @@ import Box from "@material-ui/core/Box";
 import { fade } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
+import { TextInput } from "./text-input";
 import { useStyles } from "./form-styles";
 
 interface ComboBoxProps {
-    errorMessage?: string
-    error?: boolean
-    id: string
-    name: string
-    options: OptionType[]
-    placeholder?: string
-    required?: boolean
-    tooltip?: string
-    isEditable: boolean
-    value: OptionType
-    onChange: (option: OptionType) => void
+    errorMessage?: string;
+    error?: boolean;
+    id: string;
+    name: string;
+    options: OptionType[];
+    placeholder?: string;
+    required?: boolean;
+    tooltip?: string;
+    isEditable: boolean;
+    value: OptionType;
+    onChange: (option: OptionType) => void;
 }
 
 export interface OptionType {
@@ -49,7 +50,8 @@ const StyledTextInput = withStyles((theme: Theme) =>
                 },
                 "&.Mui-disabled fieldset": {
                     backgroundColor: theme.palette.action.disabledBackground,
-                    borderColor: theme.palette.action.disabled
+                    borderColor: theme.palette.action.disabled,
+                    color: theme.palette.action.disabled
                 },
                 "&.Mui-disabled:hover fieldset": {
                     boxShadow: "none",
@@ -63,14 +65,17 @@ type Props = ComboBoxProps;
 
 const ComboBox: React.FC<Props> = (props) => {
     const classes = useStyles();
-    return (
+    return props.isEditable ? (
         <Autocomplete
             disabled={!props.isEditable}
             id={props.id}
             options={props.options}
             getOptionLabel={(option: OptionType) => option.label}
+            disableClearable
             value={props.value}
-            onChange={(_event, option) => {props.onChange(option)}}
+            onChange={(_event, option) => {
+                props.onChange(option);
+            }}
             renderInput={(params) => (
                 <Box className={classes.container}>
                     <Box
@@ -102,6 +107,13 @@ const ComboBox: React.FC<Props> = (props) => {
                     )}
                 </Box>
             )}
+        />
+    ) : (
+        <TextInput
+            placeholder={props.placeholder}
+            disabled={!props.isEditable}
+            value={props.value.label}
+            name={props.name}
         />
     );
 };

@@ -19,7 +19,8 @@ type TextInputProps = OwnProps & InputBaseProps;
 const StyledInputField = withStyles((theme: Theme) =>
     createStyles({
         root: {
-            width: "100%"
+            width: "100% !important",
+            minWidth: "none"
         },
         input: {
             border: `1.5px solid ${theme.palette.secondary.main}`,
@@ -48,7 +49,12 @@ export const TextInput: React.FC<TextInputProps> = ({ tooltip, errorMessage, ...
                 flexDirection="row"
                 justifyContent="space-between"
             >
-                <InputLabel className={classes.label} focused={false} shrink={false} required={props.required}>
+                <InputLabel
+                    className={classes.label}
+                    focused={false}
+                    shrink={false}
+                    required={props.required}
+                >
                     {props.name}
                 </InputLabel>
                 {tooltip && (

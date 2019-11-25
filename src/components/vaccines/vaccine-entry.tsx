@@ -9,25 +9,30 @@ import Box from "@material-ui/core/Box";
 import { Formik } from "formik";
 import { RouteComponentProps, withRouter } from "react-router";
 
+import { createNewVaccineEntry, updateVaccineEntry } from "../../utils/requests";
+import { hasFieldErrors } from "../../utils/form-utils";
 import { Vaccine, VaccineFormState, VaccineType } from "../../interfaces/vaccine";
-import { createVaccineEntryInitialValues, mapToVaccineFormState, mapToVaccineType } from "../../utils/data-mapper";
+import {
+    createVaccineEntryInitialValues,
+    mapToVaccineFormState,
+    mapToVaccineType
+} from "../../utils/data-mapper";
 import { RESPONSE_STATUS } from "../../utils/constants";
-import { addNewVaccineValidationSchema } from "../../utils/field-validation";
+import { getNewVaccineValidationSchema } from "../../utils/field-validation";
 import * as Panel from "../common/panel";
 import { ComboBox, DatePicker, TextInput } from "../common/form-input";
 import { FilledButton, OutlinedButton } from "../common/button";
 import { Dialog } from "../common/dialog";
 
 import ReminderCheck from "./reminder-check";
-import { createNewVaccineEntry, updateVaccineEntry } from "../../utils/requests";
 
 interface OwnProps {
-    handleClose: () => void
-    vaccine?: Vaccine,
+    handleClose: (vaccineCreated: boolean) => void;
+    vaccine?: Vaccine;
 }
 
 interface FormState {
-   vaccine: VaccineFormState
+    vaccine: VaccineFormState;
 }
 
 type Props = OwnProps & DialogProps & RouteComponentProps;
@@ -67,14 +72,13 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const VaccineEntry: React.FC<Props> = props => {
+const VaccineEntry: React.FC<Props> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
-    const initialValues = props.vaccine ?
-        { vaccine: mapToVaccineFormState(props.vaccine) }
-        :
-        { vaccine: createVaccineEntryInitialValues() };
+    const initialValues = props.vaccine
+        ? { vaccine: mapToVaccineFormState(props.vaccine) }
+        : { vaccine: createVaccineEntryInitialValues() };
     const isNewVaccineEntry = !props.vaccine;
 
     const [vaccineTypes, setVaccineTypes] = React.useState<VaccineType[]>([]);
@@ -82,7 +86,7 @@ const VaccineEntry: React.FC<Props> = props => {
     const [failedRequestDialogOpen, setFailedRequestDialogOpen] = React.useState<boolean>(false);
 
     const findVaccineTypeById = (id: string): VaccineType | undefined => {
-      return (vaccineTypes.find(vaccineType => vaccineType.id === id))
+        return vaccineTypes.find((vaccineType) => vaccineType.id === id);
     };
 
     React.useEffect(() => {
@@ -90,14 +94,14 @@ const VaccineEntry: React.FC<Props> = props => {
             method: "GET",
             credentials: "include",
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-        }).then(response => {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        }).then((response) => {
             switch (response.status) {
                 case RESPONSE_STATUS.SUCCESS: {
                     response.json().then((data) => {
-                        setVaccineTypes(data.map(mapToVaccineType))
+                        setVaccineTypes(data.map(mapToVaccineType));
                     });
                     break;
                 }
@@ -110,20 +114,22 @@ const VaccineEntry: React.FC<Props> = props => {
                     break;
                 }
             }
-        })
+        });
     });
 
     return (
         <>
             <Formik<FormState>
                 initialValues={initialValues}
-                validationSchema={addNewVaccineValidationSchema()}
-                onSubmit={(values, _formikActions) => {
+                validationSchema={getNewVaccineValidationSchema()}
+                validateOnBlur
+                validateOnChange={false}
+                onSubmit={(values, formikActions) => {
                     if (isNewVaccineEntry) {
-                        createNewVaccineEntry(values.vaccine).then(status => {
+                        createNewVaccineEntry(values.vaccine).then((status) => {
                             switch (status) {
                                 case RESPONSE_STATUS.SUCCESS: {
-                                    props.handleClose();
+                                    props.handleClose(true);
                                     break;
                                 }
                                 case RESPONSE_STATUS.UNAUTHORIZED: {
@@ -132,15 +138,16 @@ const VaccineEntry: React.FC<Props> = props => {
                                 }
                                 default: {
                                     setFailedRequestDialogOpen(true);
+                                    formikActions.setSubmitting(false);
                                     break;
                                 }
                             }
-                        })
+                        });
                     } else {
-                        updateVaccineEntry(values.vaccine).then(status => {
+                        updateVaccineEntry(values.vaccine).then((status) => {
                             switch (status) {
                                 case RESPONSE_STATUS.SUCCESS: {
-                                    props.handleClose();
+                                    props.handleClose(true);
                                     break;
                                 }
                                 case RESPONSE_STATUS.UNAUTHORIZED: {
@@ -149,10 +156,11 @@ const VaccineEntry: React.FC<Props> = props => {
                                 }
                                 default: {
                                     setFailedRequestDialogOpen(true);
+                                    formikActions.setSubmitting(false);
                                     break;
                                 }
                             }
-                        })
+                        });
                     }
                 }}
                 enableReinitialize
@@ -164,16 +172,15 @@ const VaccineEntry: React.FC<Props> = props => {
                             fullScreen={fullScreen}
                             className={classes.dialog}
                             open={props.open}
-                            onClose={props.handleClose}
                         >
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Panel.Header p={fullScreen ? 0.5 : 1.5}>
-                                        {fullScreen &&
-                                        <IconButton className={classes.backButton}>
-                                            <ArrowBack/>
-                                        </IconButton>
-                                        }
+                                        {fullScreen && (
+                                            <IconButton className={classes.backButton}>
+                                                <ArrowBack />
+                                            </IconButton>
+                                        )}
                                         <Typography>New vaccine entry</Typography>
                                     </Panel.Header>
                                 </Grid>
@@ -183,7 +190,14 @@ const VaccineEntry: React.FC<Props> = props => {
                                     <Grid item xs={12} sm={5}>
                                         <Box className={classes.leftInputContainer}>
                                             <ComboBox
-                                                error
+                                                error={Boolean(
+                                                    ((form.errors.vaccine || {}).vaccineType || {})
+                                                        .name
+                                                )}
+                                                errorMessage={
+                                                    ((form.errors.vaccine || {}).vaccineType || {})
+                                                        .name
+                                                }
                                                 isEditable={true}
                                                 required
                                                 id="name"
@@ -193,18 +207,23 @@ const VaccineEntry: React.FC<Props> = props => {
                                                     value: form.values.vaccine.vaccineType.id
                                                 }}
                                                 options={vaccineTypes.map((type) => {
-                                                    return ({
+                                                    return {
                                                         value: type.id,
                                                         label: type.name
-                                                    })
+                                                    };
                                                 })}
                                                 tooltip="Select vaccine name from options."
                                                 placeholder="Type to search..."
-                                                editStatus={false}
                                                 onChange={(option) => {
-                                                    const chosenType = findVaccineTypeById(option.value);
+                                                    const chosenType = findVaccineTypeById(
+                                                        option.value
+                                                    );
                                                     if (chosenType) {
-                                                        form.setFieldValue("vaccine.vaccineType", chosenType);
+                                                        form.setFieldValue(
+                                                            "vaccine.vaccineType",
+                                                            chosenType
+                                                        );
+                                                        form.setFieldTouched("vaccine.vaccineType");
                                                     }
                                                 }}
                                             />
@@ -219,33 +238,45 @@ const VaccineEntry: React.FC<Props> = props => {
                                         >
                                             <Typography color="textSecondary">OR</Typography>
                                         </Box>
-
                                     </Grid>
                                     <Grid item xs={12} sm={5}>
                                         <Box className={classes.rightInputContainer}>
                                             <ComboBox
-                                                error
+                                                error={Boolean(
+                                                    ((form.errors.vaccine || {}).vaccineType || {})
+                                                        .abbreviation
+                                                )}
+                                                errorMessage={
+                                                    ((form.errors.vaccine || {}).vaccineType || {})
+                                                        .abbreviation
+                                                }
                                                 required
                                                 isEditable={true}
                                                 id="abbreviation"
                                                 name="Vaccine abbreviation"
                                                 value={{
-                                                    label: form.values.vaccine.vaccineType.abbreviation,
+                                                    label:
+                                                        form.values.vaccine.vaccineType
+                                                            .abbreviation,
                                                     value: form.values.vaccine.vaccineType.id
                                                 }}
                                                 options={vaccineTypes.map((type) => {
-                                                    return ({
+                                                    return {
                                                         value: type.id,
                                                         label: type.abbreviation
-                                                    })
+                                                    };
                                                 })}
                                                 tooltip="Select vaccine abbreviation from options."
                                                 placeholder="Type to search..."
-                                                editStatus={false}
                                                 onChange={(option) => {
-                                                    const chosenType = findVaccineTypeById(option.value);
+                                                    const chosenType = findVaccineTypeById(
+                                                        option.value
+                                                    );
                                                     if (chosenType) {
-                                                        form.setFieldValue("vaccine.vaccineType", chosenType);
+                                                        form.setFieldValue(
+                                                            "vaccine.vaccineType",
+                                                            chosenType
+                                                        );
                                                     }
                                                 }}
                                             />
@@ -254,8 +285,14 @@ const VaccineEntry: React.FC<Props> = props => {
                                     <Grid item xs={12} sm={6}>
                                         <Box className={classes.leftInputContainer}>
                                             <DatePicker
-                                                onChange={(value) => {
-                                                    form.setFieldValue("vaccine.dateTaken", value)
+                                                error={Boolean(
+                                                    (form.errors.vaccine || {}).dateTaken
+                                                )}
+                                                errorMessage={(form.errors.vaccine || {}).dateTaken}
+                                                required
+                                                id="dateTaken"
+                                                onDateChange={(value) => {
+                                                    form.setFieldValue("vaccine.dateTaken", value);
                                                 }}
                                                 value={form.values.vaccine.dateTaken}
                                                 name="Date"
@@ -266,10 +303,20 @@ const VaccineEntry: React.FC<Props> = props => {
                                     <Grid item xs={12} sm={6}>
                                         <Box className={classes.rightInputContainer}>
                                             <DatePicker
-                                                onChange={(value) => {
-                                                    form.setFieldValue("vaccine.boosterDate", value)
+                                                error={Boolean(
+                                                    (form.errors.vaccine || {}).boosterDate
+                                                )}
+                                                errorMessage={
+                                                    (form.errors.vaccine || {}).boosterDate
+                                                }
+                                                id="boosterDate"
+                                                onDateChange={(value) => {
+                                                    form.setFieldValue(
+                                                        "vaccine.boosterDate",
+                                                        value
+                                                    );
                                                 }}
-                                                value={form.values.vaccine.dateTaken}
+                                                value={form.values.vaccine.boosterDate}
                                                 name="Booster due date"
                                                 tooltip="Insert the date when the booster shot is due."
                                             />
@@ -277,6 +324,23 @@ const VaccineEntry: React.FC<Props> = props => {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <ReminderCheck
+                                            onChangeRadio={(value) => {
+                                                form.setFieldValue("vaccine.reminder", value);
+                                                if (value) {
+                                                    form.setFieldTouched(
+                                                        "vaccine.reminderEmail",
+                                                        true
+                                                    );
+                                                }
+                                            }}
+                                            onChangeEmail={(value) => {
+                                                form.setFieldValue("vaccine.reminderEmail", value);
+                                                form.setFieldTouched("vaccine.reminderEmail", true);
+                                            }}
+                                            error={Boolean(
+                                                (form.errors.vaccine || {}).reminderEmail
+                                            )}
+                                            errorMessage={(form.errors.vaccine || {}).reminderEmail}
                                             radioValue={form.values.vaccine.reminder}
                                             inputValue={form.values.vaccine.reminderEmail}
                                             name="Turn on email reminders"
@@ -288,7 +352,12 @@ const VaccineEntry: React.FC<Props> = props => {
                                         <TextInput
                                             multiline
                                             value={form.values.vaccine.comment}
-                                            onChange={(value) => form.setFieldValue("vaccine.comment", value)}
+                                            onChange={(event) =>
+                                                form.setFieldValue(
+                                                    "vaccine.comment",
+                                                    event.target.value
+                                                )
+                                            }
                                             name="Comment"
                                         />
                                     </Grid>
@@ -296,12 +365,21 @@ const VaccineEntry: React.FC<Props> = props => {
                             </Panel.Body>
                             <Grid container>
                                 <Grid item xs={12}>
-                                    <Panel.Footer justifyContent={fullScreen ? "space-between" : "flex-end"}>
+                                    <Panel.Footer
+                                        justifyContent={fullScreen ? "space-between" : "flex-end"}
+                                    >
                                         <FilledButton
-                                            disabled={form.isSubmitting}
-                                            style={{ marginRight: theme.spacing(2)}}
+                                            type="submit"
+                                            disabled={form.isSubmitting || !form.isValid}
+                                            style={{ marginRight: theme.spacing(2) }}
                                             onClick={() => {
-                                                form.submitForm();
+                                                form.validateForm().then((errors) => {
+                                                    if (!hasFieldErrors(errors)) {
+                                                        form.submitForm();
+                                                    } else {
+                                                        form.setErrors(errors);
+                                                    }
+                                                });
                                             }}
                                         >
                                             Save
@@ -309,37 +387,43 @@ const VaccineEntry: React.FC<Props> = props => {
                                         <OutlinedButton
                                             onClick={() => {
                                                 form.resetForm();
-                                                props.handleClose();
+                                                props.handleClose(false);
                                             }}
                                         >
                                             Cancel
                                         </OutlinedButton>
-
                                     </Panel.Footer>
                                 </Grid>
                             </Grid>
                         </MuiDialog>
-                    )
+                    );
                 }}
             />
-            {failedFetchDialogOpen &&
+            {failedFetchDialogOpen && (
                 <Dialog
                     open={failedFetchDialogOpen}
                     content="Could not fetch vaccine types."
                     primaryAction="Ok"
-                    handleClose={() => {setFailedFetchDialogOpen(false)}}
+                    handleClose={() => {
+                        setFailedFetchDialogOpen(false);
+                    }}
                 />
-            }
-            {failedRequestDialogOpen &&
+            )}
+            {failedRequestDialogOpen && (
                 <Dialog
                     open={failedRequestDialogOpen}
-                    content={isNewVaccineEntry ? "Could not save vaccine entry" : "Could not update vaccine entry"}
+                    content={
+                        isNewVaccineEntry
+                            ? "Could not save vaccine entry."
+                            : "Could not update vaccine entry."
+                    }
                     primaryAction="Ok"
-                    handleClose={() => {setFailedRequestDialogOpen(false)}}
+                    handleClose={() => {
+                        setFailedRequestDialogOpen(false);
+                    }}
                 />
-            }
+            )}
         </>
-
     );
 };
 

@@ -21,11 +21,11 @@ import { Table } from "./vaccine-table";
 import VaccineEntry from "./vaccine-entry";
 
 interface State {
-    vaccines: Vaccine[]
-    deleteFailedDialogOpen: boolean
-    failedFetchDialogOpen: boolean
-    vaccineEntryOpen: boolean
-    vaccine?: Vaccine
+    vaccines: Vaccine[];
+    deleteFailedDialogOpen: boolean;
+    failedFetchDialogOpen: boolean;
+    vaccineEntryOpen: boolean;
+    vaccine?: Vaccine;
 }
 
 const StyledColorize = styled(Colorize)({
@@ -38,7 +38,7 @@ const StyledColorize = styled(Colorize)({
  * @constructor
  */
 
-type Props = RouteComponentProps & MapStateToProps & DispatchProps
+type Props = RouteComponentProps & MapStateToProps & DispatchProps;
 class VaccineList extends React.Component<Props, State> {
     readonly state = {
         vaccines: [],
@@ -79,20 +79,23 @@ class VaccineList extends React.Component<Props, State> {
             }
         });
         if (this.props.user.userId === undefined || this.props.user.userId < 1) {
-            this.props.history.push("/login")
+            this.props.history.push("/login");
         }
     };
 
     closeDeleteDialog = (): void => {
-        this.setState({ deleteFailedDialogOpen: false })
+        this.setState({ deleteFailedDialogOpen: false });
     };
 
     closeFailedFetchDialog = (): void => {
-        this.setState({ failedFetchDialogOpen: false })
+        this.setState({ failedFetchDialogOpen: false });
     };
 
-    closeVaccineEntry = (): void => {
-        this.setState({ vaccineEntryOpen: false })
+    closeVaccineEntry = (vaccineCreated: boolean): void => {
+        this.setState({ vaccineEntryOpen: false });
+        if (vaccineCreated) {
+            this.getVaccines();
+        }
     };
 
     deleteVaccine = (id: number): void => {
@@ -125,17 +128,15 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     editVaccine = (vaccine: Vaccine): void => {
-        this.setState({ vaccineEntryOpen: true, vaccine: vaccine })
+        this.setState({ vaccineEntryOpen: true, vaccine: vaccine });
     };
 
     createNewVaccineEntry = (): void => {
-        this.setState({ vaccineEntryOpen: true })
+        this.setState({ vaccineEntryOpen: true });
     };
 
     render(): React.ReactNode {
         const state = this.state;
-        const props = this.props;
-
         return (
             <>
                 <Panel.Container>
@@ -163,7 +164,7 @@ class VaccineList extends React.Component<Props, State> {
                             <Panel.Footer>
                                 <OutlinedButton
                                     onClick={() => {
-                                        this.createNewVaccineEntry()
+                                        this.createNewVaccineEntry();
                                     }}
                                     startIcon={<AddIcon />}
                                 >
@@ -173,55 +174,57 @@ class VaccineList extends React.Component<Props, State> {
                         </Grid>
                     </Grid>
                 </Panel.Container>
-                {state.deleteFailedDialogOpen &&
+                {state.deleteFailedDialogOpen && (
                     <Dialog
                         open={state.deleteFailedDialogOpen}
                         content="Vaccine entry could not be deleted."
                         primaryAction="Ok"
                         handleClose={this.closeDeleteDialog}
                     />
-                }
-                {state.failedFetchDialogOpen &&
+                )}
+                {state.failedFetchDialogOpen && (
                     <Dialog
                         open={state.failedFetchDialogOpen}
                         content="Could not fetch vaccine entries."
                         primaryAction="Ok"
                         handleClose={this.closeFailedFetchDialog}
                     />
-                }
-                {state.vaccineEntryOpen &&
+                )}
+                {state.vaccineEntryOpen && (
                     <VaccineEntry
                         handleClose={this.closeVaccineEntry}
                         open={state.vaccineEntryOpen}
                         vaccine={state.vaccine}
                     />
-                }
+                )}
             </>
-
         );
     }
 }
 
 interface DispatchProps {
-    storeUserId: typeof storeUserId
+    storeUserId: typeof storeUserId;
 }
 
 interface MapStateToProps {
-    user: UserState
+    user: UserState;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
     return {
         storeUserId: (payload: number) => dispatch(storeUserId(payload))
-    }
+    };
 };
-function mapStateToProps(state: any):MapStateToProps {
+function mapStateToProps(state: any): MapStateToProps {
     return {
         user: state.user
-    }
-};
+    };
+}
 
 export default compose(
     withRouter,
-    connect( mapStateToProps, mapDispatchToProps)
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
 )(VaccineList);

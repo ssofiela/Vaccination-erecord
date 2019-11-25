@@ -2,32 +2,31 @@ import React from "react";
 //eslint-disable-next-line import/no-unassigned-import
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
-    KeyboardDatePickerProps
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Box from "@material-ui/core/Box";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
-import moment from "moment";
 import { createStyles, fade, Theme, withStyles } from "@material-ui/core/styles/";
 import { FormHelperText } from "@material-ui/core";
 
+import { isNonEmpty } from "../../../utils/form-utils";
 import { convertDotFormatToISO } from "../../../utils/date-utils";
 
 import { useStyles } from "./form-styles";
-import { isNonEmpty } from "../../../utils/field-validation";
 
 interface OwnProps {
-    error?: boolean
-    errorMessage?: string
-    tooltip?: string
-    value: string
+    error?: boolean;
+    required?: boolean;
+    errorMessage?: string;
+    id: string;
+    tooltip?: string;
+    value?: string;
+    name: string;
+    onDateChange: (date?: string) => void;
 }
 
-type Props = OwnProps & KeyboardDatePickerProps;
+type Props = OwnProps;
 
 const StyledDatePicker = withStyles((theme: Theme) =>
     createStyles({
@@ -37,7 +36,7 @@ const StyledDatePicker = withStyles((theme: Theme) =>
                 width: "100%",
                 border: `1.5px solid ${theme.palette.secondary.main}`,
                 padding: "4px 4px 4px 14px",
-                transition: theme.transitions.create(["border-color"]),
+                transition: theme.transitions.create(["border-color"])
             },
             "&  .Mui-focused": {
                 boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
@@ -46,15 +45,15 @@ const StyledDatePicker = withStyles((theme: Theme) =>
             "&.Mui-disabled": {
                 backgroundColor: theme.palette.action.disabledBackground,
                 borderColor: theme.palette.action.disabled
-            },
-        },
+            }
+        }
     })
 )(KeyboardDatePicker);
 
-const DatePicker: React.FC<Props> = props => {
+const DatePicker: React.FC<Props> = (props) => {
     const classes = useStyles();
 
-    const initialDate = isNonEmpty(props.value) ? new Date(convertDotFormatToISO(props.value)) : new Date((moment().format()));
+    const initialDate = props.value && isNonEmpty(props.value) ? new Date(props.value) : new Date();
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(initialDate);
 
     return (
@@ -82,17 +81,22 @@ const DatePicker: React.FC<Props> = props => {
                     value={selectedDate}
                     onChange={(date) => {
                         setSelectedDate(date);
-                        props.onChange(date.toLocaleDateString())
+                        if (date) {
+                            props.onDateChange(convertDotFormatToISO(date.toLocaleDateString()));
+                        } else {
+                            props.onDateChange(undefined);
+                        }
                     }}
                     InputProps={{ disableUnderline: true }}
                     KeyboardButtonProps={{ style: { padding: "8px" }, size: "small" }}
                 />
             </MuiPickersUtilsProvider>
             {props.error && (
-                <FormHelperText className={classes.errorMessage}>{props.errorMessage}</FormHelperText>
+                <FormHelperText className={classes.errorMessage}>
+                    {props.errorMessage}
+                </FormHelperText>
             )}
         </Box>
-
     );
 };
 

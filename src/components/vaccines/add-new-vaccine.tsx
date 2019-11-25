@@ -35,11 +35,11 @@ interface VaccineOptions {
     label: string;
 }
 
-function createVaccineOptions(options: string[] ): VaccineOptions[] {
-    return options.map((option) => ({ value: options.indexOf(option)+1, label: option}));
+function createVaccineOptions(options: string[]): VaccineOptions[] {
+    return options.map((option) => ({ value: options.indexOf(option) + 1, label: option }));
 }
 
-type Props = RouteComponentProps & MapStateToProps & DispatchProps
+type Props = RouteComponentProps & MapStateToProps & DispatchProps;
 
 const NewVaccine: React.FC<Props> = (props) => {
     const classes = useStyles();
@@ -70,7 +70,6 @@ const NewVaccine: React.FC<Props> = (props) => {
     const mappedVaccineOptions = createVaccineOptions(vaccineList);
     const mappedAbbserviationOptions = createVaccineOptions(abbreviation);
 
-
     const handleComment = (event: string): void => {
         setComment(event);
     };
@@ -98,30 +97,30 @@ const NewVaccine: React.FC<Props> = (props) => {
             method: "GET",
             credentials: "include",
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-        }).then(response => response.json())
-            .then(data => {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
                 const vaccines = [];
                 const abb = [];
                 for (const element of data) {
                     vaccines.push(element.name);
-                    abb.push(element.vaccine_abbreviation)
+                    abb.push(element.vaccine_abbreviation);
                 }
 
                 setVaccineList(vaccines);
                 setAbbreviation(abb);
             });
         if (props.user.userId === undefined || props.user.userId < 1) {
-            props.history.push("/login")
+            props.history.push("/login");
         }
         window.addEventListener("resize", handleMobile);
         () => window.removeEventListener("resize", handleMobile);
     }, [width]);
 
     //const initialValues = props.location.state.vaccine;
-    console.log(props);
 
     return (
         // TODO add mobile support
@@ -245,7 +244,7 @@ const NewVaccine: React.FC<Props> = (props) => {
             <Grid item xs={12}>
                 <Panel.Footer justifyContent="flex-end">
                     <FilledButton
-                        style={{ marginRight: theme.spacing(2)}}
+                        style={{ marginRight: theme.spacing(2) }}
                         onClick={() => {
                             const invalidName: boolean = name === "";
                             const invalidEmail: boolean =
@@ -287,25 +286,28 @@ const NewVaccine: React.FC<Props> = (props) => {
     );
 };
 interface DispatchProps {
-    storeUserId: typeof storeUserId
+    storeUserId: typeof storeUserId;
 }
 
 interface MapStateToProps {
-    user: UserState
+    user: UserState;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch):DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
     return {
         storeUserId: (payload: number) => dispatch(storeUserId(payload))
-    }
+    };
 };
-function mapStateToProps(state: any):MapStateToProps {
+function mapStateToProps(state: any): MapStateToProps {
     return {
         user: state.user
-    }
-};
+    };
+}
 
 export default compose(
     withRouter,
-    connect( mapStateToProps, mapDispatchToProps)
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
 )(NewVaccine);

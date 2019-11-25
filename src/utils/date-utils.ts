@@ -4,10 +4,10 @@
  */
 export function convertDotFormatToISO(date: string): string {
     const splitDate = date.split(".");
-    return `${splitDate[2]}-${splitDate[1]}-${splitDate[0]}`
+    return `${splitDate[1]}/${splitDate[0]}/${splitDate[2]}`;
 }
 
-export function convertISOFormatToDotFormat(date:string): string {
+export function convertISOFormatToDotFormat(date: string): string {
     const splitDate = date.split("/");
-    return `${splitDate[0]}.${splitDate[1]}.${splitDate[2]}`
+    return `${splitDate[1]}.${splitDate[0]}.${splitDate[2]}`;
 }
