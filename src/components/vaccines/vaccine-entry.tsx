@@ -12,11 +12,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { createNewVaccineEntry, updateVaccineEntry } from "../../utils/requests";
 import { hasFieldErrors } from "../../utils/form-utils";
 import { Vaccine, VaccineFormState, VaccineType } from "../../interfaces/vaccine";
-import {
-    createVaccineEntryInitialValues,
-    mapToVaccineFormState,
-    mapToVaccineType
-} from "../../utils/data-mapper";
+import { createVaccineEntryInitialValues, mapToVaccineFormState } from "../../utils/data-mapper";
 import { RESPONSE_STATUS } from "../../utils/constants";
 import { getNewVaccineValidationSchema } from "../../utils/field-validation";
 import * as Panel from "../common/panel";
@@ -29,6 +25,7 @@ import ReminderCheck from "./reminder-check";
 interface OwnProps {
     handleClose: (vaccineCreated: boolean) => void;
     vaccine?: Vaccine;
+    vaccineTypes: VaccineType[];
 }
 
 interface FormState {
@@ -81,49 +78,18 @@ const VaccineEntry: React.FC<Props> = (props) => {
         : { vaccine: createVaccineEntryInitialValues() };
     const isNewVaccineEntry = !props.vaccine;
 
-    const [vaccineTypes, setVaccineTypes] = React.useState<VaccineType[]>([]);
     const [failedFetchDialogOpen, setFailedFetchDialogOpen] = React.useState<boolean>(false);
     const [failedRequestDialogOpen, setFailedRequestDialogOpen] = React.useState<boolean>(false);
 
     const findVaccineTypeById = (id: string): VaccineType | undefined => {
-        return vaccineTypes.find((vaccineType) => vaccineType.id === id);
+        return props.vaccineTypes.find((vaccineType) => vaccineType.id === id);
     };
-
-    React.useEffect(() => {
-        fetch("https://vaccine-backend.herokuapp.com/api/vaccine", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }
-        }).then((response) => {
-            switch (response.status) {
-                case RESPONSE_STATUS.SUCCESS: {
-                    response.json().then((data) => {
-                        setVaccineTypes(data.map(mapToVaccineType));
-                    });
-                    break;
-                }
-                case RESPONSE_STATUS.UNAUTHORIZED: {
-                    props.history.push("/login");
-                    break;
-                }
-                default: {
-                    setFailedFetchDialogOpen(true);
-                    break;
-                }
-            }
-        });
-    });
 
     return (
         <>
             <Formik<FormState>
                 initialValues={initialValues}
                 validationSchema={getNewVaccineValidationSchema()}
-                validateOnBlur
-                validateOnChange={false}
                 onSubmit={(values, formikActions) => {
                     if (isNewVaccineEntry) {
                         createNewVaccineEntry(values.vaccine).then((status) => {
@@ -181,7 +147,11 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                                 <ArrowBack />
                                             </IconButton>
                                         )}
-                                        <Typography>New vaccine entry</Typography>
+                                        <Typography>
+                                            {isNewVaccineEntry
+                                                ? "New vaccine entry"
+                                                : "Update vaccine entry"}
+                                        </Typography>
                                     </Panel.Header>
                                 </Grid>
                             </Grid>
@@ -206,7 +176,7 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                                     label: form.values.vaccine.vaccineType.name,
                                                     value: form.values.vaccine.vaccineType.id
                                                 }}
-                                                options={vaccineTypes.map((type) => {
+                                                options={props.vaccineTypes.map((type) => {
                                                     return {
                                                         value: type.id,
                                                         label: type.name
@@ -260,7 +230,7 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                                             .abbreviation,
                                                     value: form.values.vaccine.vaccineType.id
                                                 }}
-                                                options={vaccineTypes.map((type) => {
+                                                options={props.vaccineTypes.map((type) => {
                                                     return {
                                                         value: type.id,
                                                         label: type.abbreviation

@@ -17,15 +17,19 @@ export const useStyles = makeStyles((theme: Theme) =>
             color: "#00000054"
         },
         errorMessage: {
-            color: theme.palette.error.main
+            color: theme.palette.error.main,
+            "&.Mui-focused": {
+                boxShadow: "none"
+            },
+            "&:focus": {
+                boxShadow: "none"
+            }
         },
         required: {
             color: theme.palette.error.main
         },
         datePicker: {
-            "": {
-
-            }
+            "": {}
         }
     })
 );

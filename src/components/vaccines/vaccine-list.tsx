@@ -9,10 +9,10 @@ import { compose, Dispatch } from "redux";
 import { connect } from "react-redux";
 
 import { UserState } from "../../interfaces/user";
-import { Vaccine } from "../../interfaces/vaccine";
+import { Vaccine, VaccineType } from "../../interfaces/vaccine";
 import { storeUserId } from "../../redux/actions/user";
 import { RESPONSE_STATUS } from "../../utils/constants";
-import { mapToVaccinePayload } from "../../utils/data-mapper";
+import { mapToVaccinePayload, mapToVaccineType } from "../../utils/data-mapper";
 import * as Panel from "../common/panel";
 import { OutlinedButton } from "../common/button";
 import { Dialog } from "../common/dialog";
@@ -26,6 +26,7 @@ interface State {
     failedFetchDialogOpen: boolean;
     vaccineEntryOpen: boolean;
     vaccine?: Vaccine;
+    vaccineTypes: VaccineType[];
 }
 
 const StyledColorize = styled(Colorize)({
@@ -45,7 +46,8 @@ class VaccineList extends React.Component<Props, State> {
         deleteFailedDialogOpen: false,
         failedFetchDialogOpen: false,
         vaccineEntryOpen: false,
-        vaccine: undefined
+        vaccine: undefined,
+        vaccineTypes: []
     };
 
     componentDidMount(): void {
@@ -81,6 +83,34 @@ class VaccineList extends React.Component<Props, State> {
         if (this.props.user.userId === undefined || this.props.user.userId < 1) {
             this.props.history.push("/login");
         }
+    };
+
+    getVaccineTypeOptions = (): void => {
+        fetch("https://vaccine-backend.herokuapp.com/api/vaccine", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        }).then((response) => {
+            switch (response.status) {
+                case RESPONSE_STATUS.SUCCESS: {
+                    response.json().then((data) => {
+                        this.setState({ vaccineTypes: data.map(mapToVaccineType) });
+                    });
+                    break;
+                }
+                case RESPONSE_STATUS.UNAUTHORIZED: {
+                    this.props.history.push("/login");
+                    break;
+                }
+                default: {
+                    this.setState({ failedFetchDialogOpen: true });
+                    break;
+                }
+            }
+        });
     };
 
     closeDeleteDialog = (): void => {
@@ -128,10 +158,12 @@ class VaccineList extends React.Component<Props, State> {
     };
 
     editVaccine = (vaccine: Vaccine): void => {
+        this.getVaccineTypeOptions();
         this.setState({ vaccineEntryOpen: true, vaccine: vaccine });
     };
 
     createNewVaccineEntry = (): void => {
+        this.getVaccineTypeOptions();
         this.setState({ vaccineEntryOpen: true });
     };
 
@@ -195,6 +227,7 @@ class VaccineList extends React.Component<Props, State> {
                         handleClose={this.closeVaccineEntry}
                         open={state.vaccineEntryOpen}
                         vaccine={state.vaccine}
+                        vaccineTypes={state.vaccineTypes}
                     />
                 )}
             </>

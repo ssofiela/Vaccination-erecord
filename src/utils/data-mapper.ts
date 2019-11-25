@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import moment from "moment";
 
 import { Vaccine, VaccineFormState, VaccinePayload, VaccineType } from "../interfaces/vaccine";
 import { AccountSettingsFormState, AccountSettingsPayload } from "../interfaces/user";
@@ -44,7 +45,7 @@ export function createVaccineEntryInitialValues(): VaccineFormState {
     return {
         id: "",
         vaccineType: { id: "", name: "", abbreviation: "" },
-        dateTaken: convertDotFormatToISO(new Date().toLocaleDateString()),
+        dateTaken: convertDotFormatToISO(new Date(moment().format()).toLocaleDateString()),
         boosterDate: undefined,
         reminder: false,
         reminderEmail: "",
