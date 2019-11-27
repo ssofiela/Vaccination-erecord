@@ -8,6 +8,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import { Formik } from "formik";
 import { RouteComponentProps, withRouter } from "react-router";
+import { Dispatch } from "redux";
+import { storeUser, UserActionTypes } from "../../redux/actions/user";
+import { RootState } from "../../redux/reducers";
+import { connect } from "react-redux";
 
 import { createNewVaccineEntry, updateVaccineEntry } from "../../utils/requests";
 import { hasFieldErrors } from "../../utils/form-utils";
@@ -34,7 +38,15 @@ interface FormState {
     vaccine: VaccineFormState;
 }
 
-type Props = OwnProps & DialogProps & RouteComponentProps;
+interface MapStateToProps {
+    user?: User;
+}
+
+interface MapDispatchToProps {
+    storeUser: (user: User) => UserActionTypes;
+}
+
+type Props = OwnProps & DialogProps & RouteComponentProps & MapStateToProps & MapDispatchToProps;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -308,7 +320,7 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                                 }
                                             }}
                                             onChangeEmail={(value) => {
-                                                form.setFieldValue("vaccine.reminderEmail", value);
+                                                form.setFieldValue("vaccine.reminderEmail", props.user.default_reminder_email);
                                                 form.setFieldTouched("vaccine.reminderEmail", true);
                                             }}
                                             error={Boolean(
@@ -401,4 +413,21 @@ const VaccineEntry: React.FC<Props> = (props) => {
     );
 };
 
-export default withRouter(VaccineEntry);
+const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
+    return {
+        storeUser: (user: User) => dispatch(storeUser(user))
+    };
+};
+function mapStateToProps(state: RootState): MapStateToProps {
+    return {
+        user: state.user
+    };
+}
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(VaccineEntry)
+);
+

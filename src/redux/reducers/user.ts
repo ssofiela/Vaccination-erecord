@@ -12,11 +12,14 @@ export const userReducer = (state = _initialState, action: UserActionTypes): Use
     switch (action.type) {
         case ACTION_TYPES.STORE_USER:
             return {
+
+
+                // TODO leave above ignore comment if this compiles and works with no issues
+                ...state,
                 //eslint-disable-next-line @typescript-eslint/ban-ts-ignore
                 //@ts-ignore
-                // TODO leave above ignore comment if this compiles and works with no issues
                 ...action.payload,
-                ...state
+
             };
         case ACTION_TYPES.CLEAR_STORED_USER:
             return _initialState;
