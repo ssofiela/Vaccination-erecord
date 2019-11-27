@@ -2,7 +2,7 @@
 import moment from "moment";
 
 import { Vaccine, VaccineFormState, VaccinePayload, VaccineType } from "../interfaces/vaccine";
-import { AccountSettingsFormState, AccountSettingsPayload } from "../interfaces/user";
+import { AccountSettingsFormState, AccountSettingsPayload, User } from "../interfaces/user";
 
 import { convertDotFormatToISO, convertISOFormatToDotFormat } from "./date-utils";
 
@@ -79,4 +79,8 @@ export function mapToVaccinePayload(vaccinePayload: Vaccine): Vaccine {
 
 export function mapToVaccineType(vaccineTypePayload: VaccineType): VaccineType {
     return Object.assign({}, vaccineTypePayload, { id: String(vaccineTypePayload.id) });
+}
+
+export function mapToUser(userPayload: User): User {
+    return Object.assign({}, userPayload);
 }

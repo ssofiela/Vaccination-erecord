@@ -1,13 +1,17 @@
 import { combineReducers } from "redux";
 
+import { Session } from "../../interfaces/session";
+import { User } from "../../interfaces/user";
+
 import { userReducer } from "./user";
-import { vaccineReducer } from "./vaccine";
+import { sessionReducer } from "./session";
 
 export interface RootState {
-    userId?: number;
+    user?: User;
+    session: Session;
 }
 
 export const rootReducer = combineReducers({
-    user: userReducer,
-    vaccine: vaccineReducer
+    session: sessionReducer,
+    user: userReducer
 });

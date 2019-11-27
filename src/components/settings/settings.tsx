@@ -8,18 +8,20 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import { RouteComponentProps, withRouter } from "react-router";
 import Typography from "@material-ui/core/Typography";
 import CreateIcon from "@material-ui/icons/Create";
-import { compose, Dispatch } from "redux";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { Formik } from "formik";
 
-import { AccountSettingsFormState, UserState } from "../../interfaces/user";
-import { storeUserId } from "../../redux/actions/user";
+import { AccountSettingsFormState, User } from "../../interfaces/user";
+import { storeUser, UserActionTypes } from "../../redux/actions/user";
+import { RootState } from "../../redux/reducers";
 import { RESPONSE_STATUS } from "../../utils/constants";
 import { getSettingsValidationSchema } from "../../utils/field-validation";
 import { hasFieldErrors } from "../../utils/form-utils";
 import {
     createAccountSettingsInitialValues,
-    mapToAccountSettingsFormState
+    mapToAccountSettingsFormState,
+    mapToUser
 } from "../../utils/data-mapper";
 import * as Panel from "../common/panel";
 import { FilledButton, OutlinedButton } from "../common/button";
@@ -42,6 +44,14 @@ interface State {
     isEditable: boolean;
 }
 
+interface MapStateToProps {
+    user?: User;
+}
+
+interface MapDispatchToProps {
+    storeUser: (user: User) => UserActionTypes;
+}
+
 const StyledSettings = styled(SettingsIcon)({
     marginRight: "10px"
 });
@@ -50,7 +60,7 @@ const StyledCreate = styled(CreateIcon)({
     marginRight: "10px"
 });
 
-type Props = RouteComponentProps & MapStateToProps & DispatchProps;
+type Props = RouteComponentProps & MapStateToProps & MapDispatchToProps;
 
 class Settings extends React.Component<Props, State> {
     readonly state = {
@@ -76,6 +86,7 @@ class Settings extends React.Component<Props, State> {
             switch (response.status) {
                 case RESPONSE_STATUS.SUCCESS: {
                     response.json().then((data) => {
+                        this.props.storeUser(mapToUser(data));
                         this.setState({ settings: mapToAccountSettingsFormState(data) });
                     });
                     break;
@@ -90,9 +101,6 @@ class Settings extends React.Component<Props, State> {
                 }
             }
         });
-        if (this.props.user.userId === undefined || this.props.user.userId < 1) {
-            this.props.history.push("/login");
-        }
     };
 
     pushData = (values: AccountSettingsFormState): void => {
@@ -111,7 +119,8 @@ class Settings extends React.Component<Props, State> {
         }).then((response) => {
             switch (response.status) {
                 case RESPONSE_STATUS.SUCCESS: {
-                    this.setState({ settings: values, isEditable: false });
+                    this.getData();
+                    this.setState({ isEditable: false });
                     break;
                 }
                 case RESPONSE_STATUS.UNAUTHORIZED: {
@@ -339,29 +348,20 @@ class Settings extends React.Component<Props, State> {
     }
 }
 
-interface DispatchProps {
-    storeUserId: typeof storeUserId;
-}
-
-interface MapStateToProps {
-    user: UserState;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
     return {
-        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+        storeUser: (user: User) => dispatch(storeUser(user))
     };
 };
-function mapStateToProps(state: any): MapStateToProps {
+function mapStateToProps(state: RootState): MapStateToProps {
     return {
         user: state.user
     };
 }
 
-export default compose(
-    withRouter,
+export default withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )
-)(Settings);
+    )(Settings)
+);

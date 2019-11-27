@@ -9,9 +9,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import { createStyles, fade, Theme, withStyles } from "@material-ui/core/styles/";
 import { FormHelperText } from "@material-ui/core";
-import moment from "moment";
 
-import { isNonEmpty } from "../../../utils/form-utils";
 import { convertDotFormatToISO } from "../../../utils/date-utils";
 
 import { useStyles } from "./form-styles";
@@ -54,10 +52,7 @@ const StyledDatePicker = withStyles((theme: Theme) =>
 const DatePicker: React.FC<Props> = (props) => {
     const classes = useStyles();
 
-    const initialDate =
-        props.value && isNonEmpty(props.value)
-            ? new Date(props.value)
-            : new Date(moment().format());
+    const initialDate = props.value ? new Date(props.value) : null;
     const [selectedDate, setSelectedDate] = React.useState<Date | null>(initialDate);
 
     return (

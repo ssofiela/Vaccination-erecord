@@ -5,14 +5,15 @@ import Colorize from "@material-ui/icons/Colorize";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
 import { withRouter, RouteComponentProps } from "react-router";
-import { compose, Dispatch } from "redux";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import { UserState } from "../../interfaces/user";
+import { User } from "../../interfaces/user";
 import { Vaccine, VaccineType } from "../../interfaces/vaccine";
-import { storeUserId } from "../../redux/actions/user";
+import { storeUser, UserActionTypes } from "../../redux/actions/user";
+import { RootState } from "../../redux/reducers";
 import { RESPONSE_STATUS } from "../../utils/constants";
-import { mapToVaccinePayload, mapToVaccineType } from "../../utils/data-mapper";
+import { mapToUser, mapToVaccinePayload, mapToVaccineType } from "../../utils/data-mapper";
 import * as Panel from "../common/panel";
 import { OutlinedButton } from "../common/button";
 import { Dialog } from "../common/dialog";
@@ -29,6 +30,14 @@ interface State {
     vaccineTypes: VaccineType[];
 }
 
+interface MapStateToProps {
+    user?: User;
+}
+
+interface MapDispatchToProps {
+    storeUser: (user: User) => UserActionTypes;
+}
+
 const StyledColorize = styled(Colorize)({
     marginRight: "10px"
 });
@@ -39,7 +48,7 @@ const StyledColorize = styled(Colorize)({
  * @constructor
  */
 
-type Props = RouteComponentProps & MapStateToProps & DispatchProps;
+type Props = RouteComponentProps & MapStateToProps & MapDispatchToProps;
 class VaccineList extends React.Component<Props, State> {
     readonly state = {
         vaccines: [],
@@ -52,6 +61,7 @@ class VaccineList extends React.Component<Props, State> {
 
     componentDidMount(): void {
         this.getVaccines();
+        this.getUser();
     }
 
     getVaccines = (): void => {
@@ -80,9 +90,34 @@ class VaccineList extends React.Component<Props, State> {
                 }
             }
         });
-        if (this.props.user.userId === undefined || this.props.user.userId < 1) {
-            this.props.history.push("/login");
-        }
+    };
+
+    getUser = (): void => {
+        fetch("https://vaccine-backend.herokuapp.com/api/user", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        }).then((response) => {
+            switch (response.status) {
+                case RESPONSE_STATUS.SUCCESS: {
+                    response.json().then((data) => {
+                        this.props.storeUser(mapToUser(data));
+                    });
+                    break;
+                }
+                case RESPONSE_STATUS.UNAUTHORIZED: {
+                    this.props.history.push("/login");
+                    break;
+                }
+                default: {
+                    this.setState({ failedFetchDialogOpen: true });
+                    break;
+                }
+            }
+        });
     };
 
     getVaccineTypeOptions = (): void => {
@@ -164,10 +199,11 @@ class VaccineList extends React.Component<Props, State> {
 
     createNewVaccineEntry = (): void => {
         this.getVaccineTypeOptions();
-        this.setState({ vaccineEntryOpen: true });
+        this.setState({ vaccineEntryOpen: true, vaccine: undefined });
     };
 
     render(): React.ReactNode {
+        const props = this.props;
         const state = this.state;
         return (
             <>
@@ -226,6 +262,7 @@ class VaccineList extends React.Component<Props, State> {
                     <VaccineEntry
                         handleClose={this.closeVaccineEntry}
                         open={state.vaccineEntryOpen}
+                        user={props.user}
                         vaccine={state.vaccine}
                         vaccineTypes={state.vaccineTypes}
                     />
@@ -235,29 +272,21 @@ class VaccineList extends React.Component<Props, State> {
     }
 }
 
-interface DispatchProps {
-    storeUserId: typeof storeUserId;
-}
-
-interface MapStateToProps {
-    user: UserState;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
+function mapDispatchToProps(dispatch: Dispatch): MapDispatchToProps {
     return {
-        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+        storeUser: (user: User) => dispatch(storeUser(user))
     };
-};
-function mapStateToProps(state: any): MapStateToProps {
+}
+
+function mapStateToProps(state: RootState): MapStateToProps {
     return {
         user: state.user
     };
 }
 
-export default compose(
-    withRouter,
+export default withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )
-)(VaccineList);
+    )(VaccineList)
+);

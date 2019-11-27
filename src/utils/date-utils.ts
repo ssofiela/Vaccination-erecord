@@ -1,5 +1,5 @@
 /**
- * Convert DD.MM.YYYY to YYYY-MM-DD
+ * Convert DD.MM.YYYY to MM-DD-YYYY
  * @param date
  */
 export function convertDotFormatToISO(date: string): string {

@@ -12,6 +12,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { createNewVaccineEntry, updateVaccineEntry } from "../../utils/requests";
 import { hasFieldErrors } from "../../utils/form-utils";
 import { Vaccine, VaccineFormState, VaccineType } from "../../interfaces/vaccine";
+import { User } from "../../interfaces/user";
 import { createVaccineEntryInitialValues, mapToVaccineFormState } from "../../utils/data-mapper";
 import { RESPONSE_STATUS } from "../../utils/constants";
 import { getNewVaccineValidationSchema } from "../../utils/field-validation";
@@ -26,6 +27,7 @@ interface OwnProps {
     handleClose: (vaccineCreated: boolean) => void;
     vaccine?: Vaccine;
     vaccineTypes: VaccineType[];
+    user?: User;
 }
 
 interface FormState {
@@ -77,6 +79,8 @@ const VaccineEntry: React.FC<Props> = (props) => {
         ? { vaccine: mapToVaccineFormState(props.vaccine) }
         : { vaccine: createVaccineEntryInitialValues() };
     const isNewVaccineEntry = !props.vaccine;
+
+    initialValues.vaccine.reminderEmail = (props.user || {}).default_reminder_email || "";
 
     const [failedFetchDialogOpen, setFailedFetchDialogOpen] = React.useState<boolean>(false);
     const [failedRequestDialogOpen, setFailedRequestDialogOpen] = React.useState<boolean>(false);

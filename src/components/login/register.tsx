@@ -7,18 +7,28 @@ import { RouteComponentProps } from "react-router";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import * as Redux from "redux";
+import { connect } from "react-redux";
 
 import useStyles from "../common/styles";
 import * as Panel from "../common/panel";
 import { FilledButton } from "../common/button";
 import emailCheck from "../common/email-checker";
 import { TextInput } from "../common/form-input";
+import { receiveCurrentUser, SessionActionTypes } from "../../redux/actions/session";
+import { Session } from "../../interfaces/session";
+import { register } from "../../utils/requests";
 
+interface MapDispatchToProps {
+    receiveCurrentUser: (session: Session) => SessionActionTypes;
+}
 
-const Register: React.FC<RouteComponentProps> = (props) => {
+type Props = MapDispatchToProps & RouteComponentProps;
+
+const Register: React.FC<Props> = (props) => {
     const classes = useStyles();
     // const classes2 = StyledButton
 
@@ -58,25 +68,14 @@ const Register: React.FC<RouteComponentProps> = (props) => {
         }
         handleErrors(errors);
         if (errors.length === 0) {
-            let valid = true;
-            fetch("https://vaccine-backend.herokuapp.com/api/user/create", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            }).then((response) => {
-                valid = response.ok;
-                /*props.userId = userId*/
-
-                if (valid) {
-                    props.history.push("/vaccines");
-                    window.location.reload(true);
+            register({ email: email, password: password }).then((response) => {
+                if (response.ok) {
+                    response.json().then((data) => {
+                        props.receiveCurrentUser({
+                            id: data.id
+                        });
+                        props.history.push("/vaccines");
+                    });
                 }
             });
         }
@@ -134,7 +133,9 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                     id="password"
                                     name="Password"
                                     error={errors.includes("password")}
-                                    errorMessage={errors.includes("password") ? "Invalid password" : ""}
+                                    errorMessage={
+                                        errors.includes("password") ? "Invalid password" : ""
+                                    }
                                     onChange={(event) => setPassword(event.target.value)}
                                     tooltip="A password should be at least 6 characters long, and should contain one lowercase and one uppercase letter, a numeral and one special character."
                                     fullWidth
@@ -142,8 +143,11 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                                     autoComplete="current-password"
                                     endAdornment={
                                         <InputAdornment position="end">
-                                            <IconButton aria-label="delete" onClick={() => setShowPassword(!showPassword)}>
-                                                {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                            <IconButton
+                                                aria-label="delete"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
                                             </IconButton>
                                         </InputAdornment>
                                     }
@@ -159,7 +163,9 @@ const Register: React.FC<RouteComponentProps> = (props) => {
                         </Grid>
                         <Grid container>
                             <Grid item xs={12}>
-                                <div className={mobile() ? classes.differentLine : classes.sameLine}>
+                                <div
+                                    className={mobile() ? classes.differentLine : classes.sameLine}
+                                >
                                     <Typography>Already have an account?&nbsp;</Typography>
                                     <Link
                                         underline="none"
@@ -178,4 +184,10 @@ const Register: React.FC<RouteComponentProps> = (props) => {
     );
 };
 
-export default Register;
+function mapDispatchToProps(dispatch: Redux.Dispatch): MapDispatchToProps {
+    return {
+        receiveCurrentUser: (session: Session) => dispatch(receiveCurrentUser(session))
+    };
+}
+
+export default connect(mapDispatchToProps)(Register);

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { withRouter, RouteComponentProps } from "react-router";
 import { createStyles, makeStyles, Theme, useMediaQuery, useTheme } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
@@ -13,16 +12,28 @@ import Colorize from "@material-ui/icons/Colorize";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import { connect } from "react-redux";
-import { compose, Dispatch } from "redux";
+import { Dispatch } from "redux";
 
-import { UserState } from "../../interfaces/user";
-import { storeUserId } from "../../redux/actions/user";
+import { Session } from "../../interfaces/session";
+import { logoutCurrentUser, SessionActionTypes } from "../../redux/actions/session";
+import { RootState } from "../../redux/reducers";
+import { logout } from "../../utils/requests";
+import { clearStoredUser, UserActionTypes } from "../../redux/actions/user";
 
 interface HeaderProps {
     userId?: number;
 }
 
-type Props = HeaderProps & RouteComponentProps & DispatchProps;
+interface MapStateToProps {
+    session: Session;
+}
+
+interface MapDispatchToProps {
+    logoutCurrentUser: () => SessionActionTypes;
+    clearStoredUser: () => UserActionTypes;
+}
+
+type Props = HeaderProps & RouteComponentProps & MapDispatchToProps & MapStateToProps;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -80,52 +91,24 @@ const Header: React.FC<Props> = (props) => {
     const mobile = useMediaQuery(theme.breakpoints.down("xs"));
 
     const [value, setValue] = React.useState("/");
-    const [id, setId] = React.useState<number>(0);
 
     const handleChange = (_event: React.ChangeEvent<{}>, newValue: string): void => {
         setValue(newValue);
         props.history.push(newValue);
     };
     const handleLogin = (): void => {
-        if (id == 0) {
-            props.history.push("/login");
-        } else {
-            /* Sign out */
-            fetch("https://vaccine-backend.herokuapp.com/api/logout", {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                }
-            }).then(() => {
-                setId(0);
-                props.history.push("/login");
-            });
-        }
+        props.history.push("/login");
     };
 
-    /* Check user id */
-    /* TODO do that not need refresh after log in */
-    React.useEffect(() => {
-        fetch("https://vaccine-backend.herokuapp.com/api/user", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
+    const handleLogout = (): void => {
+        logout().then((response) => {
+            if (response.ok) {
+                props.logoutCurrentUser();
+                props.clearStoredUser();
+                props.history.push("/");
             }
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.id !== undefined) {
-                    setId(data.id);
-                    props.storeUserId(data.id);
-                }
-            });
-    }, []);
+        });
+    };
 
     return (
         <div className={classes.root}>
@@ -162,14 +145,14 @@ const Header: React.FC<Props> = (props) => {
                                 className={classes.tab}
                                 icon={<Colorize />}
                                 label={!mobile ? "My vaccines" : undefined}
-                                disabled={id < 1}
+                                disabled={!props.session.id}
                                 value="/vaccines"
                             />
                             <Tab
                                 className={classes.tab}
                                 icon={<SettingsIcon />}
                                 label={!mobile ? "Settings" : undefined}
-                                disabled={id < 1}
+                                disabled={!props.session.id}
                                 value="/settings"
                             />
                             <Tab
@@ -180,42 +163,37 @@ const Header: React.FC<Props> = (props) => {
                             />
                         </Tabs>
                     </div>
-                    <Button className={classes.button} color="inherit" onClick={handleLogin}>
-                        {id > 0 ? "Log out" : "Log in"}
-                    </Button>
+                    {props.session.id ? (
+                        <Button className={classes.button} color="inherit" onClick={handleLogout}>
+                            Log out
+                        </Button>
+                    ) : (
+                        <Button className={classes.button} color="inherit" onClick={handleLogin}>
+                            Log in
+                        </Button>
+                    )}
                 </Toolbar>
             </AppBar>
         </div>
     );
 };
 
-Header.propTypes = {
-    userId: PropTypes.number
-};
-
-interface DispatchProps {
-    storeUserId: typeof storeUserId;
-}
-
-interface MapStateToProps {
-    userReducer: UserState;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
+function mapStateToProps(state: RootState): MapStateToProps {
     return {
-        storeUserId: (payload: number) => dispatch(storeUserId(payload))
+        session: state.session
     };
-};
-/*function mapStateToProps(state: any):MapStateToProps {
-    return {
-        userReducer: state.userReducer
-    }
-};*/
+}
 
-export default compose(
-    withRouter,
+function mapDispatchToProps(dispatch: Dispatch): MapDispatchToProps {
+    return {
+        logoutCurrentUser: () => dispatch(logoutCurrentUser()),
+        clearStoredUser: () => dispatch(clearStoredUser())
+    };
+}
+
+export default withRouter(
     connect(
-        null,
+        mapStateToProps,
         mapDispatchToProps
-    )
-)(Header);
+    )(Header)
+);

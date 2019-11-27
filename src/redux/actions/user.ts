@@ -1,13 +1,24 @@
-import { Action } from "redux-actions";
+import { User } from "../../interfaces/user";
+import { ACTION_TYPES } from "../../utils/constants";
 
-import { userActionTypes, STORE_USER_ID, UserState } from "../../interfaces/user";
-
-
-
-export const storeUserId = (payload: userActionTypes): Action<userActionTypes> => {
-    return {
-        type: STORE_USER_ID,
-        payload: payload
-    }
+interface StoreUserAction {
+    type: typeof ACTION_TYPES.STORE_USER;
+    payload: User;
 }
 
+interface ClearStoredUserAction {
+    type: typeof ACTION_TYPES.CLEAR_STORED_USER;
+}
+
+export type UserActionTypes = StoreUserAction | ClearStoredUserAction;
+
+export function storeUser(user: User): UserActionTypes {
+    return {
+        type: ACTION_TYPES.STORE_USER,
+        payload: user
+    };
+}
+
+export function clearStoredUser(): UserActionTypes {
+    return { type: ACTION_TYPES.CLEAR_STORED_USER };
+}

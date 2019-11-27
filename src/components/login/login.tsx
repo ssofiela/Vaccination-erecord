@@ -6,48 +6,44 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { RouteComponentProps } from "react-router";
+import * as Redux from "redux";
+import { connect } from "react-redux";
 
+import { receiveCurrentUser, SessionActionTypes } from "../../redux/actions/session";
+import { login } from "../../utils/requests";
+import { Session } from "../../interfaces/session";
 import useStyles from "../common/styles";
 import * as Panel from "../common/panel";
 import { FilledButton } from "../common/button";
 import { TextInput } from "../common/form-input";
 
-const Login: React.FC<RouteComponentProps> = (props) => {
+interface MapDispatchToProps {
+    receiveCurrentUser: (session: Session) => SessionActionTypes;
+}
+
+type Props = MapDispatchToProps & RouteComponentProps;
+
+const Login: React.FC<Props> = (props) => {
     const classes = useStyles();
 
     const [width, setWidth] = React.useState<number>(0);
     const [email, setEmail] = React.useState<string>("");
     const [password, setPassword] = React.useState<string>("");
     const [error, setError] = React.useState<boolean>(false);
-    const handleBack = (): void => {
-        let valid = true;
-        /* Check that email address match with the password */
-        fetch("https://vaccine-backend.herokuapp.com/api/login", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                username: email,
-                password: password
-            })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                valid = data.status === "Authorized";
-
-                if (valid) {
+    const handleLogin = (event: React.FormEvent<HTMLFormElement>): void => {
+        event.preventDefault();
+        login({ email: email, password: password }).then((response) => {
+            if (response.ok) {
+                response.json().then((data) => {
+                    props.receiveCurrentUser({
+                        id: data.id
+                    });
                     props.history.push("/vaccines");
-                    window.location.reload(true);
-
-                } else {
-                    setError(true);
-                }
-            });
+                });
+            } else {
+                setError(true);
+            }
+        });
     };
 
     const moobile = (): boolean => {
@@ -78,7 +74,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                     </Grid>
                 </Grid>
                 <Panel.Body>
-                    <form className={classes.form} noValidate>
+                    <form onSubmit={handleLogin} className={classes.form} noValidate>
                         <Grid container>
                             <Grid item xs={12}>
                                 <TextInput
@@ -87,7 +83,9 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                                     autoComplete="email"
                                     onChange={(event) => setEmail(event.target.value)}
                                     error={error}
-                                    errorMessage={error ? "Incorrect email address or password." : ""}
+                                    errorMessage={
+                                        error ? "Incorrect email address or password." : ""
+                                    }
                                 />
                             </Grid>
                         </Grid>
@@ -100,20 +98,24 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                                     autoComplete="current-password"
                                     onChange={(event) => setPassword(event.target.value)}
                                     error={error}
-                                    errorMessage={error ? "Incorrect email address or password." : ""}
+                                    errorMessage={
+                                        error ? "Incorrect email address or password." : ""
+                                    }
                                 />
                             </Grid>
                         </Grid>
                         <Grid container>
                             <Grid item xs={12}>
                                 <Box className={classes.button}>
-                                    <FilledButton onClick={handleBack}>Log In</FilledButton>
+                                    <FilledButton type="submit">Log In</FilledButton>
                                 </Box>
                             </Grid>
                         </Grid>
                         <Grid container>
                             <Grid item>
-                                <div className={moobile() ? classes.differentLine : classes.sameLine}>
+                                <div
+                                    className={moobile() ? classes.differentLine : classes.sameLine}
+                                >
                                     <Typography>New to Vaccination eRecord?&nbsp;</Typography>
                                     <Link
                                         underline="none"
@@ -129,8 +131,13 @@ const Login: React.FC<RouteComponentProps> = (props) => {
                 </Panel.Body>
             </Panel.Container>
         </Grid>
-
     );
 };
 
-export default Login;
+function mapDispatchToProps(dispatch: Redux.Dispatch): MapDispatchToProps {
+    return {
+        receiveCurrentUser: (session: Session) => dispatch(receiveCurrentUser(session))
+    };
+}
+
+export default connect(mapDispatchToProps)(Login);

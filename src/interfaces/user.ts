@@ -4,6 +4,19 @@ export type UserState = {
     userId?: number;
 };
 
+export interface User {
+    id: number;
+    username: string;
+    default_reminder_email: string;
+    year_born: number;
+    reminder_days_before_due: number;
+}
+
+export interface UserAuth {
+    email: string;
+    password: string;
+}
+
 export interface AccountSettingsFormState {
     reminderEmail: string;
     birthYear: string;
