@@ -20,7 +20,7 @@ import emailCheck from "../common/email-checker";
 import { TextInput } from "../common/form-input";
 import { receiveCurrentUser, SessionActionTypes } from "../../redux/actions/session";
 import { Session } from "../../interfaces/session";
-import { register } from "../../utils/requests";
+import { register, login } from "../../utils/requests";
 
 interface MapDispatchToProps {
     receiveCurrentUser: (session: Session) => SessionActionTypes;
@@ -70,11 +70,15 @@ const Register: React.FC<Props> = (props) => {
         if (errors.length === 0) {
             register({ email: email, password: password }).then((response) => {
                 if (response.ok) {
-                    response.json().then((data) => {
-                        props.receiveCurrentUser({
-                            id: data.id
-                        });
-                        props.history.push("/vaccines");
+                    login({ email: email, password: password }).then((response) => {
+                        if (response.ok) {
+                            response.json().then((data) => {
+                                props.receiveCurrentUser({
+                                    id: data.id
+                                });
+                                props.history.push("/vaccines");
+                            });
+                        }
                     });
                 }
             });
