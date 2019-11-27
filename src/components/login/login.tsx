@@ -38,7 +38,7 @@ const Login: React.FC<Props> = (props) => {
                     props.receiveCurrentUser({
                         id: data.id
                     });
-                    props.history.push("/vaccines");
+                    props.history.push("/");
                 });
             } else {
                 setError(true);
