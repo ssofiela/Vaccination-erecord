@@ -9,14 +9,14 @@ import Box from "@material-ui/core/Box";
 import { Formik } from "formik";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Dispatch } from "redux";
-import { storeUser, UserActionTypes } from "../../redux/actions/user";
-import { RootState } from "../../redux/reducers";
 import { connect } from "react-redux";
 
 import { createNewVaccineEntry, updateVaccineEntry } from "../../utils/requests";
 import { hasFieldErrors } from "../../utils/form-utils";
 import { Vaccine, VaccineFormState, VaccineType } from "../../interfaces/vaccine";
 import { User } from "../../interfaces/user";
+import { storeUser, UserActionTypes } from "../../redux/actions/user";
+import { RootState } from "../../redux/reducers";
 import { createVaccineEntryInitialValues, mapToVaccineFormState } from "../../utils/data-mapper";
 import { RESPONSE_STATUS } from "../../utils/constants";
 import { getNewVaccineValidationSchema } from "../../utils/field-validation";
@@ -313,6 +313,12 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                             onChangeRadio={(value) => {
                                                 form.setFieldValue("vaccine.reminder", value);
                                                 if (value) {
+                                                    if (props.user) {
+                                                        form.setFieldValue(
+                                                            "vaccine.reminderEmail",
+                                                            props.user.default_reminder_email
+                                                        );
+                                                    }
                                                     form.setFieldTouched(
                                                         "vaccine.reminderEmail",
                                                         true
@@ -320,7 +326,7 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                                 }
                                             }}
                                             onChangeEmail={(value) => {
-                                                form.setFieldValue("vaccine.reminderEmail", props.user.default_reminder_email);
+                                                form.setFieldValue("vaccine.reminderEmail", value);
                                                 form.setFieldTouched("vaccine.reminderEmail", true);
                                             }}
                                             error={Boolean(
@@ -430,4 +436,3 @@ export default withRouter(
         mapDispatchToProps
     )(VaccineEntry)
 );
-
