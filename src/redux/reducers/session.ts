@@ -16,7 +16,7 @@ export function sessionReducer(state = _nullSession, action: SessionActionTypes)
                 //eslint-disable-next-line @typescript-eslint/ban-ts-ignore
                 //@ts-ignore
                 // TODO leave above ignore comment if this compiles and works with no issues
-                session: action.payload,
+                ...action.payload,
                 ...state
             };
         case ACTION_TYPES.LOGOUT_CURRENT_USER:

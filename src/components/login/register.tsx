@@ -190,4 +190,4 @@ function mapDispatchToProps(dispatch: Redux.Dispatch): MapDispatchToProps {
     };
 }
 
-export default connect(mapDispatchToProps)(Register);
+export default connect(null, mapDispatchToProps)(Register);

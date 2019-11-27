@@ -15,7 +15,7 @@ export const userReducer = (state = _initialState, action: UserActionTypes): Use
                 //eslint-disable-next-line @typescript-eslint/ban-ts-ignore
                 //@ts-ignore
                 // TODO leave above ignore comment if this compiles and works with no issues
-                user: action.payload,
+                ...action.payload,
                 ...state
             };
         case ACTION_TYPES.CLEAR_STORED_USER:
