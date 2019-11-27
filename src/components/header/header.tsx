@@ -90,7 +90,15 @@ const Header: React.FC<Props> = (props) => {
     const theme = useTheme();
     const mobile = useMediaQuery(theme.breakpoints.down("xs"));
 
-    const [value, setValue] = React.useState("/");
+    const initialValue = props.location.pathname !== "/login" ? props.location.pathname : "/";
+    const [value, setValue] = React.useState(initialValue);
+
+    React.useEffect(() => {
+        const pathname = props.location.pathname !== "/login" ? props.location.pathname : "/";
+        if (value != pathname) {
+            setValue(pathname);
+        }
+    });
 
     const handleChange = (_event: React.ChangeEvent<{}>, newValue: string): void => {
         setValue(newValue);
