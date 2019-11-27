@@ -39,7 +39,7 @@ export const login = (user: UserAuth): Promise<Response> => {
 };
 
 export const logout = (): Promise<Response> => {
-    return fetch("https://vaccine-backend.herokuapp.com/api/user", {
+    return fetch("https://vaccine-backend.herokuapp.com/api/logout", {
         method: "GET",
         headers: {
             Accept: "application/json",
