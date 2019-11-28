@@ -67,10 +67,10 @@ export const checkLoggedIn = (): Promise<RootState> => {
             return response.json().then((data) => {
                 const user = mapToUser(data);
                 return {
+                    ...initialState,
                     session: {
                         id: user.id
-                    },
-                    ...initialState
+                    }
                 };
             });
         } else {
