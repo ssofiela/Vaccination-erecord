@@ -135,7 +135,17 @@ const Header: React.FC<Props> = (props) => {
                     )}
                     <div className={classes.tabContainer}>
                         <Tabs
-                            value={value}
+                            // Don't activate any of the tabs if page don't have its own tab (e.g. registration)
+                            value={
+                                [
+                                    "/",
+                                    "/vaccines",
+                                    "/settings",
+                                    "/frequently-asked-questions"
+                                ].includes(value)
+                                    ? value
+                                    : false
+                            }
                             variant="fullWidth"
                             onChange={handleChange}
                             indicatorColor="primary"
