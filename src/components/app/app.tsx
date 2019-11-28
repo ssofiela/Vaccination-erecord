@@ -21,36 +21,45 @@ interface MapDispatchToProps {
 }
 
 class App extends React.Component {
+    state = {
+        loadingLoginInformation: true
+    };
+
     render(): React.ReactNode {
+        // Render only home path if still loading login information
+        // Reason: not possible to determine if other paths are rendered
+        // before the login information is loaded
+        const routes = this.state.loadingLoginInformation ? (
+            <Switch>
+                <Route key="home" exact path="/" component={Home} />
+            </Switch>
+        ) : (
+            <Switch>
+                <Route key="home" exact path="/" component={Home} />
+                <AuthRoute key="login" path="/login" component={Login} />
+                <AuthRoute key="register" path="/register" component={Register} />
+                <PrivateRoute key="vaccines" exact path="/vaccines" component={VaccineList} />
+                <PrivateRoute key="settings" path="/settings" component={Settings} />
+                <Route
+                    key="frequentlyAskedQuestions"
+                    path="/frequently-asked-questions"
+                    component={FrequentlyAskedQuestions}
+                />
+                // Redirect all invalid urls to home
+                <Redirect to="/" />
+            </Switch>
+        );
+
         return (
             <Router>
                 <CssBaseline />
                 <Header />
-                <Main>
-                    <Switch>
-                        <Route key="home" exact path="/" component={Home} />
-                        <AuthRoute key="login" path="/login" component={Login} />
-                        <AuthRoute key="register" path="/register" component={Register} />
-                        <PrivateRoute
-                            key="vaccines"
-                            exact
-                            path="/vaccines"
-                            component={VaccineList}
-                        />
-                        <PrivateRoute key="settings" path="/settings" component={Settings} />
-                        <Route
-                            key="frequentlyAskedQuestions"
-                            path="/frequently-asked-questions"
-                            component={FrequentlyAskedQuestions}
-                        />
-                        // Redirect all invalid urls to home
-                        <Redirect to="/" />
-                    </Switch>
-                </Main>
+                <Main>{routes}</Main>
             </Router>
         );
     }
 
+    // Check user's login state after component is mounted to prevent long wait
     async componentDidMount(): Promise<void> {
         const newState = await checkLoggedIn();
         if ((newState.session || {}).id != null) {
@@ -58,6 +67,7 @@ class App extends React.Component {
                 id: newState.session.id
             });
         }
+        this.setState({ loadingLoginInformation: false });
     }
 }
 
