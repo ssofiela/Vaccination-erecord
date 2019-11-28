@@ -89,10 +89,12 @@ const VaccineEntry: React.FC<Props> = (props) => {
     const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
     const initialValues = props.vaccine
         ? { vaccine: mapToVaccineFormState(props.vaccine) }
-        : { vaccine: createVaccineEntryInitialValues() };
+        : {
+              vaccine: createVaccineEntryInitialValues(
+                  (props.user || {}).default_reminder_email || ""
+              )
+          };
     const isNewVaccineEntry = !props.vaccine;
-
-    initialValues.vaccine.reminderEmail = (props.user || {}).default_reminder_email || "";
 
     const [failedFetchDialogOpen, setFailedFetchDialogOpen] = React.useState<boolean>(false);
     const [failedRequestDialogOpen, setFailedRequestDialogOpen] = React.useState<boolean>(false);
@@ -316,7 +318,9 @@ const VaccineEntry: React.FC<Props> = (props) => {
                                                     if (props.user) {
                                                         form.setFieldValue(
                                                             "vaccine.reminderEmail",
-                                                            props.user.default_reminder_email
+                                                            (props.vaccine || {})
+                                                                .booster_reminder_address ||
+                                                                props.user.default_reminder_email
                                                         );
                                                     }
                                                     form.setFieldTouched(

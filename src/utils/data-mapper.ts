@@ -41,14 +41,14 @@ export function mapVaccineFormStateToPayload(vaccineFormState: VaccineFormState)
     };
 }
 
-export function createVaccineEntryInitialValues(): VaccineFormState {
+export function createVaccineEntryInitialValues(defaultReminderEmail: string): VaccineFormState {
     return {
         id: "",
         vaccineType: { id: "", name: "", abbreviation: "" },
         dateTaken: convertDotFormatToISO(new Date(moment().format()).toLocaleDateString()),
         boosterDate: undefined,
         reminder: false,
-        reminderEmail: "",
+        reminderEmail: defaultReminderEmail ? defaultReminderEmail : "",
         comment: ""
     };
 }
