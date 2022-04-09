@@ -24,7 +24,7 @@
         "date-fns": "2.0.0-beta.5",
         "formik": "1.5.8",
         "lodash": "4.17.15",
-        "moment": "2.24.0",
+        "moment": "2.29.2",
         "prop-types": "15.7.2",
         "react": "16.10.2",
         "react-dom": "16.10.2",
